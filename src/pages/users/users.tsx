@@ -14,7 +14,6 @@ import { Layout, Table, Button } from "@/components";
 import { Users as usersList } from "@/data";
 
 import UserModal from "./user-modal";
-import ScheduleModal from "./schedule-modal";
 
 export default function Users() {
   const [page, setPage] = useState(0);
@@ -23,11 +22,6 @@ export default function Users() {
     isOpen: isOpenAddUser,
     onOpen: onOpenAddUser,
     onClose: onCloseAddUser,
-  } = useDisclosure();
-  const {
-    isOpen: isOpenAddSchedule,
-    onOpen: onOpenAddSchedule,
-    onClose: onCloseAddSchedule,
   } = useDisclosure();
 
   const tableData = usersList.map((user) => ({
@@ -40,8 +34,8 @@ export default function Users() {
     status: user.status,
     action: (
       <Flex justifyContent={"space-between"}>
-        <ChakraButton colorScheme="yellow" size="sm">
-          <BsPencilFill onClick={onOpenAddUser} />
+        <ChakraButton colorScheme="yellow" size="sm" onClick={onOpenAddUser}>
+          <BsPencilFill />
         </ChakraButton>
         <ChakraButton colorScheme="red" size="sm">
           <BsFillTrash3Fill />
@@ -97,7 +91,6 @@ export default function Users() {
   return (
     <Layout>
       <UserModal isOpen={isOpenAddUser} onClose={onCloseAddUser} />
-      <ScheduleModal isOpen={isOpenAddSchedule} onClose={onCloseAddSchedule} />
       <VStack w={"100%"}>
         <Table
           title="User Management"
@@ -107,13 +100,6 @@ export default function Users() {
           columns={columns}
           actions={
             <Box>
-              <Button
-                label="Add Schedule"
-                colorScheme="green"
-                size="sm"
-                onClick={onOpenAddSchedule}
-                mr={3}
-              />
               <Button
                 label="Add User"
                 colorScheme="green"
