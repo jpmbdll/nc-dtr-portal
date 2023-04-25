@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { Box, Flex, Text, Divider, Heading } from "@chakra-ui/react";
 import {
   BsFillHouseFill,
@@ -21,6 +22,8 @@ const nav = [
 ];
 
 export function SideNav() {
+  const { route } = useRouter();
+
   return (
     <Flex
       flexDirection="column"
@@ -34,27 +37,32 @@ export function SideNav() {
       boxShadow="rgba(149, 157, 165, 0.2) 0px 8px 24px"
     >
       <Box>
-        {nav.map((n, i) => (
-          <Link href={n.link} key={i}>
-            <Flex
-              justifyContent="center"
-              flexDirection="column"
-              h={14}
-              px={6}
-              w="100%"
-              borderRadius={12}
-              cursor="pointer"
-              color="gray.700"
-              fontSize="md"
-              fontWeight="bold"
-              sx={{ _hover: { bg: "blue.400", color: "white" } }}
-            >
-              <Text display="flex" gap={4}>
-                {n.icon} {n.label}
-              </Text>
-            </Flex>
-          </Link>
-        ))}
+        {nav.map((n, i) => {
+          const isActivated = n.link === route;
+          return (
+            <Link href={n.link} key={i}>
+              <Flex
+                justifyContent="center"
+                flexDirection="column"
+                h={14}
+                px={6}
+                w="100%"
+                borderRadius={12}
+                cursor="pointer"
+                fontSize="md"
+                fontWeight="bold"
+                my={3}
+                color={isActivated ? "white" : "gray.700"}
+                bg={isActivated ? "blue.400" : "white"}
+                sx={{ _hover: { bg: "blue.400", color: "white" } }}
+              >
+                <Text display="flex" gap={4}>
+                  {n.icon} {n.label}
+                </Text>
+              </Flex>
+            </Link>
+          );
+        })}
       </Box>
       <Box color="gray.600">
         <Divider sx={{ marginY: "30px !important" }} />
