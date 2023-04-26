@@ -1,0 +1,62 @@
+[
+  {
+    "username": "joshua",
+    "password": "password",
+    "email": "test@test.com",
+    "first_name": "Hello",
+    "last_name": "Test",
+    "role": "Teacher",
+    "created_at": "2016-11-28T14:10:11.338Z",
+    "updated_at": "2016-12-02T01:17:29.310Z",
+    "email_verified": true,
+    "authToken": "583c5484cb79a5fe593425a9"
+  },
+  {
+    "username": "583c5484cb79a5fe593425a9",
+    "password": "12345",
+    "email": "test1@test.com",
+    "first_name": "Hello1",
+    "last_name": "Test1",
+    "role": "Admin",
+    "created_at": "2016-11-28T16:00:04.209Z",
+    "updated_at": "2016-11-28T16:00:47.203Z",
+    "email_verified": true,
+    "authToken": "583c5484cb79a5fe593425a9"
+  },
+  {
+    "username": "583c57672c7686377d2f66c9",
+    "password": "12345",
+    "email": "aaa@aaa.com",
+    "first_name": "John",
+    "last_name": "Dough",
+    "role": "Teacher",
+    "created_at": "2016-11-28T16:12:23.777Z",
+    "updated_at": "2016-11-28T16:12:52.353Z",
+    "email_verified": true,
+    "authToken": "583c57672c7686377d2f66c9"
+  },
+  {
+    "username": "5840b954da0529cd293d76fe",
+    "password": "12345",
+    "email": "a@a.com",
+    "first_name": "Jane",
+    "last_name": "Dough",
+    "role": "Faculty Member",
+    "created_at": "2016-12-01T23:59:16.473Z",
+    "updated_at": "2016-12-01T23:59:53.474Z",
+    "email_verified": true,
+    "authToken": "5840b954da0529cd293d76fe"
+  },
+  {
+    "username": "584a9d13e808bcf75f05f580",
+    "password": "12345",
+    "email": "test9999@test.com",
+    "first_name": "Dummy",
+    "last_name": "User",
+    "role": "Dean",
+    "created_at": "2016-12-09T12:01:23.787Z",
+    "updated_at": "2016-12-09T12:01:23.787Z",
+    "email_verified": false,
+    "authToken": "584a9d13e808bcf75f05f580"
+  }
+]

@@ -1,5 +1,3 @@
-import * as cookie from "cookie";
-
 export const checkAuth = async (context: any, cb: any) => {
   const isAuthenticated = context.req.headers.cookie;
 

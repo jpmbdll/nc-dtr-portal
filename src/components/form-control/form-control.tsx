@@ -1,3 +1,5 @@
+//This component must be only used with `Form Provider`
+
 import {
   FormControl as ChakraFormControl,
   FormControlProps,
@@ -5,15 +7,28 @@ import {
   FormErrorMessage,
   Input,
 } from "@chakra-ui/react";
+import { useFormContext } from "react-hook-form";
 
-export function FormControl(props: FormControlProps) {
+type Props = {
+  name: string;
+  type: "text" | "password";
+} & FormControlProps;
+
+export function FormControl(props: Props) {
   const {
     label,
+    name,
+    type,
     isInvalid = false,
     isRequired = false,
     isDisabled = false,
-    ...rest
   } = props;
+
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+
   return (
     <ChakraFormControl
       isInvalid={isInvalid}
@@ -22,8 +37,15 @@ export function FormControl(props: FormControlProps) {
       mb={2}
     >
       <FormLabel fontSize="sm">{label}</FormLabel>
-      <Input type="email" value="" onChange={() => {}} />
-      {true && <FormErrorMessage>Email is required.</FormErrorMessage>}
+      <Input
+        type={type}
+        {...register(name, {
+          required: isRequired ? `${name} is required` : false,
+        })}
+      />
+      {isRequired && errors?.[name] && (
+        <FormErrorMessage>Email is required.</FormErrorMessage>
+      )}
     </ChakraFormControl>
   );
 }

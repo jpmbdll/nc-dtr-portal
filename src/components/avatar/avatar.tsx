@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import {
   Avatar as ChakraAvatar,
   Flex,
@@ -21,6 +22,14 @@ type Props = {
 
 export function Avatar(props: Props) {
   const { name, accessType } = props;
+  const router = useRouter();
+  const handleLogout = () => {
+    document.cookie =
+      "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    router.replace("/login");
+  };
   return (
     <HStack>
       <ChakraAvatar size="sm" name={name} src="" mr={1} bg="black" />
@@ -51,7 +60,9 @@ export function Avatar(props: Props) {
             </MenuItem>
           </Link>
           <MenuDivider />
-          <MenuItem icon={<BiLogOut size={20} />}>Logout</MenuItem>
+          <MenuItem icon={<BiLogOut size={20} />} onClick={handleLogout}>
+            Logout
+          </MenuItem>
         </MenuList>
       </Menu>
     </HStack>

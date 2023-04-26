@@ -1,10 +1,11 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useForm, FormProvider } from "react-hook-form";
 import {
   Card,
   CardHeader,
   CardBody,
   Heading,
-  AbsoluteCenter,
   Text,
   VStack,
   Link,
@@ -14,6 +15,37 @@ import {
 import { FormControl, Button } from "@/components";
 
 export default function Login() {
+  const methods = useForm();
+  const router = useRouter();
+  const { handleSubmit } = methods;
+
+  const submit = async (data: any) => {
+    try {
+      const response = await fetch("/api/auth", {
+        method: "POST",
+        body: JSON.stringify({ ...data }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+
+      if (
+        !responseData?.hasError &&
+        responseData?.user &&
+        responseData?.user?.authToken
+      ) {
+        document.cookie = "isAuthenticated=true";
+        document.cookie = `authToken=${responseData?.user?.authToken}`;
+        router.replace("/home");
+      } else {
+        // has error, no auth data!!!
+      }
+    } catch (error) {
+      // toast error
+    }
+  };
+
   return (
     <VStack
       sx={{
@@ -34,14 +66,25 @@ export default function Login() {
             </Center>
           </CardHeader>
           <CardBody px={8} pt={4} pb={8}>
-            <FormControl label="Username" />
-            <FormControl label="Password" />
-            <Text fontSize="xs">
-              <Link href="#" color="blue.400">
-                Forgot Password?
-              </Link>
-            </Text>
-            <Button label="Login" colorScheme="twitter" w="100%" my={5} />
+            <FormProvider {...methods}>
+              <form onSubmit={handleSubmit(submit)}>
+                <FormControl type="text" label="Username" name="username" />
+                <FormControl type="password" label="Password" name="password" />
+
+                <Text fontSize="xs">
+                  <Link href="#" color="blue.400">
+                    Forgot Password?
+                  </Link>
+                </Text>
+                <Button
+                  type="submit"
+                  label="Login"
+                  colorScheme="twitter"
+                  w="100%"
+                  my={5}
+                />
+              </form>
+            </FormProvider>
             <Center>
               <Text fontSize="xs">
                 Not a member?{" "}
@@ -58,7 +101,16 @@ export default function Login() {
 }
 
 export async function getServerSideProps(context: any) {
-  return {
-    props: {},
-  };
+  const isAuthenticated = context.req.headers.cookie;
+
+  if (Boolean(isAuthenticated)) {
+    return {
+      redirect: {
+        destination: "/home",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: {} };
 }
