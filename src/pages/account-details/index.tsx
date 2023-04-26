@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Layout, FormControl, Button, Card } from "@/components";
 import ChangePasswordModal from "./change-password-modal";
+import { checkAuth } from "@/lib";
 
 export default function AccountDetails() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -88,7 +89,9 @@ export default function AccountDetails() {
 }
 
 export async function getServerSideProps(context: any) {
-  return {
-    props: {},
-  };
+  return checkAuth(context, ({ isAuthenticated }: any) => {
+    return {
+      props: { isAuthenticated },
+    };
+  });
 }

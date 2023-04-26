@@ -2,6 +2,7 @@ import { useState } from "react";
 import { VStack, Box } from "@chakra-ui/react";
 import { Layout, Table, Button } from "@/components";
 import { Reports as reportsList } from "@/data";
+import { checkAuth } from "@/lib";
 
 import { createColumn } from "react-chakra-pagination";
 
@@ -89,7 +90,9 @@ export default function Reports() {
 }
 
 export async function getServerSideProps(context: any) {
-  return {
-    props: {},
-  };
+  return checkAuth(context, ({ isAuthenticated }: any) => {
+    return {
+      props: { isAuthenticated },
+    };
+  });
 }

@@ -12,6 +12,7 @@ import { createColumn } from "react-chakra-pagination";
 
 import { Layout, Table, Button } from "@/components";
 import { Users as usersList } from "@/data";
+import { checkAuth } from "@/lib";
 
 import UserModal from "./user-modal";
 
@@ -116,7 +117,9 @@ export default function Users() {
 }
 
 export async function getServerSideProps(context: any) {
-  return {
-    props: {},
-  };
+  return checkAuth(context, ({ isAuthenticated }: any) => {
+    return {
+      props: { isAuthenticated },
+    };
+  });
 }

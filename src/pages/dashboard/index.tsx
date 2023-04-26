@@ -16,6 +16,7 @@ import { Layout, Card } from "@/components";
 import { Bar, Doughnut, Radar } from "react-chartjs-2";
 import { faker } from "@faker-js/faker";
 import { VStack, Grid, GridItem } from "@chakra-ui/react";
+import { checkAuth } from "@/lib";
 
 ChartJS.register(
   LineElement,
@@ -180,7 +181,9 @@ export default function Dashboard() {
 }
 
 export async function getServerSideProps(context: any) {
-  return {
-    props: {},
-  };
+  return checkAuth(context, ({ isAuthenticated }: any) => {
+    return {
+      props: { isAuthenticated },
+    };
+  });
 }

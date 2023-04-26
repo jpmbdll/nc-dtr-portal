@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Card, Layout } from "@/components";
 import { Announcements } from "@/data";
+import { checkAuth } from "@/lib";
 
 export default function Home() {
   return (
@@ -81,7 +82,9 @@ export default function Home() {
 }
 
 export async function getServerSideProps(context: any) {
-  return {
-    props: {},
-  };
+  return checkAuth(context, ({ isAuthenticated }: any) => {
+    return {
+      props: { isAuthenticated },
+    };
+  });
 }
