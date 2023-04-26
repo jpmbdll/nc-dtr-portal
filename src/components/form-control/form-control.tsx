@@ -15,14 +15,7 @@ type Props = {
 } & FormControlProps;
 
 export function FormControl(props: Props) {
-  const {
-    label,
-    name,
-    type,
-    isInvalid = false,
-    isRequired = false,
-    isDisabled = false,
-  } = props;
+  const { label, name, type, isRequired = false, isDisabled = false } = props;
 
   const {
     register,
@@ -31,8 +24,7 @@ export function FormControl(props: Props) {
 
   return (
     <ChakraFormControl
-      isInvalid={isInvalid}
-      isRequired={isRequired}
+      isInvalid={isRequired && Boolean(errors?.[name])}
       isDisabled={isDisabled}
       mb={2}
     >
@@ -40,12 +32,10 @@ export function FormControl(props: Props) {
       <Input
         type={type}
         {...register(name, {
-          required: isRequired ? `${name} is required` : false,
+          required: isRequired,
         })}
       />
-      {isRequired && errors?.[name] && (
-        <FormErrorMessage>Email is required.</FormErrorMessage>
-      )}
+      <FormErrorMessage>{`${label} is required.`}</FormErrorMessage>
     </ChakraFormControl>
   );
 }

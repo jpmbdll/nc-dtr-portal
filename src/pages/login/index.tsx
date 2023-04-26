@@ -42,14 +42,12 @@ export default function Login() {
         document.cookie = `authToken=${responseData?.user?.authToken}; path=/`;
         router.replace("/home");
       } else {
-        console.log(responseData);
         toast.error(responseData?.message || "Error logging in");
       }
     } catch (error) {
       toast.error(
         "There is an issue processing your request. Please contact your administrator."
       );
-      // toast error
     }
   };
 
@@ -75,8 +73,18 @@ export default function Login() {
           <CardBody px={8} pt={4} pb={8}>
             <FormProvider {...methods}>
               <form onSubmit={handleSubmit(submit)}>
-                <FormControl type="text" label="Username" name="username" />
-                <FormControl type="password" label="Password" name="password" />
+                <FormControl
+                  type="text"
+                  label="Username"
+                  name="username"
+                  isRequired
+                />
+                <FormControl
+                  type="password"
+                  label="Password"
+                  name="password"
+                  isRequired={true}
+                />
 
                 <Text fontSize="xs">
                   <Link href="#" color="blue.400">
