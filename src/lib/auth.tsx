@@ -1,7 +1,8 @@
-export const checkAuth = async (context: any, cb: any) => {
-  const isAuthenticated = context.req.headers.cookie;
+import cookies from "next-cookies";
 
-  if (!Boolean(isAuthenticated)) {
+export const checkAuth = async (context: any, cb: any) => {
+  const { isAuthenticated, authToken } = cookies(context);
+  if (!Boolean(isAuthenticated) && !authToken) {
     return {
       redirect: {
         destination: "/login",

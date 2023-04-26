@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useForm, FormProvider } from "react-hook-form";
+import cookies from "next-cookies";
+
 import {
   Card,
   CardHeader,
@@ -35,8 +37,8 @@ export default function Login() {
         responseData?.user &&
         responseData?.user?.authToken
       ) {
-        document.cookie = "isAuthenticated=true";
-        document.cookie = `authToken=${responseData?.user?.authToken}`;
+        document.cookie = "isAuthenticated=true; path=/";
+        document.cookie = `authToken=${responseData?.user?.authToken}; path=/`;
         router.replace("/home");
       } else {
         // has error, no auth data!!!
@@ -101,9 +103,8 @@ export default function Login() {
 }
 
 export async function getServerSideProps(context: any) {
-  const isAuthenticated = context.req.headers.cookie;
-
-  if (Boolean(isAuthenticated)) {
+  const { isAuthenticated, authToken } = cookies(context);
+  if (Boolean(isAuthenticated) && authToken) {
     return {
       redirect: {
         destination: "/home",
