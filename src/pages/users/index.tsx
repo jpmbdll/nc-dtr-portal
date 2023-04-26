@@ -114,3 +114,9 @@ export default function Users() {
     </Layout>
   );
 }
+
+export async function getServerSideProps(context: any) {
+  return {
+    props: {},
+  };
+}

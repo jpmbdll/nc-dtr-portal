@@ -79,3 +79,9 @@ export default function Home() {
     </Layout>
   );
 }
+
+export async function getServerSideProps(context: any) {
+  return {
+    props: {},
+  };
+}

@@ -87,3 +87,9 @@ export default function Reports() {
     </Layout>
   );
 }
+
+export async function getServerSideProps(context: any) {
+  return {
+    props: {},
+  };
+}

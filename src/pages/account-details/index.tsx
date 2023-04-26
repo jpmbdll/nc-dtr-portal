@@ -86,3 +86,9 @@ export default function AccountDetails() {
     </Layout>
   );
 }
+
+export async function getServerSideProps(context: any) {
+  return {
+    props: {},
+  };
+}

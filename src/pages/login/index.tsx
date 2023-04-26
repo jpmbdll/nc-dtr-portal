@@ -56,3 +56,9 @@ export default function Login() {
     </VStack>
   );
 }
+
+export async function getServerSideProps(context: any) {
+  return {
+    props: {},
+  };
+}
