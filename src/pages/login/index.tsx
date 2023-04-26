@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useForm, FormProvider } from "react-hook-form";
 import cookies from "next-cookies";
@@ -41,9 +42,13 @@ export default function Login() {
         document.cookie = `authToken=${responseData?.user?.authToken}; path=/`;
         router.replace("/home");
       } else {
-        // has error, no auth data!!!
+        console.log(responseData);
+        toast.error(responseData?.message || "Error logging in");
       }
     } catch (error) {
+      toast.error(
+        "There is an issue processing your request. Please contact your administrator."
+      );
       // toast error
     }
   };
