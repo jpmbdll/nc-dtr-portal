@@ -7,14 +7,20 @@ import {
   Flex,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useForm, FormProvider } from "react-hook-form";
 import { Layout, FormControl, Button, Card } from "@/components";
 import ChangePasswordModal from "./change-password-modal";
 import { checkAuth } from "@/lib";
 
 export default function AccountDetails() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
+  const methods = useForm();
+  const { handleSubmit } = methods;
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const submit = async (data: any) => {
+    console.log(data);
+  };
 
   return (
     <Layout>
@@ -41,47 +47,103 @@ export default function AccountDetails() {
           }
           w={"100%"}
         >
-          <Grid templateColumns="repeat(12, 1fr)" gap={4}>
-            <GridItem colSpan={6}>
-              <FormControl label="ID No." isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={6}>
-              <FormControl label="Job Title" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={4}>
-              <FormControl label="First Name" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={4}>
-              <FormControl label="Middle Name" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={4}>
-              <FormControl label="Last Name" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={3}>
-              <FormControl label="Contact" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={3}>
-              <FormControl label="Email" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={6}>
-              <FormControl label="Address" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={6}>
-              <FormControl label="Password" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={6}>
-              <FormControl label="Status" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={6}>
-              <FormControl label="Department" isReadOnly={!isEditing} />
-            </GridItem>
-            <GridItem colSpan={6}>
-              <FormControl label="Address" isReadOnly={!isEditing} />
-            </GridItem>
-          </Grid>
-          <Flex justifyContent={"flex-end"} mt={5} hidden={!isEditing}>
-            <Button label="Save" colorScheme="green" />
-          </Flex>
+          <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(submit)}>
+              <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+                <GridItem colSpan={6}>
+                  <FormControl
+                    label="ID No."
+                    type="text"
+                    name="idNo"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={6}>
+                  <FormControl
+                    label="Job Title"
+                    type="text"
+                    name="jobTitle"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={4}>
+                  <FormControl
+                    label="First Name"
+                    type="text"
+                    name="firstName"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={4}>
+                  <FormControl
+                    label="Middle Name"
+                    type="text"
+                    name="middleName"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={4}>
+                  <FormControl
+                    label="Last Name"
+                    type="text"
+                    name="lastName"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <FormControl
+                    label="Contact"
+                    type="text"
+                    name="contact"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={3}>
+                  <FormControl
+                    label="Email"
+                    type="text"
+                    name="email"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={6}>
+                  <FormControl
+                    label="Address"
+                    type="text"
+                    name="address"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={6}>
+                  <FormControl
+                    label="Password"
+                    type="text"
+                    name="password"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={6}>
+                  <FormControl
+                    label="Status"
+                    type="text"
+                    name="status"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={6}>
+                  <FormControl
+                    label="Department"
+                    type="text"
+                    name="department"
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+              </Grid>
+              <Flex justifyContent={"flex-end"} mt={5} hidden={!isEditing}>
+                <Button type="submit" label="Save" colorScheme="green" />
+              </Flex>
+            </form>
+          </FormProvider>
         </Card>
       </VStack>
     </Layout>
