@@ -10,7 +10,7 @@ import {
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import { createColumn } from "react-chakra-pagination";
 
-import { Layout, Table, Button } from "@/components";
+import { Layout, Table, Button, Dialog } from "@/components";
 import { Users as usersList } from "@/data";
 import { checkAuth } from "@/lib";
 
@@ -19,10 +19,18 @@ import UserModal from "./user-modal";
 export default function Users() {
   const [page, setPage] = useState(0);
 
+  const [deleteUser, setDeleteUser] = useState<any>(null);
+
   const {
     isOpen: isOpenAddUser,
     onOpen: onOpenAddUser,
     onClose: onCloseAddUser,
+  } = useDisclosure();
+
+  const {
+    isOpen: isConfirmDeleteOpen,
+    onOpen: onConfirmDeleteOpen,
+    onClose: onConfirmDeleteClose,
   } = useDisclosure();
 
   const tableData = usersList.map((user) => ({
@@ -38,7 +46,14 @@ export default function Users() {
         <ChakraButton colorScheme="yellow" size="sm" onClick={onOpenAddUser}>
           <BsPencilFill />
         </ChakraButton>
-        <ChakraButton colorScheme="red" size="sm">
+        <ChakraButton
+          colorScheme="red"
+          size="sm"
+          onClick={() => {
+            setDeleteUser(user);
+            onConfirmDeleteOpen();
+          }}
+        >
           <BsFillTrash3Fill />
         </ChakraButton>
       </Flex>
@@ -91,6 +106,18 @@ export default function Users() {
 
   return (
     <Layout>
+      <Dialog
+        isOpen={isConfirmDeleteOpen}
+        onClose={onConfirmDeleteClose}
+        title="Delete User"
+        color="red"
+        message={`Are you sure you want to delete this user (${deleteUser?.name})?`} //Add user name
+        cb={() => {
+          console.log("user deleted");
+          onConfirmDeleteClose();
+          setDeleteUser(null);
+        }}
+      />
       <UserModal isOpen={isOpenAddUser} onClose={onCloseAddUser} />
       <VStack w={"100%"}>
         <Table
