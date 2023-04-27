@@ -1,5 +1,5 @@
 //This component must be only used with `Form Provider`
-
+import { forwardRef } from "react";
 import {
   FormControl as ChakraFormControl,
   FormControlProps,
@@ -8,11 +8,12 @@ import {
   Input,
   Select,
 } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
+import DatePicker from "react-datepicker";
+import { useFormContext, Controller } from "react-hook-form";
 
 type Props = {
   name: string;
-  type: "text" | "password" | "select";
+  type: "text" | "password" | "select" | "datepicker";
   options?: { value: string; label: string }[];
 } & FormControlProps;
 
@@ -30,13 +31,21 @@ export function FormControl(props: Props) {
   const {
     register,
     formState: { errors },
+    control,
   } = useFormContext();
 
-  let control = null;
+  let controlInput = null;
+
+  // eslint-disable-next-line react/display-name
+  const CustomInput = forwardRef(
+    ({ value, onClick, onChange }: any, ref: any) => (
+      <Input onClick={onClick} value={value} onChange={onChange} ref={ref} />
+    )
+  );
 
   switch (type) {
     case "select":
-      control = (
+      controlInput = (
         <Select
           placeholder="Select option"
           {...register(name, {
@@ -52,8 +61,24 @@ export function FormControl(props: Props) {
         </Select>
       );
       break;
+    case "datepicker":
+      controlInput = (
+        <Controller
+          control={control}
+          name={name}
+          render={({ field }) => (
+            <DatePicker
+              placeholderText="Select date"
+              onChange={(date) => field.onChange(date)}
+              selected={field.value}
+              customInput={<CustomInput />}
+            />
+          )}
+        />
+      );
+      break;
     default:
-      control = (
+      controlInput = (
         <Input
           type={type}
           {...register(name, {
@@ -72,7 +97,7 @@ export function FormControl(props: Props) {
       mb={2}
     >
       <FormLabel fontSize="sm">{label}</FormLabel>
-      {control}
+      {controlInput}
       <FormErrorMessage>{`${label} is required.`}</FormErrorMessage>
     </ChakraFormControl>
   );

@@ -1,7 +1,6 @@
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
 import { FormControl, Modal, Button } from "@/components";
-
 type Props = {} & UseDisclosureProps;
 
 export default function ChangePasswordModal(props: Props) {
