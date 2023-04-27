@@ -11,6 +11,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Layout, FormControl, Button, Card } from "@/components";
 import ChangePasswordModal from "./change-password-modal";
 import { checkAuth } from "@/lib";
+import { DepartmentOptions } from "@/data";
 
 export default function AccountDetails() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -133,8 +134,9 @@ export default function AccountDetails() {
                 <GridItem colSpan={6}>
                   <FormControl
                     label="Department"
-                    type="text"
+                    type="select"
                     name="department"
+                    options={DepartmentOptions}
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
