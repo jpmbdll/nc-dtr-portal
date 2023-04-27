@@ -40,10 +40,6 @@ export function Table(props: Props) {
           color: "gray.700",
           fontWeight: "bold",
         },
-        "&  table  tr  td:last-child": {
-          px: 0,
-          w: 24,
-        },
       }}
     >
       <ChakraTable

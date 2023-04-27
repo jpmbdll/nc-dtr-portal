@@ -103,7 +103,7 @@ export default function Users() {
             <Box>
               <Button
                 label="Add User"
-                colorScheme="green"
+                colorScheme="twitter"
                 size="sm"
                 onClick={onOpenAddUser}
               />

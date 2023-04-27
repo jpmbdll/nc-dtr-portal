@@ -39,7 +39,7 @@ export default function AccountDetails() {
               />
               <Button
                 label="Change Password"
-                colorScheme="green"
+                colorScheme="twitter"
                 size="sm"
                 onClick={onOpen}
               />
@@ -140,7 +140,7 @@ export default function AccountDetails() {
                 </GridItem>
               </Grid>
               <Flex justifyContent={"flex-end"} mt={5} hidden={!isEditing}>
-                <Button type="submit" label="Save" colorScheme="green" />
+                <Button type="submit" label="Save" colorScheme="twitter" />
               </Flex>
             </form>
           </FormProvider>

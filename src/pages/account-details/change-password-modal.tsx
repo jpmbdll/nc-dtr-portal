@@ -21,7 +21,7 @@ export default function ChangePasswordModal(props: Props) {
       actions={
         <Button
           mr={3}
-          colorScheme="green"
+          colorScheme="twitter"
           onClick={handleSubmit(submit)}
           label="Change Password"
         />
