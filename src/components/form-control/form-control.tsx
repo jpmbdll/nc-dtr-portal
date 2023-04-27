@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { useFormContext, Controller } from "react-hook-form";
+import "react-datepicker/dist/react-datepicker.css";
 
 type Props = {
   name: string;
@@ -71,6 +72,7 @@ export function FormControl(props: Props) {
               placeholderText="Select date"
               onChange={(date) => field.onChange(date)}
               selected={field.value}
+              showPopperArrow={false}
               customInput={<CustomInput />}
             />
           )}
