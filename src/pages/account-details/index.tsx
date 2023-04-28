@@ -47,13 +47,15 @@ export default function AccountDetails() {
           title={"Account Details"}
           actions={
             <Box>
-              <Button
-                label="Edit"
-                colorScheme="yellow"
-                size="sm"
-                mr={3}
-                onClick={() => setIsEditing((state) => !state)}
-              />
+              {!isEditing && (
+                <Button
+                  label="Edit"
+                  colorScheme="yellow"
+                  size="sm"
+                  mr={3}
+                  onClick={() => setIsEditing((state) => !state)}
+                />
+              )}
               <Button
                 label="Change Password"
                 colorScheme="twitter"
@@ -128,7 +130,7 @@ export default function AccountDetails() {
                 <GridItem colSpan={4}>
                   <FormControl
                     label="Password"
-                    type="text"
+                    type="password"
                     name="password"
                     isReadOnly={!isEditing}
                   />
@@ -160,8 +162,18 @@ export default function AccountDetails() {
                   />
                 </GridItem>
               </Grid>
-              <Flex justifyContent={"flex-end"} mt={5} hidden={!isEditing}>
+              <Flex
+                gap={3}
+                justifyContent={"flex-end"}
+                mt={5}
+                hidden={!isEditing}
+              >
                 <Button type="submit" label="Save" colorScheme="twitter" />
+                <Button
+                  label="Cancel"
+                  colorScheme="gray"
+                  onClick={() => setIsEditing(false)}
+                />
               </Flex>
             </form>
           </FormProvider>

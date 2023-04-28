@@ -132,7 +132,7 @@ export default function UserModal(props: Props) {
                 <FormControl type="text" name="email" label="Email" />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="password" label="Password" />
+                <FormControl type="password" name="password" label="Password" />
               </GridItem>
               <GridItem colSpan={6}>
                 <FormControl

@@ -1,5 +1,5 @@
 //This component must be only used with `Form Provider`
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
 import {
   FormControl as ChakraFormControl,
   FormControlProps,
@@ -7,10 +7,14 @@ import {
   FormErrorMessage,
   Input,
   Select,
+  InputGroup,
+  Box,
+  InputRightElement,
 } from "@chakra-ui/react";
 import DatePicker from "react-datepicker";
 import { useFormContext, Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
+import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 
 type Props = {
   name: string;
@@ -30,6 +34,9 @@ export function FormControl(props: Props) {
     isReadOnly = false,
     isTimepicker = false,
   } = props;
+
+  const [show, setShow] = useState(false);
+  const handleClick = () => setShow(!show);
 
   const {
     register,
@@ -84,6 +91,28 @@ export function FormControl(props: Props) {
             />
           )}
         />
+      );
+      break;
+    case "password":
+      controlInput = (
+        <InputGroup>
+          <Input
+            type={show ? "text" : "password"}
+            {...register(name, {
+              required: isRequired,
+            })}
+            disabled={isReadOnly}
+          />
+          <InputRightElement width="3rem">
+            <Box onClick={handleClick}>
+              {show ? (
+                <AiOutlineEyeInvisible size="20px" />
+              ) : (
+                <AiOutlineEye size="20px" />
+              )}
+            </Box>
+          </InputRightElement>
+        </InputGroup>
       );
       break;
     default:
