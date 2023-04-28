@@ -15,6 +15,8 @@ import DatePicker from "react-datepicker";
 import { useFormContext, Controller } from "react-hook-form";
 import "react-datepicker/dist/react-datepicker.css";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
+import { MdDateRange } from "react-icons/md";
+import { BiTime } from "react-icons/bi";
 
 type Props = {
   name: string;
@@ -48,8 +50,19 @@ export function FormControl(props: Props) {
 
   // eslint-disable-next-line react/display-name
   const CustomInput = forwardRef(
-    ({ value, onClick, onChange }: any, ref: any) => (
-      <Input onClick={onClick} value={value} onChange={onChange} ref={ref} />
+    ({ value, onClick, onChange, isTimepicker }: any, ref: any) => (
+      <InputGroup onClick={onClick}>
+        <Input value={value} onChange={onChange} ref={ref} />
+        <InputRightElement width="3rem">
+          <Box onClick={handleClick}>
+            {isTimepicker ? (
+              <BiTime size="20px" />
+            ) : (
+              <MdDateRange size="20px" />
+            )}
+          </Box>
+        </InputRightElement>
+      </InputGroup>
     )
   );
 
@@ -87,7 +100,7 @@ export function FormControl(props: Props) {
               timeIntervals={10}
               timeCaption=""
               dateFormat="h:mm aa"
-              customInput={<CustomInput />}
+              customInput={<CustomInput isTimepicker />}
             />
           )}
         />
