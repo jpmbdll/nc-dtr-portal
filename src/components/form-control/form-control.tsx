@@ -16,6 +16,7 @@ type Props = {
   name: string;
   type: "text" | "password" | "select" | "datepicker";
   options?: { value: string; label: string }[];
+  isTimepicker?: boolean;
 } & FormControlProps;
 
 export function FormControl(props: Props) {
@@ -27,6 +28,7 @@ export function FormControl(props: Props) {
     isDisabled = false,
     options = [],
     isReadOnly = false,
+    isTimepicker = false,
   } = props;
 
   const {
@@ -48,7 +50,7 @@ export function FormControl(props: Props) {
     case "select":
       controlInput = (
         <Select
-          placeholder="Select option"
+          placeholder=""
           {...register(name, {
             required: isRequired,
           })}
@@ -73,6 +75,11 @@ export function FormControl(props: Props) {
               onChange={(date) => field.onChange(date)}
               selected={field.value}
               showPopperArrow={false}
+              showTimeSelect={isTimepicker}
+              showTimeSelectOnly={isTimepicker}
+              timeIntervals={10}
+              timeCaption=""
+              dateFormat="h:mm aa"
               customInput={<CustomInput />}
             />
           )}

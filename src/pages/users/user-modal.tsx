@@ -9,7 +9,12 @@ import {
 import { FormControl, Modal, Button, Table } from "@/components";
 import { createColumn } from "react-chakra-pagination";
 import { useForm, FormProvider } from "react-hook-form";
-import { UserSchedule } from "@/data";
+import {
+  JobtitleOptions,
+  UserSchedule,
+  StatusOptions,
+  DepartmentOptions,
+} from "@/data";
 import ScheduleModal from "./schedule-modal";
 
 type Props = UseDisclosureProps;
@@ -17,7 +22,21 @@ type Props = UseDisclosureProps;
 export default function UserModal(props: Props) {
   const { isOpen = false, onClose = () => {} } = props;
   const [page, setPage] = useState(0);
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      idNo: "",
+      jobTitle: null,
+      firstName: null,
+      middleName: "",
+      lastName: "",
+      contact: "",
+      email: "",
+      status: null,
+      department: null,
+      address: "",
+      password: "",
+    },
+  });
   const { handleSubmit } = methods;
   const {
     isOpen: isAddScheduleOpen,
@@ -27,6 +46,8 @@ export default function UserModal(props: Props) {
 
   const submit = async (data: any) => {
     console.log(data);
+    methods.reset();
+    onClose();
   };
 
   const tableData = UserSchedule.map((sched) => ({
@@ -62,7 +83,10 @@ export default function UserModal(props: Props) {
       <ScheduleModal isOpen={isAddScheduleOpen} onClose={onAddScheduleClose} />
       <Modal
         isOpen={isOpen}
-        onClose={onClose}
+        onClose={() => {
+          methods.reset();
+          onClose();
+        }}
         title="Add User"
         size="6xl"
         actions={
@@ -81,7 +105,12 @@ export default function UserModal(props: Props) {
                 <FormControl type="text" name="idNo" label="ID No." />
               </GridItem>
               <GridItem colSpan={6}>
-                <FormControl type="text" name="jobTitle" label="Job Title" />
+                <FormControl
+                  type="select"
+                  name="jobTitle"
+                  label="Job Title"
+                  options={JobtitleOptions}
+                />
               </GridItem>
               <GridItem colSpan={4}>
                 <FormControl type="text" name="firstName" label="First Name" />
@@ -96,23 +125,33 @@ export default function UserModal(props: Props) {
               <GridItem colSpan={4}>
                 <FormControl type="text" name="lastName" label="Last Name" />
               </GridItem>
-              <GridItem colSpan={3}>
+              <GridItem colSpan={4}>
                 <FormControl type="text" name="contact" label="Contact" />
               </GridItem>
-              <GridItem colSpan={3}>
+              <GridItem colSpan={4}>
                 <FormControl type="text" name="email" label="Email" />
               </GridItem>
-              <GridItem colSpan={6}>
-                <FormControl type="text" name="address" label="Address" />
-              </GridItem>
-              <GridItem colSpan={6}>
+              <GridItem colSpan={4}>
                 <FormControl type="text" name="password" label="Password" />
               </GridItem>
               <GridItem colSpan={6}>
-                <FormControl type="text" name="status" label="Status" />
+                <FormControl
+                  type="select"
+                  name="status"
+                  label="Status"
+                  options={StatusOptions}
+                />
               </GridItem>
               <GridItem colSpan={6}>
-                <FormControl type="text" name="department" label="Department" />
+                <FormControl
+                  type="select"
+                  name="department"
+                  label="Department"
+                  options={DepartmentOptions}
+                />
+              </GridItem>
+              <GridItem colSpan={12}>
+                <FormControl type="text" name="address" label="Address" />
               </GridItem>
             </FormProvider>
           </Grid>

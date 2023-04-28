@@ -11,16 +11,32 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Layout, FormControl, Button, Card } from "@/components";
 import ChangePasswordModal from "./change-password-modal";
 import { checkAuth } from "@/lib";
-import { DepartmentOptions } from "@/data";
+import { JobtitleOptions, StatusOptions, DepartmentOptions } from "@/data";
 
 export default function AccountDetails() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      idNo: "",
+      jobTitle: null,
+      firstName: null,
+      middleName: "",
+      lastName: "",
+      contact: "",
+      email: "",
+      status: null,
+      department: null,
+      address: "",
+      password: "",
+    },
+  });
   const { handleSubmit } = methods;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const submit = async (data: any) => {
     console.log(data);
+    setIsEditing(false);
+    onClose();
   };
 
   return (
@@ -62,8 +78,9 @@ export default function AccountDetails() {
                 <GridItem colSpan={6}>
                   <FormControl
                     label="Job Title"
-                    type="text"
+                    type="select"
                     name="jobTitle"
+                    options={JobtitleOptions}
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
@@ -91,7 +108,7 @@ export default function AccountDetails() {
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
-                <GridItem colSpan={3}>
+                <GridItem colSpan={4}>
                   <FormControl
                     label="Contact"
                     type="text"
@@ -99,7 +116,7 @@ export default function AccountDetails() {
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
-                <GridItem colSpan={3}>
+                <GridItem colSpan={4}>
                   <FormControl
                     label="Email"
                     type="text"
@@ -107,15 +124,8 @@ export default function AccountDetails() {
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
-                <GridItem colSpan={6}>
-                  <FormControl
-                    label="Address"
-                    type="text"
-                    name="address"
-                    isReadOnly={!isEditing}
-                  />
-                </GridItem>
-                <GridItem colSpan={6}>
+
+                <GridItem colSpan={4}>
                   <FormControl
                     label="Password"
                     type="text"
@@ -126,8 +136,9 @@ export default function AccountDetails() {
                 <GridItem colSpan={6}>
                   <FormControl
                     label="Status"
-                    type="text"
+                    type="select"
                     name="status"
+                    options={StatusOptions}
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
@@ -137,6 +148,14 @@ export default function AccountDetails() {
                     type="select"
                     name="department"
                     options={DepartmentOptions}
+                    isReadOnly={!isEditing}
+                  />
+                </GridItem>
+                <GridItem colSpan={12}>
+                  <FormControl
+                    label="Address"
+                    type="text"
+                    name="address"
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
