@@ -5,16 +5,27 @@ type Props = {} & UseDisclosureProps;
 
 export default function ChangePasswordModal(props: Props) {
   const { isOpen = false, onClose = () => {} } = props;
-  const methods = useForm();
+  const methods = useForm({
+    defaultValues: {
+      oldPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+  });
   const { handleSubmit } = methods;
 
   const submit = async (data: any) => {
     console.log(data);
+    methods.reset();
+    onClose();
   };
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        methods.reset();
+        onClose();
+      }}
       title="Change Password"
       size="lg"
       actions={
@@ -29,16 +40,27 @@ export default function ChangePasswordModal(props: Props) {
       <Grid templateColumns="repeat(1, 1fr)" gap={4}>
         <FormProvider {...methods}>
           <GridItem colSpan={1}>
-            <FormControl label="Old Password" type="text" name="oldPassword" />
+            <FormControl
+              label="Old Password"
+              type="password"
+              name="oldPassword"
+              isRequired
+            />
           </GridItem>
           <GridItem colSpan={1}>
-            <FormControl label="New Password" type="text" name="newPassword" />
+            <FormControl
+              label="New Password"
+              type="password"
+              name="newPassword"
+              isRequired
+            />
           </GridItem>
           <GridItem colSpan={1}>
             <FormControl
               label="Confirm Password"
-              type="text"
+              type="password"
               name="confirmPassword"
+              isRequired
             />
           </GridItem>
         </FormProvider>
