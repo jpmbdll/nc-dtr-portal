@@ -53,8 +53,8 @@ export function SideNav() {
                 fontWeight="bold"
                 my={3}
                 color={isActivated ? "white" : "gray.700"}
-                bg={isActivated ? "blue.400" : "white"}
-                sx={{ _hover: { bg: "blue.400", color: "white" } }}
+                bg={isActivated ? "#1DA1F2" : "white"}
+                sx={{ _hover: { bg: "#1DA1F2", color: "white" } }}
               >
                 <Text display="flex" gap={4}>
                   {n.icon} {n.label}
