@@ -18,25 +18,27 @@ import {
 } from "@/data";
 import ScheduleModal from "./schedule-modal";
 
-type Props = UseDisclosureProps;
+type Props = { selected: {}; setSelected: any } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
-  const { isOpen = false, onClose = () => {} } = props;
+  const { isOpen = false, onClose = () => {}, selected, setSelected } = props;
   const [page, setPage] = useState(0);
   const methods = useForm({
-    defaultValues: {
-      idNo: "",
-      jobTitle: null,
-      firstName: null,
-      middleName: "",
-      lastName: "",
-      contact: "",
-      email: "",
-      status: null,
-      department: null,
-      address: "",
-      password: "",
-    },
+    defaultValues: selected
+      ? selected
+      : {
+          idNo: "",
+          jobTitle: null,
+          firstName: null,
+          middleName: "",
+          lastName: "",
+          contact: "",
+          email: "",
+          status: null,
+          department: null,
+          address: "",
+          password: "",
+        },
   });
   const { handleSubmit } = methods;
   const {
@@ -48,6 +50,7 @@ export default function UserModal(props: Props) {
   const submit = async (data: any) => {
     console.log(data);
     methods.reset();
+    setSelected(null);
     onClose();
     toast.success("User added successfully!");
   };
@@ -87,16 +90,17 @@ export default function UserModal(props: Props) {
         isOpen={isOpen}
         onClose={() => {
           methods.reset();
+          setSelected(null);
           onClose();
         }}
         title="Add User"
         size="6xl"
         actions={
           <Button
-            colorScheme="twitter"
+            colorScheme={selected ? "yellow" : "twitter"}
             mr={3}
             onClick={handleSubmit(submit)}
-            label="Save"
+            label={selected ? "Edit" : "Add"}
           />
         }
       >

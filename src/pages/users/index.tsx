@@ -15,11 +15,12 @@ import { Users as usersList } from "@/data";
 import { checkAuth } from "@/lib";
 
 import UserModal from "./user-modal";
+import { toast } from "react-toastify";
 
 export default function Users() {
   const [page, setPage] = useState(0);
 
-  const [deleteUser, setDeleteUser] = useState<any>(null);
+  const [selected, setSelected] = useState<any>(null);
 
   const {
     isOpen: isOpenAddUser,
@@ -43,14 +44,21 @@ export default function Users() {
     status: user.status,
     action: (
       <Flex justifyContent={"space-between"}>
-        <ChakraButton colorScheme="yellow" size="sm" onClick={onOpenAddUser}>
+        <ChakraButton
+          colorScheme="yellow"
+          size="sm"
+          onClick={() => {
+            setSelected(user);
+            onOpenAddUser();
+          }}
+        >
           <BsPencilFill />
         </ChakraButton>
         <ChakraButton
           colorScheme="red"
           size="sm"
           onClick={() => {
-            setDeleteUser(user);
+            setSelected(user);
             onConfirmDeleteOpen();
           }}
         >
@@ -111,14 +119,24 @@ export default function Users() {
         onClose={onConfirmDeleteClose}
         title="Delete User"
         color="red"
-        message={`Are you sure you want to delete this user (${deleteUser?.name})?`} //Add user name
-        cb={() => {
-          console.log("user deleted");
+        message={`Are you sure you want to delete this user (${selected?.name})?`} //Add user name
+        onCloseCb={() => {
+          setSelected(null);
+        }}
+        onSaveCb={() => {
+          toast.success("User has been deleted successfully!");
           onConfirmDeleteClose();
-          setDeleteUser(null);
+          setSelected(null);
         }}
       />
-      <UserModal isOpen={isOpenAddUser} onClose={onCloseAddUser} />
+      {isOpenAddUser && (
+        <UserModal
+          isOpen={isOpenAddUser}
+          onClose={onCloseAddUser}
+          selected={selected}
+          setSelected={setSelected}
+        />
+      )}
       <VStack w={"100%"}>
         <Table
           title="User Management"

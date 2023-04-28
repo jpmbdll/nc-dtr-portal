@@ -17,7 +17,8 @@ type Props = {
   title: string;
   message: string;
   color?: "green" | "red";
-  cb: any;
+  onSaveCb: any;
+  onCloseCb: any;
 } & UseDisclosureProps;
 
 export function Dialog(props: Props) {
@@ -27,12 +28,20 @@ export function Dialog(props: Props) {
     color = "green",
     isOpen = false,
     onClose = () => {},
-    cb,
+    onSaveCb,
+    onCloseCb,
     ...rest
   } = props;
 
   return (
-    <ChakraModal isOpen={isOpen} onClose={onClose} {...rest}>
+    <ChakraModal
+      isOpen={isOpen}
+      onClose={() => {
+        onCloseCb();
+        onClose();
+      }}
+      {...rest}
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{title}</ModalHeader>
@@ -43,8 +52,15 @@ export function Dialog(props: Props) {
         </ModalBody>
         <ModalFooter>
           <HStack spacing={5}>
-            <Button label="Yes" colorScheme={color} onClick={cb} />
-            <Button label="No" colorScheme="gray" onClick={onClose} />
+            <Button label="Yes" colorScheme={color} onClick={onSaveCb} />
+            <Button
+              label="No"
+              colorScheme="gray"
+              onClick={() => {
+                onCloseCb();
+                onClose();
+              }}
+            />
           </HStack>
         </ModalFooter>
       </ModalContent>
