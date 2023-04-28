@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode, forwardRef } from "react";
 import { Box } from "@chakra-ui/react";
 import { Table as ChakraTable } from "react-chakra-pagination";
 import { Card } from "@/components";
@@ -14,7 +14,8 @@ type Props = {
   itemsPerPage?: number;
 };
 
-export function Table(props: Props) {
+// eslint-disable-next-line react/display-name
+export const Table = forwardRef((props: Props, ref: any) => {
   const {
     title,
     actions,
@@ -41,6 +42,7 @@ export function Table(props: Props) {
           fontWeight: "bold",
         },
       }}
+      ref={ref}
     >
       <ChakraTable
         itemsPerPage={itemsPerPage}
@@ -56,4 +58,4 @@ export function Table(props: Props) {
       />
     </Card>
   );
-}
+});

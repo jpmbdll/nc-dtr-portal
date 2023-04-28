@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import ReactToPrint from "react-to-print";
 import { VStack, Box } from "@chakra-ui/react";
 import { Layout, Table, Button } from "@/components";
 import { Reports as reportsList } from "@/data";
@@ -67,10 +68,13 @@ export default function Reports() {
     }),
   ];
 
+  const printRef: any = useRef();
+
   return (
     <Layout>
       <VStack w="100%">
         <Table
+          ref={printRef}
           title="DTR Reports"
           data={tableData}
           list={reportsList}
@@ -80,7 +84,10 @@ export default function Reports() {
           setPage={setPage}
           actions={
             <Box>
-              <Button label="Print" colorScheme="twitter" size="sm" mr={3} />
+              <ReactToPrint
+                trigger={() => <button>Print this out!</button>}
+                content={() => printRef.current}
+              />
             </Box>
           }
         />
