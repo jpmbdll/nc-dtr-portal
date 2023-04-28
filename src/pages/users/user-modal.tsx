@@ -1,4 +1,5 @@
 import { Fragment, useState } from "react";
+import { toast } from "react-toastify";
 import {
   UseDisclosureProps,
   Grid,
@@ -48,6 +49,7 @@ export default function UserModal(props: Props) {
     console.log(data);
     methods.reset();
     onClose();
+    toast.success("User added successfully!");
   };
 
   const tableData = UserSchedule.map((sched) => ({

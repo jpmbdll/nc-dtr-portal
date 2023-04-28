@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
 import { FormControl, Modal, Button } from "@/components";
+import { toast } from "react-toastify";
 
 type Props = UseDisclosureProps;
 
@@ -20,6 +21,7 @@ export default function ScheduleModal(props: Props) {
   const submit = async (data: any) => {
     console.log(data);
     methods.reset();
+    toast.success("Schedule added successfully!");
     onClose();
   };
 

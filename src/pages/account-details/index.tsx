@@ -12,6 +12,7 @@ import { Layout, FormControl, Button, Card } from "@/components";
 import ChangePasswordModal from "./change-password-modal";
 import { checkAuth } from "@/lib";
 import { JobtitleOptions, StatusOptions, DepartmentOptions } from "@/data";
+import { toast } from "react-toastify";
 
 export default function AccountDetails() {
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -36,6 +37,7 @@ export default function AccountDetails() {
   const submit = async (data: any) => {
     console.log(data);
     setIsEditing(false);
+    toast.success("Account details saved successfully!");
     onClose();
   };
 
