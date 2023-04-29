@@ -23,6 +23,7 @@ type Props = {
   type: "text" | "password" | "select" | "datepicker";
   options?: { value: string; label: string }[];
   isTimepicker?: boolean;
+  validator?: any;
 } & FormControlProps;
 
 export function FormControl(props: Props) {
@@ -35,6 +36,7 @@ export function FormControl(props: Props) {
     options = [],
     isReadOnly = false,
     isTimepicker = false,
+    validator,
   } = props;
 
   const [show, setShow] = useState(false);
@@ -133,7 +135,8 @@ export function FormControl(props: Props) {
         <Input
           type={type}
           {...register(name, {
-            required: isRequired,
+            required: isRequired ? `${label} is required.` : false,
+            validate: validator,
           })}
           disabled={isReadOnly}
         />
@@ -149,7 +152,9 @@ export function FormControl(props: Props) {
     >
       <FormLabel fontSize="sm">{label}</FormLabel>
       {controlInput}
-      <FormErrorMessage>{`${label} is required.`}</FormErrorMessage>
+      <FormErrorMessage>
+        <>{errors[name]?.message}</>
+      </FormErrorMessage>
     </ChakraFormControl>
   );
 }

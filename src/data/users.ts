@@ -1,6 +1,6 @@
 export const Users = [
   {
-    no: 1,
+    no: "2023-NT-0001",
     role: "Teacher",
     name: "Joshua Badillo",
     email: "jpmbdll@gmail.com",
@@ -9,7 +9,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 2,
+    no: "2023-NT-0002",
     role: "Teacher",
     name: "Joshua Badillo",
     email: "jpmbdll@gmail.com",
@@ -18,7 +18,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 3,
+    no: "2023-NT-0003",
     role: "Admin",
     name: "Steph Curry",
     email: "curry@gmail.com",
@@ -27,7 +27,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 4,
+    no: "2023-NT-0004",
     role: "Accounting Staff",
     name: "Kevin Durant",
     email: "kd@gmail.com",
@@ -36,7 +36,7 @@ export const Users = [
     status: "inactive",
   },
   {
-    no: 5,
+    no: "2023-NT-0005",
     role: "Faculty Member",
     name: "Lebron James",
     email: "lebron@gmail.com",
@@ -45,7 +45,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 6,
+    no: "2023-NT-0006",
     role: "Teacher",
     name: "Joshua Badillo",
     email: "jpmbdll@gmail.com",
@@ -54,7 +54,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 7,
+    no: "2023-NT-0007",
     role: "Teacher",
     name: "Joshua Badillo",
     email: "jpmbdll@gmail.com",
@@ -63,7 +63,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 8,
+    no: "2023-NT-0008",
     role: "Admin",
     name: "Steph Curry",
     email: "curry@gmail.com",
@@ -72,7 +72,7 @@ export const Users = [
     status: "active",
   },
   {
-    no: 9,
+    no: "2023-NT-0009",
     role: "Accounting Staff",
     name: "Kevin Durant",
     email: "kd@gmail.com",
@@ -81,7 +81,7 @@ export const Users = [
     status: "inactive",
   },
   {
-    no: 10,
+    no: "2023-NT-0010",
     role: "Faculty Member",
     name: "Lebron James",
     email: "lebron@gmail.com",

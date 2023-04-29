@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import {
   UseDisclosureProps,
@@ -18,15 +18,21 @@ import {
 } from "@/data";
 import ScheduleModal from "./schedule-modal";
 
-type Props = { selected: {}; setSelected: any } & UseDisclosureProps;
+type Props = { selected: {}; setSelected: any; list: any } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
-  const { isOpen = false, onClose = () => {}, selected, setSelected } = props;
+  const {
+    isOpen = false,
+    onClose = () => {},
+    selected,
+    setSelected,
+    list,
+  } = props;
   const [page, setPage] = useState(0);
   const methods = useForm({
     defaultValues: selected
       ? selected
-      : {
+      : ({
           idNo: "",
           jobTitle: null,
           firstName: null,
@@ -38,7 +44,7 @@ export default function UserModal(props: Props) {
           department: null,
           address: "",
           password: "",
-        },
+        } as any),
   });
   const { handleSubmit } = methods;
   const {
@@ -83,6 +89,16 @@ export default function UserModal(props: Props) {
     }),
   ];
 
+  const validateIdNo = (value: any) => {
+    if (!/^\d{4}-[A-Z]{2}-\d{4}$/.test(value)) {
+      return "ID No. has invalid format.";
+    } else {
+      if (list.find((l: any) => l.no === value)) {
+        return "ID No. is already existing.";
+      }
+    }
+  };
+
   return (
     <Fragment>
       <ScheduleModal isOpen={isAddScheduleOpen} onClose={onAddScheduleClose} />
@@ -108,7 +124,13 @@ export default function UserModal(props: Props) {
           <Grid templateColumns="repeat(12, 1fr)" gap={4} w="100%">
             <FormProvider {...methods}>
               <GridItem colSpan={6}>
-                <FormControl type="text" name="idNo" label="ID No." />
+                <FormControl
+                  type="text"
+                  name="idNo"
+                  label="ID No."
+                  validator={validateIdNo}
+                  isRequired={true}
+                />
               </GridItem>
               <GridItem colSpan={6}>
                 <FormControl

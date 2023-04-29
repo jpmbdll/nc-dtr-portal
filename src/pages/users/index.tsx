@@ -148,6 +148,7 @@ export default function Users() {
           onClose={onCloseAddUser}
           selected={selected}
           setSelected={setSelected}
+          list={usersList}
         />
       )}
       <VStack w={"100%"}>
