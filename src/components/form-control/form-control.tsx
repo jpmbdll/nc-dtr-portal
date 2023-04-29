@@ -99,8 +99,8 @@ export function FormControl(props: Props) {
               showTimeSelectOnly={isTimepicker}
               timeIntervals={10}
               timeCaption=""
-              dateFormat="h:mm aa"
-              customInput={<CustomInput isTimepicker />}
+              dateFormat={isTimepicker ? "h:mm aa" : "MM/dd/yyyy"}
+              customInput={<CustomInput isTimepicker={isTimepicker} />}
             />
           )}
         />

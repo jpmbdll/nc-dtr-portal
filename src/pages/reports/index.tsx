@@ -1,14 +1,28 @@
 import { useState, useRef } from "react";
 import ReactToPrint from "react-to-print";
-import { VStack, Box } from "@chakra-ui/react";
-import { Layout, Table, Button } from "@/components";
+import { VStack, Box, Flex, Card } from "@chakra-ui/react";
+import { Layout, Table, Button, FormControl } from "@/components";
 import { Reports as reportsList } from "@/data";
 import { checkAuth } from "@/lib";
+import { FormProvider, useForm } from "react-hook-form";
 
 import { createColumn } from "react-chakra-pagination";
 
 export default function Reports() {
   const [page, setPage] = useState(0);
+
+  const methods = useForm({
+    defaultValues: {
+      name: "",
+      from: "",
+      to: "",
+    },
+  });
+
+  const submit = async (data: any) => {
+    console.log(data);
+    //Perform search
+  };
 
   const tableData = reportsList.map((report) => ({
     no: report.no,
@@ -73,6 +87,20 @@ export default function Reports() {
   return (
     <Layout>
       <VStack w="100%">
+        <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
+          <FormProvider {...methods}>
+            <FormControl label="Name" type="text" name="name" />
+            <FormControl label="From" type="datepicker" name="from" />
+            <FormControl label="To" type="datepicker" name="to" />
+            <Flex flexDirection="column-reverse" pb={2}>
+              <Button
+                label="Search"
+                colorScheme="green"
+                onClick={methods.handleSubmit(submit)}
+              />
+            </Flex>
+          </FormProvider>
+        </Card>
         <Table
           ref={printRef}
           title="DTR Reports"
@@ -85,7 +113,9 @@ export default function Reports() {
           actions={
             <Box>
               <ReactToPrint
-                trigger={() => <button>Print this out!</button>}
+                trigger={() => (
+                  <Button label="Print" colorScheme="twitter" size="sm" />
+                )}
                 content={() => printRef.current}
               />
             </Box>

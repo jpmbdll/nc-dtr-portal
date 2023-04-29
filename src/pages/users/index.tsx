@@ -6,11 +6,13 @@ import {
   useDisclosure,
   Badge,
   Box,
+  Card,
 } from "@chakra-ui/react";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import { createColumn } from "react-chakra-pagination";
+import { FormProvider, useForm } from "react-hook-form";
 
-import { Layout, Table, Button, Dialog } from "@/components";
+import { Layout, Table, Button, Dialog, FormControl } from "@/components";
 import { Users as usersList } from "@/data";
 import { checkAuth } from "@/lib";
 
@@ -21,6 +23,17 @@ export default function Users() {
   const [page, setPage] = useState(0);
 
   const [selected, setSelected] = useState<any>(null);
+
+  const methods = useForm({
+    defaultValues: {
+      search: "",
+    },
+  });
+
+  const submit = async (data: any) => {
+    console.log(data);
+    //Perform search
+  };
 
   const {
     isOpen: isOpenAddUser,
@@ -138,6 +151,19 @@ export default function Users() {
         />
       )}
       <VStack w={"100%"}>
+        <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
+          <FormProvider {...methods}>
+            <FormControl label="" type="text" name="search" />
+
+            <Flex flexDirection="column-reverse" pb={2}>
+              <Button
+                label="Search"
+                colorScheme="green"
+                onClick={methods.handleSubmit(submit)}
+              />
+            </Flex>
+          </FormProvider>
+        </Card>
         <Table
           title="User Management"
           data={tableData}
