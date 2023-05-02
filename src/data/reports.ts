@@ -1,15 +1,17 @@
 export const Reports = [
   {
-    no: 1,
+    id: 1,
     date: "2023-04-03",
-    name: "Lebron James",
-    amArrival: "08:56 AM",
-    amDeparture: "11:47 AM",
-    pmArrival: "12:53 PM",
-    pmDeparture: "04:52 PM",
-    hours: 0,
+    name: "Lebron James", // papalitan ng userId
+    amArrival: "08:56 AM", //clockIn if(AM syan nagclockout dito mapupunta)
+    amDeparture: "11:47 AM",// clockOut if(AM syan nagclockout dito mapupunta)
+    pmArrival: "12:53 PM", //clockIn if(PM syan nagclockout dito mapupunta)
+    pmDeparture: "04:52 PM", // clockOut if(PM syan nagclockout dito mapupunta)
+    hours: 0, //totalHours
+    //need magadd ng underTime  (hours)
+    //Overtime (hours)
     minutes: 0,
-    total: 2,
+    total: 2, //ito na yung total hours
   },
   {
     no: 2,
