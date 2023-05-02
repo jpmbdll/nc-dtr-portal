@@ -57,13 +57,13 @@ export default function Reports(props: any) {
       no: report.no,
       date: report.date,
       name: report.name,
-      amArrival: report.amArrival,
-      amDeparture: report.amDeparture,
-      pmArrival: report.pmArrival,
-      pmDeparture: report.pmDeparture,
-      hours: report.hours,
-      minutes: report.minutes,
-      total: report.total,
+      amArrival: report.clockIn.toLocalTimeString().includes("AM") ? report.clockIn.toLocalTimeString() : '',
+      amDeparture: report.clockOut.toLocalTimeString().includes("AM") ? report.clockOut.toLocalTimeString() : '',
+      pmArrival: report.clockIn.toLocalTimeString().includes("PM") ? report.clockIn.toLocalTimeString() : '',
+      pmDeparture: report.clockOut.toLocalTimeString().includes("PM") ? report.clockOut.toLocalTimeString() : '',
+      hours: report.totalHours,
+      undertime: report.undertime,
+      total: report.totalHours,
     }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
@@ -101,9 +101,9 @@ export default function Reports(props: any) {
       cell: (info) => info.getValue(),
       header: "Hours",
     }),
-    columnHelper.accessor("minutes", {
+    columnHelper.accessor("undertime", {
       cell: (info) => info.getValue(),
-      header: "Minutes",
+      header: "Undertime",
     }),
     columnHelper.accessor("total", {
       cell: (info) => info.getValue(),
