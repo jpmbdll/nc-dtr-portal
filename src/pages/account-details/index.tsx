@@ -39,8 +39,6 @@ export default function AccountDetails(props: any) {
       });
       const responseData = await response.json();
 
-      console.log(responseData);
-
       toast.success("Account details saved successfully!");
     } catch (error) {
       toast.error("There was an error updating account details.");

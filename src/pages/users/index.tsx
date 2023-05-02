@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Flex,
   Button as ChakraButton,
@@ -13,7 +13,7 @@ import { createColumn } from "react-chakra-pagination";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
-import { Users as usersList } from "@/data";
+import { api_url } from "@/data";
 import { checkAuth } from "@/lib";
 
 import UserModal from "./user-modal";
@@ -22,6 +22,7 @@ import { toast } from "react-toastify";
 export default function Users(props: any) {
   const { user } = props;
   const [page, setPage] = useState(0);
+  const [users, setUsers] = useState<any>(null);
 
   const [selected, setSelected] = useState<any>(null);
 
@@ -48,44 +49,46 @@ export default function Users(props: any) {
     onClose: onConfirmDeleteClose,
   } = useDisclosure();
 
-  const tableData = usersList.map((user) => ({
-    no: user.no,
-    role: user.role,
-    name: user.name,
-    email: user.email,
-    contact: user.contact,
-    regDate: user.regDate,
-    status: user.status,
-    action: (
-      <Flex justifyContent={"space-between"}>
-        <ChakraButton
-          colorScheme="yellow"
-          size="sm"
-          onClick={() => {
-            setSelected(user);
-            onOpenAddUser();
-          }}
-        >
-          <BsPencilFill />
-        </ChakraButton>
-        <ChakraButton
-          colorScheme="red"
-          size="sm"
-          onClick={() => {
-            setSelected(user);
-            onConfirmDeleteOpen();
-          }}
-        >
-          <BsFillTrash3Fill />
-        </ChakraButton>
-      </Flex>
-    ),
-  }));
+  useEffect(() => {
+    const getUsers = async () => {
+      try {
+        const response = await fetch(`${api_url}/api/User`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const responseData = await response.json();
+
+        setUsers(responseData);
+      } catch (error) {
+        toast.error("There was an error fetching users.");
+      }
+    };
+
+    getUsers();
+
+    return () => {
+      // this now gets called when the component unmounts
+    };
+  }, []);
+
+  const tableData =
+    users ||
+    [].map((user: any) => ({
+      userNo: user.userNo,
+      role: user.role,
+      name: user.name,
+      email: user.email,
+      contact: user.contact,
+      regDate: user.regDate,
+      status: user.status,
+    }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
   const columns = [
-    columnHelper.accessor("no", {
+    columnHelper.accessor("userNo", {
       cell: (info) => info.getValue(),
       header: "No",
     }),
@@ -94,7 +97,10 @@ export default function Users(props: any) {
       header: "Role",
     }),
     columnHelper.accessor("name", {
-      cell: (info) => info.getValue(),
+      cell: (info) => {
+        const { fname, lname } = info.row.original;
+        return `${fname} ${lname}`;
+      },
       header: "Name",
     }),
     columnHelper.accessor("email", {
@@ -116,75 +122,118 @@ export default function Users(props: any) {
       },
       header: "Status",
     }),
-    columnHelper.accessor("regDate", {
+    columnHelper.accessor("createdAt", {
       cell: (info) => info.getValue(),
       header: "Reg. Date",
     }),
     columnHelper.accessor("action", {
-      cell: (info) => info.getValue(),
+      cell: (info) => (
+        <Flex justifyContent="space-between">
+          <ChakraButton
+            colorScheme="yellow"
+            size="sm"
+            onClick={() => {
+              setSelected(info.row.original);
+              onOpenAddUser();
+            }}
+          >
+            <BsPencilFill />
+          </ChakraButton>
+          <ChakraButton
+            colorScheme="red"
+            size="sm"
+            onClick={() => {
+              setSelected(info.row.original);
+              onConfirmDeleteOpen();
+            }}
+          >
+            <BsFillTrash3Fill />
+          </ChakraButton>
+        </Flex>
+      ),
       header: "",
     }),
   ];
 
   return (
     <Layout user={user}>
-      <Dialog
-        isOpen={isConfirmDeleteOpen}
-        onClose={onConfirmDeleteClose}
-        title="Delete User"
-        color="red"
-        message={`Are you sure you want to delete this user (${selected?.name})?`} //Add user name
-        onCloseCb={() => {
-          setSelected(null);
-        }}
-        onSaveCb={() => {
-          toast.success("User has been deleted successfully!");
-          onConfirmDeleteClose();
-          setSelected(null);
-        }}
-      />
-      {isOpenAddUser && (
-        <UserModal
-          isOpen={isOpenAddUser}
-          onClose={onCloseAddUser}
-          selected={selected}
-          setSelected={setSelected}
-          list={usersList}
-        />
-      )}
-      <VStack w={"100%"}>
-        <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
-          <FormProvider {...methods}>
-            <FormControl label="" type="text" name="search" />
+      {!users ? null : (
+        <>
+          <Dialog
+            isOpen={isConfirmDeleteOpen}
+            onClose={onConfirmDeleteClose}
+            title="Delete User"
+            color="red"
+            message={`Are you sure you want to delete this user (${selected?.fname} ${selected?.lname})?`} //Add user name
+            onCloseCb={() => {
+              setSelected(null);
+            }}
+            onSaveCb={async () => {
+              try {
+                const response = await fetch(
+                  `${api_url}/api/DeleteUser/${user.userName}`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                  }
+                );
+                const responseData = await response.json();
+                toast.success("User has been deleted successfully!");
+              } catch (error) {
+                toast.error("There was an error deleting this user.");
+              } finally {
+                onConfirmDeleteClose();
+                setSelected(null);
+              }
+            }}
+          />
+          {isOpenAddUser && (
+            <UserModal
+              isOpen={isOpenAddUser}
+              onClose={onCloseAddUser}
+              selected={selected}
+              setSelected={setSelected}
+              list={users}
+              user={user}
+            />
+          )}
+          <VStack w={"100%"}>
+            <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
+              <FormProvider {...methods}>
+                <FormControl label="" type="text" name="search" />
 
-            <Flex flexDirection="column-reverse" pb={2}>
-              <Button
-                label="Search"
-                colorScheme="green"
-                onClick={methods.handleSubmit(submit)}
-              />
-            </Flex>
-          </FormProvider>
-        </Card>
-        <Table
-          title="User Management"
-          data={tableData}
-          list={usersList}
-          page={page}
-          columns={columns}
-          actions={
-            <Box>
-              <Button
-                label="Add User"
-                colorScheme="twitter"
-                size="sm"
-                onClick={onOpenAddUser}
-              />
-            </Box>
-          }
-          setPage={setPage}
-        />
-      </VStack>
+                <Flex flexDirection="column-reverse" pb={2}>
+                  <Button
+                    label="Search"
+                    colorScheme="green"
+                    onClick={methods.handleSubmit(submit)}
+                  />
+                </Flex>
+              </FormProvider>
+            </Card>
+            <Table
+              title="User Management"
+              data={tableData}
+              list={users}
+              page={page}
+              columns={columns}
+              actions={
+                <Box>
+                  <Button
+                    label="Add User"
+                    colorScheme="twitter"
+                    size="sm"
+                    onClick={onOpenAddUser}
+                  />
+                </Box>
+              }
+              setPage={setPage}
+            />
+          </VStack>
+        </>
+      )}
     </Layout>
   );
 }
