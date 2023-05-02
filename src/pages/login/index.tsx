@@ -14,8 +14,8 @@ import {
   Link,
   Center,
 } from "@chakra-ui/react";
-
 import { FormControl, Button } from "@/components";
+import { api_url } from "@/data";
 
 export default function Login() {
   const methods = useForm();
@@ -24,7 +24,7 @@ export default function Login() {
 
   const submit = async (data: any) => {
     try {
-      const response = await fetch("/api/auth", {
+      const response = await fetch(`${api_url}/api/auth`, {
         method: "POST",
         body: JSON.stringify({ ...data }),
         headers: {
@@ -33,16 +33,13 @@ export default function Login() {
       });
       const responseData = await response.json();
 
-      if (
-        !responseData?.hasError &&
-        responseData?.user &&
-        responseData?.user?.authToken
-      ) {
+      if (responseData?.user && responseData?.authToken) {
         document.cookie = "isAuthenticated=true; path=/";
-        document.cookie = `authToken=${responseData?.user?.authToken}; path=/`;
+        document.cookie = `authToken=${responseData?.authToken}; path=/`;
+        document.cookie = `user=${JSON.stringify(responseData?.user)}; path=/`;
         router.replace("/home");
       } else {
-        toast.error(responseData?.message || "Error logging in");
+        toast.error(responseData?.message || "Invalid username and password.");
       }
     } catch (error) {
       toast.error(
