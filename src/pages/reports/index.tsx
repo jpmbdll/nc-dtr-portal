@@ -25,7 +25,7 @@ export default function Reports(props: any) {
   useEffect(() => {
     const getAttendance = async () => {
       try {
-        const response = await fetch(`${api_url}/api/Attedance`, {
+        const response = await fetch(`${api_url}/api/Attendance`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
