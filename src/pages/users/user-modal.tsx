@@ -10,6 +10,7 @@ import {
 import { FormControl, Modal, Button, Table } from "@/components";
 import { createColumn } from "react-chakra-pagination";
 import { useForm, FormProvider } from "react-hook-form";
+import { api_url } from "@/data";
 import {
   JobtitleOptions,
   UserSchedule,
@@ -18,7 +19,12 @@ import {
 } from "@/data";
 import ScheduleModal from "./schedule-modal";
 
-type Props = { selected: {}; setSelected: any; list: any } & UseDisclosureProps;
+type Props = {
+  selected: {};
+  setSelected: any;
+  list: any;
+  user: any;
+} & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
   const {
@@ -27,24 +33,12 @@ export default function UserModal(props: Props) {
     selected,
     setSelected,
     list,
+    user,
   } = props;
   const [page, setPage] = useState(0);
+  const [schedules, setSchedules] = useState<any>(null);
   const methods = useForm({
-    defaultValues: selected
-      ? selected
-      : ({
-          idNo: "",
-          jobTitle: null,
-          firstName: null,
-          middleName: "",
-          lastName: "",
-          contact: "",
-          email: "",
-          status: null,
-          department: null,
-          address: "",
-          password: "",
-        } as any),
+    defaultValues: selected ? selected : user,
   });
   const { handleSubmit } = methods;
   const {
@@ -53,20 +47,59 @@ export default function UserModal(props: Props) {
     onClose: onAddScheduleClose,
   } = useDisclosure();
 
+  useEffect(() => {
+    const getSchedules = async () => {
+      try {
+        const response = await fetch(`${api_url}/api/Schedule`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const responseData = await response.json();
+
+        setSchedules(responseData);
+      } catch (error) {
+        toast.error("There was an error fetching schedules.");
+      }
+    };
+
+    getSchedules();
+
+    return () => {
+      // this now gets called when the component unmounts
+    };
+  }, []);
+
   const submit = async (data: any) => {
-    console.log(data);
-    methods.reset();
-    setSelected(null);
-    onClose();
-    toast.success("User added successfully!");
+    try {
+      const response = await fetch(`${api_url}/api/User/${user.userName}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+
+      toast.success("User has been added/updated successfully!");
+    } catch (error) {
+      toast.error("There was an error adding/updating this user.");
+    } finally {
+      methods.reset();
+      setSelected(null);
+      onClose();
+    }
   };
 
-  const tableData = UserSchedule.map((sched) => ({
-    day: sched.day,
-    subjectCode: sched.subjectCode,
-    startTime: sched.startTime,
-    endTime: sched.endTime,
-  }));
+  const tableData =
+    schedules ||
+    [].map((sched: any) => ({
+      day: sched.day,
+      subjectCode: sched.subjectCode,
+      startTime: sched.startTime,
+      endTime: sched.endTime,
+    }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
@@ -101,7 +134,14 @@ export default function UserModal(props: Props) {
 
   return (
     <Fragment>
-      <ScheduleModal isOpen={isAddScheduleOpen} onClose={onAddScheduleClose} />
+      {isAddScheduleOpen && (
+        <ScheduleModal
+          isOpen={isAddScheduleOpen}
+          onClose={onAddScheduleClose}
+          user={user}
+        />
+      )}
+
       <Modal
         isOpen={isOpen}
         onClose={() => {
@@ -126,7 +166,7 @@ export default function UserModal(props: Props) {
               <GridItem colSpan={6}>
                 <FormControl
                   type="text"
-                  name="idNo"
+                  name="userNo"
                   label="ID No."
                   validator={validateIdNo}
                   isRequired={true}
@@ -141,17 +181,13 @@ export default function UserModal(props: Props) {
                 />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="firstName" label="First Name" />
+                <FormControl type="text" name="fname" label="First Name" />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl
-                  type="text"
-                  name="middleName"
-                  label="Middle Name"
-                />
+                <FormControl type="text" name="mname" label="Middle Name" />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="lastName" label="Last Name" />
+                <FormControl type="text" name="lname" label="Last Name" />
               </GridItem>
               <GridItem colSpan={4}>
                 <FormControl type="text" name="contact" label="Contact" />
@@ -187,7 +223,7 @@ export default function UserModal(props: Props) {
           <Table
             title="Schedule"
             data={tableData}
-            list={UserSchedule}
+            list={schedules}
             page={page}
             columns={columns}
             actions={

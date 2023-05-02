@@ -2,7 +2,8 @@ import Image from "next/image";
 import { Flex, Heading } from "@chakra-ui/react";
 import { Avatar } from "@/components";
 
-export function Nav() {
+export function Nav(props: any) {
+  const { user } = props;
   return (
     <Flex
       sx={{
@@ -34,7 +35,10 @@ export function Nav() {
           Norzagaray College Face Recognition DTR
         </Heading>
       </Flex>
-      <Avatar name="Joshua Badillo" accessType="admin" />
+      <Avatar
+        name={`${user?.Fname} ${user?.Lname}`}
+        accessType={user.JobTitle || "admin"}
+      />
     </Flex>
   );
 }

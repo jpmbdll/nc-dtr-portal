@@ -5,3 +5,4 @@ export * from "./userSchedule";
 export * from "./department";
 export * from "./status";
 export * from "./jobTitle";
+export * from "./api";

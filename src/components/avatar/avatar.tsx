@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { BsFillCaretDownFill, BsPersonFill } from "react-icons/bs";
 import { BiLogOut } from "react-icons/bi";
+import { AiOutlineUser } from "react-icons/ai";
 
 type Props = {
   name: string;
@@ -28,11 +29,17 @@ export function Avatar(props: Props) {
       "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie =
       "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     router.replace("/login");
   };
   return (
     <HStack>
-      <ChakraAvatar size="sm" name={name} src="" mr={1} bg="black" />
+      <ChakraAvatar
+        size="sm"
+        mr={1}
+        bg="blue.400"
+        icon={<AiOutlineUser fontSize="1.5rem" />}
+      />
       <Flex flexDirection="column" justifyContent="center">
         <Text fontWeight="bold" h={5}>
           {name}

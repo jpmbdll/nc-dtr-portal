@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import { useForm, FormProvider } from "react-hook-form";
@@ -10,21 +9,20 @@ import {
   CardHeader,
   CardBody,
   Heading,
-  Text,
   VStack,
   Center,
 } from "@chakra-ui/react";
 import { FormControl, Button } from "@/components";
 import { api_url } from "@/data";
 
-export default function Login() {
+export default function Phone() {
   const methods = useForm();
   const router = useRouter();
   const { handleSubmit } = methods;
 
   const submit = async (data: any) => {
     try {
-      const response = await fetch(`${api_url}/api/auth`, {
+      const response = await fetch(`${api_url}/api/ForgotPassword`, {
         method: "POST",
         body: JSON.stringify({ ...data }),
         headers: {
@@ -33,13 +31,10 @@ export default function Login() {
       });
       const responseData = await response.json();
 
-      if (responseData?.user && responseData?.authToken) {
-        document.cookie = "isAuthenticated=true; path=/";
-        document.cookie = `authToken=${responseData?.authToken}; path=/`;
-        document.cookie = `user=${JSON.stringify(responseData?.user)}; path=/`;
-        router.replace("/home");
+      if (responseData) {
+        router.replace("/forgot-password-otp");
       } else {
-        toast.error(responseData?.message || "Invalid username and password.");
+        toast.error(responseData?.message || "Invalid otp code");
       }
     } catch (error) {
       toast.error(
@@ -64,7 +59,7 @@ export default function Login() {
         <Card variant="elevated" size="lg" w="30rem">
           <CardHeader px={8} pt={8} pb={0}>
             <Center>
-              <Heading size="lg">Login</Heading>
+              <Heading size="lg">Forgot Password</Heading>
             </Center>
           </CardHeader>
           <CardBody px={8} pt={4} pb={8}>
@@ -72,23 +67,14 @@ export default function Login() {
               <form onSubmit={handleSubmit(submit)}>
                 <FormControl
                   type="text"
-                  label="Username"
-                  name="username"
+                  label="Enter your phone number"
+                  name="code"
                   isRequired
                 />
-                <FormControl
-                  type="password"
-                  label="Password"
-                  name="password"
-                  isRequired={true}
-                />
 
-                <Text fontSize="xs" color="blue.400">
-                  <Link href="/forgot-password-phone">Forgot Password?</Link>
-                </Text>
                 <Button
                   type="submit"
-                  label="Login"
+                  label="Submit"
                   colorScheme="twitter"
                   w="100%"
                   my={5}

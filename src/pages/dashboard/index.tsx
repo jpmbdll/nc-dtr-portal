@@ -142,9 +142,10 @@ export const data = {
   ],
 };
 
-export default function Dashboard() {
+export default function Dashboard(props: any) {
+  const { user } = props;
   return (
-    <Layout>
+    <Layout user={user}>
       <VStack w="100%">
         <Grid
           templateRows="repeat(2, 1fr)"
@@ -181,9 +182,9 @@ export default function Dashboard() {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated }: any) => {
+  return checkAuth(context, ({ isAuthenticated, user }: any) => {
     return {
-      props: { isAuthenticated },
+      props: { isAuthenticated, user },
     };
   });
 }
