@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   VStack,
   Box,
@@ -11,38 +11,46 @@ import { useForm, FormProvider } from "react-hook-form";
 import { Layout, FormControl, Button, Card } from "@/components";
 import ChangePasswordModal from "./change-password-modal";
 import { checkAuth } from "@/lib";
-import { JobtitleOptions, StatusOptions, DepartmentOptions } from "@/data";
+import {
+  JobtitleOptions,
+  StatusOptions,
+  DepartmentOptions,
+  api_url,
+} from "@/data";
 import { toast } from "react-toastify";
 
-export default function AccountDetails() {
+export default function AccountDetails(props: any) {
+  const { user } = props;
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const methods = useForm({
-    defaultValues: {
-      idNo: "",
-      jobTitle: null,
-      firstName: null,
-      middleName: "",
-      lastName: "",
-      contact: "",
-      email: "",
-      status: null,
-      department: null,
-      address: "",
-      password: "",
-    },
+    defaultValues: user,
   });
   const { handleSubmit } = methods;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const submit = async (data: any) => {
-    console.log(data);
-    setIsEditing(false);
-    toast.success("Account details saved successfully!");
-    onClose();
+    try {
+      const response = await fetch(`${api_url}/api/User/${user.Username}`, {
+        method: "PUT",
+        body: JSON.stringify({ ...data }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+
+      console.log(responseData);
+
+      toast.success("Account details saved successfully!");
+    } catch (error) {
+      toast.error("There was an error updating account details.");
+    } finally {
+      setIsEditing(false);
+    }
   };
 
   return (
-    <Layout>
+    <Layout user={user}>
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
       <VStack w="100%">
         <Card
@@ -75,24 +83,24 @@ export default function AccountDetails() {
                   <FormControl
                     label="ID No."
                     type="text"
-                    name="idNo"
-                    isReadOnly={!isEditing}
+                    name="UserNo"
+                    isReadOnly={true}
                   />
                 </GridItem>
                 <GridItem colSpan={6}>
                   <FormControl
                     label="Job Title"
                     type="select"
-                    name="jobTitle"
+                    name="JobTitle"
                     options={JobtitleOptions}
-                    isReadOnly={!isEditing}
+                    isReadOnly={true}
                   />
                 </GridItem>
                 <GridItem colSpan={4}>
                   <FormControl
                     label="First Name"
                     type="text"
-                    name="firstName"
+                    name="Fname"
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
@@ -100,7 +108,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Middle Name"
                     type="text"
-                    name="middleName"
+                    name="Mname"
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
@@ -108,19 +116,19 @@ export default function AccountDetails() {
                   <FormControl
                     label="Last Name"
                     type="text"
-                    name="lastName"
+                    name="Lname"
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
-                <GridItem colSpan={4}>
+                <GridItem colSpan={6}>
                   <FormControl
                     label="Contact"
                     type="text"
-                    name="contact"
+                    name="Contact"
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
-                <GridItem colSpan={4}>
+                <GridItem colSpan={6}>
                   <FormControl
                     label="Email"
                     type="text"
@@ -128,20 +136,11 @@ export default function AccountDetails() {
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
-
-                <GridItem colSpan={4}>
-                  <FormControl
-                    label="Password"
-                    type="password"
-                    name="password"
-                    isReadOnly={!isEditing}
-                  />
-                </GridItem>
                 <GridItem colSpan={6}>
                   <FormControl
                     label="Status"
                     type="select"
-                    name="status"
+                    name="Status"
                     options={StatusOptions}
                     isReadOnly={!isEditing}
                   />
@@ -150,7 +149,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Department"
                     type="select"
-                    name="department"
+                    name="Department"
                     options={DepartmentOptions}
                     isReadOnly={!isEditing}
                   />
@@ -159,7 +158,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Address"
                     type="text"
-                    name="address"
+                    name="Address"
                     isReadOnly={!isEditing}
                   />
                 </GridItem>
@@ -186,9 +185,9 @@ export default function AccountDetails() {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated }: any) => {
+  return checkAuth(context, ({ isAuthenticated, user }: any) => {
     return {
-      props: { isAuthenticated },
+      props: { isAuthenticated, user },
     };
   });
 }

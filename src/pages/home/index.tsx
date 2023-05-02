@@ -14,9 +14,10 @@ import { Card, Layout } from "@/components";
 import { Announcements } from "@/data";
 import { checkAuth } from "@/lib";
 
-export default function Home() {
+export default function Home(props: any) {
+  const { user } = props;
   return (
-    <Layout>
+    <Layout user={user}>
       <Grid
         h="200px"
         templateRows="repeat(2, 1fr)"
@@ -82,9 +83,9 @@ export default function Home() {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated }: any) => {
+  return checkAuth(context, ({ isAuthenticated, user }: any) => {
     return {
-      props: { isAuthenticated },
+      props: { isAuthenticated, user },
     };
   });
 }

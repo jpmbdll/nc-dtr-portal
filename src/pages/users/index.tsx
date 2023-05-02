@@ -19,7 +19,8 @@ import { checkAuth } from "@/lib";
 import UserModal from "./user-modal";
 import { toast } from "react-toastify";
 
-export default function Users() {
+export default function Users(props: any) {
+  const { user } = props;
   const [page, setPage] = useState(0);
 
   const [selected, setSelected] = useState<any>(null);
@@ -126,7 +127,7 @@ export default function Users() {
   ];
 
   return (
-    <Layout>
+    <Layout user={user}>
       <Dialog
         isOpen={isConfirmDeleteOpen}
         onClose={onConfirmDeleteClose}
@@ -189,9 +190,9 @@ export default function Users() {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated }: any) => {
+  return checkAuth(context, ({ isAuthenticated, user }: any) => {
     return {
-      props: { isAuthenticated },
+      props: { isAuthenticated, user },
     };
   });
 }

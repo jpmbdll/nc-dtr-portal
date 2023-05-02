@@ -8,7 +8,8 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { createColumn } from "react-chakra-pagination";
 
-export default function Reports() {
+export default function Reports(props: any) {
+  const { user } = props;
   const [page, setPage] = useState(0);
 
   const methods = useForm({
@@ -85,7 +86,7 @@ export default function Reports() {
   const printRef: any = useRef();
 
   return (
-    <Layout>
+    <Layout user={user}>
       <VStack w="100%">
         <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
           <FormProvider {...methods}>
@@ -127,9 +128,9 @@ export default function Reports() {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated }: any) => {
+  return checkAuth(context, ({ isAuthenticated, user }: any) => {
     return {
-      props: { isAuthenticated },
+      props: { isAuthenticated, user },
     };
   });
 }
