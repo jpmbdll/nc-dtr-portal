@@ -33,8 +33,11 @@ export default function Users(props: any) {
   });
 
   const submit = async (data: any) => {
-    console.log(data);
-    //Perform search
+    setUsers(
+      users.filter(
+        (u: any) => u.fname === data.search || u.lname === data.search
+      )
+    );
   };
 
   const {
