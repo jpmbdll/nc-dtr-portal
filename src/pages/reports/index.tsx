@@ -1,16 +1,18 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import ReactToPrint from "react-to-print";
 import { VStack, Box, Flex, Card } from "@chakra-ui/react";
 import { Layout, Table, Button, FormControl } from "@/components";
-import { Reports as reportsList } from "@/data";
+import { api_url } from "@/data";
 import { checkAuth } from "@/lib";
 import { FormProvider, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 
 import { createColumn } from "react-chakra-pagination";
 
 export default function Reports(props: any) {
   const { user } = props;
   const [page, setPage] = useState(0);
+  const [attendance, setAttendance] = useState<any>([]);
 
   const methods = useForm({
     defaultValues: {
@@ -20,23 +22,49 @@ export default function Reports(props: any) {
     },
   });
 
+  useEffect(() => {
+    const getAttendance = async () => {
+      try {
+        const response = await fetch(`${api_url}/api/Attedance`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const responseData = await response.json();
+
+        setAttendance(responseData);
+      } catch (error) {
+        toast.error("There was an error fetching reports.");
+      }
+    };
+
+    getAttendance();
+
+    return () => {
+      // this now gets called when the component unmounts
+    };
+  }, []);
+
   const submit = async (data: any) => {
     console.log(data);
     //Perform search
   };
 
-  const tableData = reportsList.map((report) => ({
-    no: report.no,
-    date: report.date,
-    name: report.name,
-    amArrival: report.amArrival,
-    amDeparture: report.amDeparture,
-    pmArrival: report.pmArrival,
-    pmDeparture: report.pmDeparture,
-    hours: report.hours,
-    minutes: report.minutes,
-    total: report.total,
-  }));
+  const tableData =
+    attendance ||
+    [].map((report: any) => ({
+      no: report.no,
+      date: report.date,
+      name: report.name,
+      amArrival: report.amArrival,
+      amDeparture: report.amDeparture,
+      pmArrival: report.pmArrival,
+      pmDeparture: report.pmDeparture,
+      hours: report.hours,
+      minutes: report.minutes,
+      total: report.total,
+    }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
@@ -106,7 +134,7 @@ export default function Reports(props: any) {
           ref={printRef}
           title="DTR Reports"
           data={tableData}
-          list={reportsList}
+          list={attendance}
           page={page}
           itemsPerPage={6}
           columns={columns}
