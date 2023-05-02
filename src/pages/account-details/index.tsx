@@ -51,7 +51,7 @@ export default function AccountDetails(props: any) {
 
   return (
     <Layout user={user}>
-      <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
+      <ChangePasswordModal isOpen={isOpen} onClose={onClose} user={user} />
       <VStack w="100%">
         <Card
           title={"Account Details"}
