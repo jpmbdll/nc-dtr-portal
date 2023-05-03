@@ -35,7 +35,7 @@ export default function Users(props: any) {
   const submit = async (data: any) => {
     setUsers(
       users.filter(
-        (u: any) => u.fname === data.search || u.lname === data.search
+        (u: any) => u.fName === data.search || u.lName === data.search
       )
     );
   };
@@ -62,6 +62,8 @@ export default function Users(props: any) {
           },
         });
         const responseData = await response.json();
+
+        console.log(JSON.stringify(">>>>>>>>>>>" + responseData));
 
         setUsers(responseData);
       } catch (error) {
@@ -99,10 +101,10 @@ export default function Users(props: any) {
       cell: (info) => info.getValue(),
       header: "Role",
     }),
-    columnHelper.accessor("name", {
+    columnHelper.accessor("naame", {
       cell: (info) => {
-        const { fname, lname } = info.row.original;
-        return `${fname} ${lname}`;
+        const { fName, lName } = info.row.original;
+        return `${fName} ${lName}`;
       },
       header: "Name",
     }),
@@ -167,7 +169,7 @@ export default function Users(props: any) {
             onClose={onConfirmDeleteClose}
             title="Delete User"
             color="red"
-            message={`Are you sure you want to delete this user (${selected?.fname} ${selected?.lname})?`} //Add user name
+            message={`Are you sure you want to delete this user (${selected?.fName} ${selected?.lName})?`} //Add user name
             onCloseCb={() => {
               setSelected(null);
             }}

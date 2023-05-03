@@ -50,7 +50,7 @@ export const Table = forwardRef((props: Props, ref: any) => {
         emptyData={{
           text: "Nobody is registered here.",
         }}
-        totalRegisters={list.length}
+        totalRegisters={data.length}
         onPageChange={(page) => setPage(page)}
         columns={columns}
         data={data}
