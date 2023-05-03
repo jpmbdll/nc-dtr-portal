@@ -22,13 +22,14 @@ export default function Phone() {
 
   const submit = async (data: any) => {
     try {
-      const response = await fetch(`${api_url}/api/ForgotPassword`, {
+      const response = await fetch(`${api_url}/api/auth/ForgotPassword`, {
         method: "POST",
         body: JSON.stringify({ ...data }),
         headers: {
           "Content-Type": "application/json",
         },
       });
+      console.log(JSON.stringify({ ...data }));
       const responseData = await response.json();
 
       if (responseData) {

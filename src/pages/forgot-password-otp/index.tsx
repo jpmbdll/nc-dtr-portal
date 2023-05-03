@@ -22,7 +22,7 @@ export default function OTP() {
 
   const submit = async (data: any) => {
     try {
-      const response = await fetch(`${api_url}/api/ForgotPasswordOtp`, {
+      const response = await fetch(`${api_url}/api/auth/ForgotPasswordOtp`, {
         method: "POST",
         body: JSON.stringify({ ...data }),
         headers: {
