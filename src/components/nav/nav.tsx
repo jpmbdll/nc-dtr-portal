@@ -36,7 +36,7 @@ export function Nav(props: any) {
         </Heading>
       </Flex>
       <Avatar
-        name={`${user?.Fname} ${user?.Lname}`}
+        name={`${user?.fName} ${user?.lName}`}
         accessType={user.JobTitle || "admin"}
       />
     </Flex>
