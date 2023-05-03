@@ -15,10 +15,11 @@ import { JobtitleOptions, StatusOptions, DepartmentOptions } from "@/data";
 import ScheduleModal from "./schedule-modal";
 
 type Props = {
-  selected: {};
+  selected: any;
   setSelected: any;
   list: any;
   user: any;
+  getUsers: any;
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
@@ -29,6 +30,7 @@ export default function UserModal(props: Props) {
     setSelected,
     list,
     user,
+    getUsers,
   } = props;
   const [page, setPage] = useState(0);
   const [schedules, setSchedules] = useState<any>([]);
@@ -45,7 +47,7 @@ export default function UserModal(props: Props) {
   useEffect(() => {
     const getSchedules = async () => {
       try {
-        const response = await fetch(`${api_url}/api/Schedule`, {
+        const response = await fetch(`${api_url}/api/Schedules`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -68,7 +70,10 @@ export default function UserModal(props: Props) {
 
   const submit = async (data: any) => {
     try {
-      const response = await fetch(`${api_url}/api/User/${user.userName}`, {
+      const url = selected
+        ? `${api_url}/api/User/${selected?.userName}`
+        : `${api_url}/api/User/`;
+      const response = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(data),
         headers: {
@@ -84,6 +89,7 @@ export default function UserModal(props: Props) {
     } catch (error) {
       toast.error("There was an error adding/updating this user.");
     } finally {
+      getUsers();
       methods.reset();
       setSelected(null);
       onClose();
@@ -179,13 +185,13 @@ export default function UserModal(props: Props) {
                 />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="fname" label="First Name" />
+                <FormControl type="text" name="fName" label="First Name" />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="mname" label="Middle Name" />
+                <FormControl type="text" name="mName" label="Middle Name" />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="lname" label="Last Name" />
+                <FormControl type="text" name="lName" label="Last Name" />
               </GridItem>
               <GridItem colSpan={4}>
                 <FormControl type="text" name="contact" label="Contact" />
