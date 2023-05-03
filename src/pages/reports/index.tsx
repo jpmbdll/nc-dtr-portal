@@ -54,14 +54,14 @@ export default function Reports(props: any) {
   const tableData =
     attendance ||
     [].map((report: any) => ({
-      no: report.no,
+      id: report.id,
       date: report.date,
       name: report.name,
-      amArrival: report.amArrival,
-      amDeparture: report.amDeparture,
-      pmArrival: report.pmArrival,
+      amArrival: report.clockIn,
+      amDeparture: report.clockOut,
+      pmArrival: report.clockIn,
       pmDeparture: report.pmDeparture,
-      hours: report.hours,
+      hours: report.totalHours === null ? 0 : report.totalHours,
       minutes: report.minutes,
       total: report.total,
     }));
@@ -69,44 +69,131 @@ export default function Reports(props: any) {
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
   const columns = [
-    columnHelper.accessor("no", {
+    columnHelper.accessor("id", {
       cell: (info) => info.getValue(),
-      header: "No",
+      header: "Id",
     }),
     columnHelper.accessor("date", {
-      cell: (info) => info.getValue(),
+      cell: (info) => new Date(info.getValue()).toLocaleDateString(),
       header: "Date",
     }),
     columnHelper.accessor("name", {
       cell: (info) => info.getValue(),
       header: "Name",
     }),
-    columnHelper.accessor("amArrival", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("clockIn", {
+      cell: (info) => {
+        const clockIn = info.getValue();
+        if (!clockIn) {
+          return "";
+        }
+        const hours = parseInt(clockIn.slice(0, 2));
+        if (hours >= 12) {
+          return "";
+        } else {
+          const ampm = hours < 12 ? "AM" : "PM";
+          const formattedHours = hours % 12 || 12;
+          const formattedClockIn = `${formattedHours}${clockIn.slice(
+            2
+          )} ${ampm}`;
+          return formattedClockIn;
+        }
+      },
       header: "Arrival (AM)",
     }),
-    columnHelper.accessor("amDeparture", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("clockOut", {
+      cell: (info) => {
+        const clockIn = info.getValue();
+        if (!clockIn) {
+          return "";
+        }
+        const hours = parseInt(clockIn.slice(0, 2));
+        if (hours >= 12) {
+          return "";
+        } else {
+          const ampm = hours < 12 ? "AM" : "PM";
+          const formattedHours = hours % 12 || 12;
+          const formattedClockIn = `${formattedHours}${clockIn.slice(
+            2
+          )} ${ampm}`;
+          return formattedClockIn;
+        }
+      },
       header: "Departure (AM)",
     }),
-    columnHelper.accessor("pmArrival", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("clockIn", {
+      cell: (info) => {
+        const clockIn = info.getValue();
+        if (!clockIn) {
+          return "";
+        }
+        const hours = parseInt(clockIn.slice(0, 2));
+        if (hours < 12) {
+          return "";
+        } else {
+          const ampm = hours >= 12 ? "PM" : "AM";
+          const formattedHours = hours % 12 || 12;
+          const formattedClockIn = `${formattedHours}${clockIn.slice(
+            2
+          )} ${ampm}`;
+          return formattedClockIn;
+        }
+      },
       header: "Arrival (PM)",
     }),
-    columnHelper.accessor("pmDeparture", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("clockOut", {
+      cell: (info) => {
+        const clockOut = info.getValue();
+        if (!clockOut) {
+          return "";
+        }
+        const hours = parseInt(clockOut.slice(0, 2));
+        if (hours < 12) {
+          return "";
+        } else {
+          const ampm = hours >= 12 ? "PM" : "AM";
+          const formattedHours = hours % 12 || 12;
+          const formattedclockOut = `${formattedHours}${clockOut.slice(
+            2
+          )} ${ampm}`;
+          return formattedclockOut;
+        }
+      },
       header: "Departure (PM)",
     }),
-    columnHelper.accessor("hours", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("totalHours", {
+      cell: (info) => {
+        const totalHours = info.getValue();
+        if (!totalHours) {
+          return 0;
+        }
+        const hours = totalHours.slice(0, 2).replace(/^0+/, "") || "0";
+        return `${hours}`;
+      },
       header: "Hours",
     }),
+
     columnHelper.accessor("minutes", {
-      cell: (info) => info.getValue(),
+      cell: (info) => {
+        const totalHours = info.getValue();
+        if (!totalHours) {
+          return 0;
+        }
+        const minutes = totalHours.slice(3, 5);
+        return `${minutes}`;
+      },
       header: "Minutes",
     }),
-    columnHelper.accessor("total", {
-      cell: (info) => info.getValue(),
+    columnHelper.accessor("totalHours", {
+      cell: (info) => {
+        const totalHours = info.getValue();
+        if (!totalHours) {
+          return "";
+        }
+        const hours = totalHours.slice(0, 2).replace(/^0+/, "") || "0";
+        const minutes = totalHours.slice(3, 5);
+        return `${hours}:${minutes}`;
+      },
       header: "Total",
     }),
   ];
