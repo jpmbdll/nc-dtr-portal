@@ -51,7 +51,6 @@ export default function ScheduleModal(props: Props) {
           },
         });
         const responseData = await response.json();
-
         setCodes(
           responseData.map((d: any) => {
             return { value: d.subjectCode, label: d.subjectName };
