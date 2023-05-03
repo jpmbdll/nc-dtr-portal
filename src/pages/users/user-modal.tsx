@@ -11,12 +11,7 @@ import { FormControl, Modal, Button, Table } from "@/components";
 import { createColumn } from "react-chakra-pagination";
 import { useForm, FormProvider } from "react-hook-form";
 import { api_url } from "@/data";
-import {
-  JobtitleOptions,
-  UserSchedule,
-  StatusOptions,
-  DepartmentOptions,
-} from "@/data";
+import { JobtitleOptions, StatusOptions, DepartmentOptions } from "@/data";
 import ScheduleModal from "./schedule-modal";
 
 type Props = {
@@ -80,9 +75,12 @@ export default function UserModal(props: Props) {
           "Content-Type": "application/json",
         },
       });
-      const responseData = await response.json();
 
-      toast.success("User has been added/updated successfully!");
+      if (response.ok) {
+        toast.success("User has been added/updated successfully!");
+      } else {
+        toast.error("There was an error adding/updating this user.");
+      }
     } catch (error) {
       toast.error("There was an error adding/updating this user.");
     } finally {
@@ -104,7 +102,7 @@ export default function UserModal(props: Props) {
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
   const columns = [
-    columnHelper.accessor("day", {
+    columnHelper.accessor("workDay", {
       cell: (info) => info.getValue(),
       header: "Day",
     }),

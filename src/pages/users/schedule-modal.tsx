@@ -54,11 +54,11 @@ export default function ScheduleModal(props: Props) {
 
         setCodes(
           responseData.map((d: any) => {
-            return { value: d.subjectCode, label: d.subjectName };
+            return { value: d.subjectId, label: d.subjectName };
           })
         );
       } catch (error) {
-        toast.error("There was an error fetching users.");
+        toast.error("There was an error fetching subject codes.");
       }
     };
 
