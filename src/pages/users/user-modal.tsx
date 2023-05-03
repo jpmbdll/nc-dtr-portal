@@ -36,7 +36,7 @@ export default function UserModal(props: Props) {
     user,
   } = props;
   const [page, setPage] = useState(0);
-  const [schedules, setSchedules] = useState<any>(null);
+  const [schedules, setSchedules] = useState<any>([]);
   const methods = useForm({
     defaultValues: selected ? selected : user,
   });
