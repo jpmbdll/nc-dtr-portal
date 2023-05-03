@@ -52,25 +52,23 @@ export default function Users(props: any) {
     onClose: onConfirmDeleteClose,
   } = useDisclosure();
 
+  const getUsers = async () => {
+    try {
+      const response = await fetch(`${api_url}/api/User`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const responseData = await response.json();
+
+      setUsers(responseData);
+    } catch (error) {
+      toast.error("There was an error fetching users.");
+    }
+  };
+
   useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const response = await fetch(`${api_url}/api/User`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const responseData = await response.json();
-
-        console.log(JSON.stringify(">>>>>>>>>>>" + responseData));
-
-        setUsers(responseData);
-      } catch (error) {
-        toast.error("There was an error fetching users.");
-      }
-    };
-
     getUsers();
 
     return () => {
@@ -202,6 +200,7 @@ export default function Users(props: any) {
               setSelected={setSelected}
               list={users}
               user={user}
+              getUsers={getUsers}
             />
           )}
           <VStack w={"100%"}>

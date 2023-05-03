@@ -31,8 +31,6 @@ export default function ChangePasswordModal(props: Props) {
       );
       const responseData = await response.json();
 
-      console.log(responseData);
-
       toast.success("Successfully changed  password!");
     } catch (error) {
       toast.error("There was an error changing password.");

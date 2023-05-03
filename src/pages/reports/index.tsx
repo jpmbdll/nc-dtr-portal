@@ -93,7 +93,9 @@ export default function Reports(props: any) {
         } else {
           const ampm = hours < 12 ? "AM" : "PM";
           const formattedHours = hours % 12 || 12;
-          const formattedClockIn = `${formattedHours}${clockIn.slice(2)} ${ampm}`;
+          const formattedClockIn = `${formattedHours}${clockIn.slice(
+            2
+          )} ${ampm}`;
           return formattedClockIn;
         }
       },
@@ -111,7 +113,9 @@ export default function Reports(props: any) {
         } else {
           const ampm = hours < 12 ? "AM" : "PM";
           const formattedHours = hours % 12 || 12;
-          const formattedClockIn = `${formattedHours}${clockIn.slice(2)} ${ampm}`;
+          const formattedClockIn = `${formattedHours}${clockIn.slice(
+            2
+          )} ${ampm}`;
           return formattedClockIn;
         }
       },
@@ -129,7 +133,9 @@ export default function Reports(props: any) {
         } else {
           const ampm = hours >= 12 ? "PM" : "AM";
           const formattedHours = hours % 12 || 12;
-          const formattedClockIn = `${formattedHours}${clockIn.slice(2)} ${ampm}`;
+          const formattedClockIn = `${formattedHours}${clockIn.slice(
+            2
+          )} ${ampm}`;
           return formattedClockIn;
         }
       },
@@ -147,7 +153,9 @@ export default function Reports(props: any) {
         } else {
           const ampm = hours >= 12 ? "PM" : "AM";
           const formattedHours = hours % 12 || 12;
-          const formattedclockOut = `${formattedHours}${clockOut.slice(2)} ${ampm}`;
+          const formattedclockOut = `${formattedHours}${clockOut.slice(
+            2
+          )} ${ampm}`;
           return formattedclockOut;
         }
       },
@@ -164,7 +172,7 @@ export default function Reports(props: any) {
       },
       header: "Hours",
     }),
-        
+
     columnHelper.accessor("minutes", {
       cell: (info) => {
         const totalHours = info.getValue();

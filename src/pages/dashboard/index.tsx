@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,10 +13,11 @@ import {
   LineElement,
 } from "chart.js";
 import { Layout, Card } from "@/components";
-import { Bar, Doughnut, Radar } from "react-chartjs-2";
-import { faker } from "@faker-js/faker";
+import { Bar } from "react-chartjs-2";
 import { VStack, Grid, GridItem } from "@chakra-ui/react";
 import { checkAuth } from "@/lib";
+import { api_url } from "@/data";
+import { toast } from "react-toastify";
 
 ChartJS.register(
   LineElement,
@@ -39,111 +40,71 @@ const barOptions = {
     },
     title: {
       display: true,
-      text: "Chart.js Bar Chart",
+      text: "",
     },
   },
 };
 
-const radarOptions = {
-  labels: ["Thing 1", "Thing 2", "Thing 3", "Thing 4", "Thing 5", "Thing 6"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [2, 9, 3, 5, 2, 3],
-      backgroundColor: "rgba(255, 99, 132, 0.2)",
-      borderColor: "rgba(255, 99, 132, 1)",
-      borderWidth: 1,
-    },
-  ],
-};
-
-const doughnutOptions = {
-  labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-  datasets: [
-    {
-      label: "# of Votes",
-      data: [12, 19, 3, 5, 2, 3],
-      backgroundColor: [
-        "rgba(255, 99, 132, 0.2)",
-        "rgba(54, 162, 235, 0.2)",
-        "rgba(255, 206, 86, 0.2)",
-        "rgba(75, 192, 192, 0.2)",
-        "rgba(153, 102, 255, 0.2)",
-        "rgba(255, 159, 64, 0.2)",
-      ],
-      borderColor: [
-        "rgba(255, 99, 132, 1)",
-        "rgba(54, 162, 235, 1)",
-        "rgba(255, 206, 86, 1)",
-        "rgba(75, 192, 192, 1)",
-        "rgba(153, 102, 255, 1)",
-        "rgba(255, 159, 64, 1)",
-      ],
-      borderWidth: 1,
-    },
-  ],
-};
-
-const stackedOptions = {
-  plugins: {
-    title: {
-      display: true,
-      text: "Chart.js Bar Chart - Stacked",
-    },
-  },
-  responsive: true,
-  scales: {
-    x: {
-      stacked: true,
-    },
-    y: {
-      stacked: true,
-    },
-  },
-};
-
-const groupedOption = {
-  plugins: {
-    title: {
-      display: true,
-      text: "Chart.js Bar Chart - Stacked",
-    },
-  },
-  responsive: true,
-  interaction: {
-    mode: "index" as const,
-    intersect: false,
-  },
-  scales: {
-    x: {
-      stacked: true,
-    },
-    y: {
-      stacked: true,
-    },
-  },
-};
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 1",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(255, 99, 132, 0.5)",
-    },
-    {
-      label: "Dataset 2",
-      data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
+const labels = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
 
 export default function Dashboard(props: any) {
   const { user } = props;
+
+  const [attendance, setAttendance] = useState<any>([]);
+
+  useEffect(() => {
+    const getAttendance = async () => {
+      try {
+        const response = await fetch(`${api_url}/api/Attendance`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        const responseData = await response.json();
+
+        setAttendance(responseData);
+      } catch (error) {
+        toast.error("There was an error fetching attendance.");
+      }
+    };
+
+    getAttendance();
+
+    return () => {
+      // this now gets called when the component unmounts
+    };
+  }, []);
+
+  const data = {
+    labels,
+    datasets: [
+      {
+        label: "Attendance",
+        data: labels.map((label: any) => {
+          const filtered = attendance.filter(
+            (a: any) => new Date(a.date).getMonth() === labels.indexOf(label)
+          );
+          return filtered.length;
+        }),
+        backgroundColor: "rgba(255, 99, 132, 0.5)",
+      },
+    ],
+  };
+
   return (
     <Layout user={user}>
       <VStack w="100%">
@@ -155,26 +116,13 @@ export default function Dashboard(props: any) {
           maxH="calc(100vh - 100px)"
           overflowY="auto"
         >
-          <GridItem colSpan={1} rowSpan={1}>
-            <Card title="Radar Chart" w="100%">
-              <Radar data={data} />
-            </Card>
-          </GridItem>
-          <GridItem colSpan={1} rowSpan={1}>
-            <Card title="Doughnut Graph" w="100%">
-              <Doughnut data={doughnutOptions} />
-            </Card>
-          </GridItem>
-          <GridItem colSpan={1} rowSpan={1}>
-            <Card title="Bar Graph" w="100%">
-              <Bar options={barOptions} data={data} />
-            </Card>
-          </GridItem>
-          <GridItem colSpan={1} rowSpan={1}>
-            <Card title="Stacked Bar Graph" w="100%">
-              <Bar options={stackedOptions} data={data} />
-            </Card>
-          </GridItem>
+          {attendance && (
+            <GridItem colSpan={1} rowSpan={1}>
+              <Card title="Attendance Graph" w="100%">
+                <Bar options={barOptions} data={data} />
+              </Card>
+            </GridItem>
+          )}
         </Grid>
       </VStack>
     </Layout>
