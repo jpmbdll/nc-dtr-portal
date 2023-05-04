@@ -19,7 +19,7 @@ type Props = {
   setSelected: any;
   list: any;
   user: any;
-  getUsers: any;
+  cb: any;
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
@@ -30,7 +30,7 @@ export default function UserModal(props: Props) {
     setSelected,
     list,
     user,
-    getUsers,
+    cb,
   } = props;
   const [page, setPage] = useState(0);
   const [schedules, setSchedules] = useState<any>([]);
@@ -98,7 +98,7 @@ export default function UserModal(props: Props) {
     } catch (error) {
       toast.error("There was an error adding/updating this user.");
     } finally {
-      getUsers();
+      cb();
       methods.reset();
       setSelected(null);
       onClose();

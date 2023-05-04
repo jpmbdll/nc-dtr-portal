@@ -27,21 +27,13 @@ export default function Users(props: any) {
 
   const [selected, setSelected] = useState<any>(null);
 
-  const { users, setUsers } = useUsers();
+  const { users, loading, errors, filter, refetch } = useUsers();
 
   const methods = useForm({
     defaultValues: {
       search: "",
     },
   });
-
-  const submit = async (data: any) => {
-    setUsers(
-      users.filter(
-        (u: any) => u.fName === data.search || u.lName === data.search
-      )
-    );
-  };
 
   const {
     isOpen: isOpenAddUser,
@@ -139,7 +131,9 @@ export default function Users(props: any) {
 
   return (
     <Layout user={user}>
-      {!users ? null : (
+      {loading || errors ? (
+        <h1>LOADING...</h1>
+      ) : (
         <>
           <Dialog
             isOpen={isConfirmDeleteOpen}
@@ -179,7 +173,7 @@ export default function Users(props: any) {
               setSelected={setSelected}
               list={users}
               user={user}
-              getUsers={() => {}}
+              cb={refetch}
             />
           )}
           <VStack w={"100%"}>
@@ -191,7 +185,9 @@ export default function Users(props: any) {
                   <Button
                     label="Search"
                     colorScheme="green"
-                    onClick={methods.handleSubmit(submit)}
+                    onClick={methods.handleSubmit((data: any) =>
+                      filter(data.search)
+                    )}
                   />
                 </Flex>
               </FormProvider>
