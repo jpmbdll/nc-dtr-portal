@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Flex,
   Button as ChakraButton,
@@ -18,13 +18,16 @@ import { checkAuth } from "@/lib";
 
 import UserModal from "./user-modal";
 import { toast } from "react-toastify";
+import { useUsers } from "@/hooks";
 
 export default function Users(props: any) {
   const { user } = props;
+
   const [page, setPage] = useState(0);
-  const [users, setUsers] = useState<any>(null);
 
   const [selected, setSelected] = useState<any>(null);
+
+  const { users, setUsers } = useUsers();
 
   const methods = useForm({
     defaultValues: {
@@ -51,30 +54,6 @@ export default function Users(props: any) {
     onOpen: onConfirmDeleteOpen,
     onClose: onConfirmDeleteClose,
   } = useDisclosure();
-
-  const getUsers = async () => {
-    try {
-      const response = await fetch(`${api_url}/api/User`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      const responseData = await response.json();
-
-      setUsers(responseData);
-    } catch (error) {
-      toast.error("There was an error fetching users.");
-    }
-  };
-
-  useEffect(() => {
-    getUsers();
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, []);
 
   const tableData =
     users ||
@@ -200,7 +179,7 @@ export default function Users(props: any) {
               setSelected={setSelected}
               list={users}
               user={user}
-              getUsers={getUsers}
+              getUsers={() => {}}
             />
           )}
           <VStack w={"100%"}>
