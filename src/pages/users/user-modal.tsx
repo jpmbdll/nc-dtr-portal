@@ -35,7 +35,7 @@ export default function UserModal(props: Props) {
   const [page, setPage] = useState(0);
   const [schedules, setSchedules] = useState<any>([]);
   const methods = useForm({
-    defaultValues: selected ? selected : user,
+    defaultValues: selected ? selected : {},
   });
   const { handleSubmit } = methods;
   const {
@@ -47,26 +47,35 @@ export default function UserModal(props: Props) {
   useEffect(() => {
     const getSchedules = async () => {
       try {
-        const response = await fetch(`${api_url}/api/Schedules`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          `${api_url}/api/Schedules/${selected.userName}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         const responseData = await response.json();
 
-        setSchedules(responseData);
+        if (response.ok) {
+          setSchedules(responseData);
+        } else {
+          throw Error;
+        }
       } catch (error) {
         toast.error("There was an error fetching schedules.");
       }
     };
 
-    getSchedules();
+    if (selected) {
+      getSchedules();
+    }
 
     return () => {
       // this now gets called when the component unmounts
     };
-  }, []);
+  }, [selected]);
 
   const submit = async (data: any) => {
     try {
