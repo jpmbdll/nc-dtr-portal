@@ -47,7 +47,6 @@ export default function Reports(props: any) {
   }, []);
 
   const submit = async (data: any) => {
-    console.log(data);
     //Perform search
   };
 

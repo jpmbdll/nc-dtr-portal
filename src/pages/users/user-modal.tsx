@@ -1,4 +1,7 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useState } from "react";
+import { useForm, FormProvider } from "react-hook-form";
+import { createColumn } from "react-chakra-pagination";
+import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import {
   UseDisclosureProps,
@@ -7,19 +10,23 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
+
 import { FormControl, Modal, Button, Table } from "@/components";
-import { createColumn } from "react-chakra-pagination";
-import { useForm, FormProvider } from "react-hook-form";
-import { api_url } from "@/data";
-import { JobtitleOptions, StatusOptions, DepartmentOptions } from "@/data";
+import {
+  JobtitleOptions,
+  StatusOptions,
+  DepartmentOptions,
+  api_url,
+} from "@/data";
+
 import ScheduleModal from "./schedule-modal";
+import { get } from "@/lib";
 
 type Props = {
   selected: any;
   setSelected: any;
   list: any;
   user: any;
-  cb: any;
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
@@ -30,10 +37,8 @@ export default function UserModal(props: Props) {
     setSelected,
     list,
     user,
-    cb,
   } = props;
   const [page, setPage] = useState(0);
-  const [schedules, setSchedules] = useState<any>([]);
   const methods = useForm({
     defaultValues: selected ? selected : {},
   });
@@ -44,38 +49,19 @@ export default function UserModal(props: Props) {
     onClose: onAddScheduleClose,
   } = useDisclosure();
 
-  useEffect(() => {
-    const getSchedules = async () => {
-      try {
-        const response = await fetch(
-          `${api_url}/api/Schedules/${selected.userName}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        const responseData = await response.json();
-
-        if (response.ok) {
-          setSchedules(responseData);
-        } else {
-          throw Error;
-        }
-      } catch (error) {
-        toast.error("There was an error fetching schedules.");
-      }
-    };
-
-    if (selected) {
-      getSchedules();
-    }
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, [selected]);
+  const {
+    data: schedules = [],
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["schedules"],
+    queryFn: async () =>
+      await get({
+        url: `/api/Schedules/${selected.userName}`,
+        key: "schedules",
+      }),
+    enabled: Boolean(selected),
+  });
 
   const submit = async (data: any) => {
     try {
@@ -98,7 +84,6 @@ export default function UserModal(props: Props) {
     } catch (error) {
       toast.error("There was an error adding/updating this user.");
     } finally {
-      cb();
       methods.reset();
       setSelected(null);
       onClose();
@@ -239,6 +224,7 @@ export default function UserModal(props: Props) {
             list={schedules}
             page={page}
             columns={columns}
+            isLoading={isFetching || isLoading}
             actions={
               <Button
                 label="Add Schedule"

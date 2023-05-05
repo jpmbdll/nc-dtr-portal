@@ -11,11 +11,11 @@ import {
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import { FormProvider, useForm } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
-import { checkAuth } from "@/lib";
+import { checkAuth, get } from "@/lib";
 import { api_url } from "@/data";
 
 import UserModal from "./user-modal";
@@ -27,20 +27,17 @@ export default function Users(props: any) {
 
   const [selected, setSelected] = useState<any>(null);
 
-  const queryClient = useQueryClient();
-
   const {
-    data: users,
+    data: users = [],
     isFetching,
     isLoading,
-  } = useQuery("users", async () => {
-    const res = await fetch(`${api_url}/api/user`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return await res.json();
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () =>
+      await get({
+        url: `/api/user`,
+        key: "users",
+      }),
   });
 
   const methods = useForm({
@@ -184,9 +181,6 @@ export default function Users(props: any) {
             setSelected={setSelected}
             list={users}
             user={user}
-            cb={() => {
-              queryClient.invalidateQueries("users");
-            }}
           />
         )}
         <VStack w="100%">

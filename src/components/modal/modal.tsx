@@ -34,7 +34,9 @@ export function Modal(props: Props) {
         <ModalHeader>{title}</ModalHeader>
         <Divider />
         <ModalCloseButton />
-        <ModalBody px={10}>{children}</ModalBody>
+        <ModalBody px={10} maxH="calc(100vh - 300px)" overflowY="auto">
+          {children}
+        </ModalBody>
         <ModalFooter>{actions}</ModalFooter>
       </ModalContent>
     </ChakraModal>

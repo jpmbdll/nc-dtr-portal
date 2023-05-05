@@ -5,7 +5,6 @@ import { Avatar } from "@/components";
 export function Nav(props: any) {
   const { user } = props;
 
-  console.log(user);
   return (
     <Flex
       sx={{
