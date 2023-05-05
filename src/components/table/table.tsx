@@ -1,7 +1,7 @@
 import { ReactNode, forwardRef } from "react";
-import { Box } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
 import { Table as ChakraTable } from "react-chakra-pagination";
-import { Card } from "@/components";
+import { Card, Spinner } from "@/components";
 
 type Props = {
   title: string;
@@ -12,6 +12,7 @@ type Props = {
   data: any;
   setPage: any;
   itemsPerPage?: number;
+  isLoading?: boolean;
 };
 
 // eslint-disable-next-line react/display-name
@@ -24,8 +25,10 @@ export const Table = forwardRef((props: Props, ref: any) => {
     data,
     setPage,
     itemsPerPage = 8,
+    isLoading = true,
     ...rest
   } = props;
+
   return (
     <Card
       className="table-container"
@@ -44,18 +47,21 @@ export const Table = forwardRef((props: Props, ref: any) => {
       }}
       ref={ref}
     >
-      <ChakraTable
-        itemsPerPage={itemsPerPage}
-        colorScheme="twitter"
-        emptyData={{
-          text: "Nobody is registered here.",
-        }}
-        totalRegisters={list.length}
-        onPageChange={(page) => setPage(page)}
-        columns={columns}
-        data={data}
-        {...rest}
-      />
+      {isLoading && <Spinner />}
+      {!isLoading && (
+        <ChakraTable
+          itemsPerPage={itemsPerPage}
+          colorScheme="twitter"
+          emptyData={{
+            text: "Nobody is registered here.",
+          }}
+          totalRegisters={list.length}
+          onPageChange={(page) => setPage(page)}
+          columns={columns}
+          data={data}
+          {...rest}
+        />
+      )}
     </Card>
   );
 });

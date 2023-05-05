@@ -9,16 +9,16 @@ import {
   Card,
 } from "@chakra-ui/react";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
-import { createColumn } from "react-chakra-pagination";
 import { FormProvider, useForm } from "react-hook-form";
+import { createColumn } from "react-chakra-pagination";
+import { useQuery, useQueryClient } from "react-query";
+import { toast } from "react-toastify";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
-import { api_url } from "@/data";
 import { checkAuth } from "@/lib";
+import { api_url } from "@/data";
 
 import UserModal from "./user-modal";
-import { toast } from "react-toastify";
-import { useUsers } from "@/hooks";
 
 export default function Users(props: any) {
   const { user } = props;
@@ -27,7 +27,21 @@ export default function Users(props: any) {
 
   const [selected, setSelected] = useState<any>(null);
 
-  const { users, loading, errors, filter, refetch } = useUsers();
+  const queryClient = useQueryClient();
+
+  const {
+    data: users,
+    isFetching,
+    isLoading,
+  } = useQuery("users", async () => {
+    const res = await fetch(`${api_url}/api/user`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return await res.json();
+  });
 
   const methods = useForm({
     defaultValues: {
@@ -131,88 +145,87 @@ export default function Users(props: any) {
 
   return (
     <Layout user={user}>
-      {loading || errors ? (
-        <h1>LOADING...</h1>
-      ) : (
-        <>
-          <Dialog
-            isOpen={isConfirmDeleteOpen}
-            onClose={onConfirmDeleteClose}
-            title="Delete User"
-            color="red"
-            message={`Are you sure you want to delete this user (${selected?.fname} ${selected?.lname})?`} //Add user name
-            onCloseCb={() => {
+      <>
+        <Dialog
+          isOpen={isConfirmDeleteOpen}
+          onClose={onConfirmDeleteClose}
+          title="Delete User"
+          color="red"
+          message={`Are you sure you want to delete this user (${selected?.fname} ${selected?.lname})?`} //Add user name
+          onCloseCb={() => {
+            setSelected(null);
+          }}
+          onSaveCb={async () => {
+            try {
+              const response = await fetch(
+                `${api_url}/api/DeleteUser/${user.userName}`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+              const responseData = await response.json();
+              toast.success("User has been deleted successfully!");
+            } catch (error) {
+              toast.error("There was an error deleting this user.");
+            } finally {
+              onConfirmDeleteClose();
               setSelected(null);
-            }}
-            onSaveCb={async () => {
-              try {
-                const response = await fetch(
-                  `${api_url}/api/DeleteUser/${user.userName}`,
-                  {
-                    method: "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                    },
-                  }
-                );
-                const responseData = await response.json();
-                toast.success("User has been deleted successfully!");
-              } catch (error) {
-                toast.error("There was an error deleting this user.");
-              } finally {
-                onConfirmDeleteClose();
-                setSelected(null);
-              }
+            }
+          }}
+        />
+        {isOpenAddUser && (
+          <UserModal
+            isOpen={isOpenAddUser}
+            onClose={onCloseAddUser}
+            selected={selected}
+            setSelected={setSelected}
+            list={users}
+            user={user}
+            cb={() => {
+              queryClient.invalidateQueries("users");
             }}
           />
-          {isOpenAddUser && (
-            <UserModal
-              isOpen={isOpenAddUser}
-              onClose={onCloseAddUser}
-              selected={selected}
-              setSelected={setSelected}
-              list={users}
-              user={user}
-              cb={refetch}
-            />
-          )}
-          <VStack w={"100%"}>
-            <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
-              <FormProvider {...methods}>
-                <FormControl label="" type="text" name="search" />
+        )}
+        <VStack w="100%">
+          <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
+            <FormProvider {...methods}>
+              <FormControl label="" type="text" name="search" />
 
-                <Flex flexDirection="column-reverse" pb={2}>
-                  <Button
-                    label="Search"
-                    colorScheme="green"
-                    onClick={methods.handleSubmit((data: any) =>
-                      filter(data.search)
-                    )}
-                  />
-                </Flex>
-              </FormProvider>
-            </Card>
-            <Table
-              title="User Management"
-              data={tableData}
-              list={users}
-              page={page}
-              columns={columns}
-              actions={
-                <Box>
-                  <Button
-                    label="Add User"
-                    colorScheme="twitter"
-                    size="sm"
-                    onClick={onOpenAddUser}
-                  />
-                </Box>
-              }
-              setPage={setPage}
-            />
-          </VStack>
-        </>
-      )}
+              <Flex flexDirection="column-reverse" pb={2}>
+                <Button
+                  label="Search"
+                  colorScheme="green"
+                  onClick={methods.handleSubmit((data: any) => {
+                    //filter here
+                  })}
+                />
+              </Flex>
+            </FormProvider>
+          </Card>
+          <Table
+            title="User Management"
+            data={tableData}
+            list={users}
+            page={page}
+            columns={columns}
+            isLoading={isFetching || isLoading}
+            actions={
+              <Box>
+                <Button
+                  label="Add User"
+                  colorScheme="twitter"
+                  size="sm"
+                  onClick={onOpenAddUser}
+                />
+              </Box>
+            }
+            setPage={setPage}
+          />
+        </VStack>
+      </>
     </Layout>
   );
 }
