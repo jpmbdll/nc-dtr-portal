@@ -1,18 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import ReactToPrint from "react-to-print";
 import { VStack, Box, Flex, Card } from "@chakra-ui/react";
-import { Layout, Table, Button, FormControl } from "@/components";
-import { api_url } from "@/data";
-import { checkAuth } from "@/lib";
 import { FormProvider, useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-
 import { createColumn } from "react-chakra-pagination";
+import ReactToPrint from "react-to-print";
+import { useQuery } from "react-query";
+
+import { Layout, Table, Button, FormControl } from "@/components";
+import { checkAuth, get } from "@/lib";
 
 export default function Reports(props: any) {
   const { user } = props;
   const [page, setPage] = useState(0);
-  const [attendance, setAttendance] = useState<any>([]);
 
   const methods = useForm({
     defaultValues: {
@@ -22,29 +20,18 @@ export default function Reports(props: any) {
     },
   });
 
-  useEffect(() => {
-    const getAttendance = async () => {
-      try {
-        const response = await fetch(`${api_url}/api/Attendance`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const responseData = await response.json();
-
-        setAttendance(responseData);
-      } catch (error) {
-        toast.error("There was an error fetching reports.");
-      }
-    };
-
-    getAttendance();
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, []);
+  const {
+    data: attendance = [],
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["attendance"],
+    queryFn: async () =>
+      await get({
+        url: `/api/Attendance`,
+        key: "attendance",
+      }),
+  });
 
   const submit = async (data: any) => {
     //Perform search
@@ -225,6 +212,7 @@ export default function Reports(props: any) {
           itemsPerPage={6}
           columns={columns}
           setPage={setPage}
+          isLoading={isFetching || isLoading}
           actions={
             <Box>
               <ReactToPrint
