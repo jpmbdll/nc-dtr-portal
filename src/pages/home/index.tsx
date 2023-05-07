@@ -9,7 +9,10 @@ import {
   StackDivider,
   Grid,
   GridItem,
+  Center,
 } from "@chakra-ui/react";
+import Image from "next/image";
+
 import { Card, Layout } from "@/components";
 import { Announcements } from "@/data";
 import { checkAuth } from "@/lib";
@@ -20,11 +23,11 @@ export default function Home() {
       <Grid
         h="200px"
         templateRows="repeat(2, 1fr)"
-        templateColumns="repeat(6, 1fr)"
+        templateColumns="repeat(3, 1fr)"
         gap={4}
       >
-        <GridItem rowSpan={1} colSpan={4}>
-          <Card title="Vision">
+        <GridItem rowSpan={1} colSpan={2}>
+          <Card title="Vision" pb={10}>
             <Text pt="2" fontSize="sm" fontWeight="bold">
               Norzagaray College envisions itself to transform lives of
               individuals and communities through life-long learning.
@@ -32,28 +35,13 @@ export default function Home() {
           </Card>
         </GridItem>
 
-        <GridItem rowSpan={2} colSpan={2}>
-          <Card title="Announcements">
-            <Stack divider={<StackDivider />} spacing="4">
-              {Announcements.map(
-                ({ month, year, isNew, announcements }, index) => (
-                  <Box key={index}>
-                    <Heading fontSize="sm" display="flex">
-                      {isNew && <Text color="red">*</Text>}
-                      {month}, {year}
-                    </Heading>
-                    <UnorderedList fontSize="sm" pl={5} pt={3}>
-                      {announcements.map((a, index) => (
-                        <ListItem key={index}>{a}</ListItem>
-                      ))}
-                    </UnorderedList>
-                  </Box>
-                )
-              )}
-            </Stack>
-          </Card>
+        <GridItem rowSpan={1} colSpan={1}>
+          <Center>
+            <Image src="/logo.png" alt="logo" width={150} height={150} />
+          </Center>
         </GridItem>
-        <GridItem rowSpan={1} colSpan={4}>
+
+        <GridItem rowSpan={1} colSpan={2}>
           <Card title="Mission">
             <Text pt="2" fontSize="sm" fontWeight="bold">
               As an institution of Higher Education, we commit ourselves to:
@@ -74,6 +62,28 @@ export default function Home() {
                 thrive and prosper.
               </ListItem>
             </OrderedList>
+          </Card>
+        </GridItem>
+
+        <GridItem rowSpan={1} colSpan={1}>
+          <Card title="Announcements">
+            <Stack divider={<StackDivider />} spacing="4">
+              {Announcements.map(
+                ({ month, year, isNew, announcements }, index) => (
+                  <Box key={index}>
+                    <Heading fontSize="sm" display="flex">
+                      {isNew && <Text color="red">*</Text>}
+                      {month}, {year}
+                    </Heading>
+                    <UnorderedList fontSize="sm" pl={5} pt={3}>
+                      {announcements.map((a, index) => (
+                        <ListItem key={index}>{a}</ListItem>
+                      ))}
+                    </UnorderedList>
+                  </Box>
+                )
+              )}
+            </Stack>
           </Card>
         </GridItem>
       </Grid>
