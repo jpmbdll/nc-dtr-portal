@@ -1,6 +1,7 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useCallback } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
+import { useMutation } from "react-query";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 import {
@@ -41,6 +42,42 @@ export default function UserModal(props: Props) {
     onClose: onAddScheduleClose,
   } = useDisclosure();
 
+  const submitUser = async (data: any) => {
+    const url = selected
+      ? `${api_url}/api/User/${selected?.userName}`
+      : `${api_url}/api/User/`;
+    const res = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await res.json();
+  };
+
+  const mutation = useMutation(submitUser);
+
+  const onSubmit = useCallback(
+    (data: any) => {
+      mutation.mutate(data, {
+        onSuccess: () => {
+          toast.success("User has been added/updated successfully!");
+        },
+        onError: () => {
+          toast.error("There was an error adding/updating this user.");
+        },
+        onSettled: () => {
+          methods.reset();
+          setSelected(null);
+          onClose();
+        },
+      });
+    },
+    [mutation, setSelected, onClose, methods]
+  );
+
   const {
     data: schedules = [],
     isFetching,
@@ -54,33 +91,6 @@ export default function UserModal(props: Props) {
       }),
     enabled: Boolean(selected),
   });
-
-  const submit = async (data: any) => {
-    try {
-      const url = selected
-        ? `${api_url}/api/User/${selected?.userName}`
-        : `${api_url}/api/User/`;
-      const response = await fetch(url, {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        toast.success("User has been added/updated successfully!");
-      } else {
-        toast.error("There was an error adding/updating this user.");
-      }
-    } catch (error) {
-      toast.error("There was an error adding/updating this user.");
-    } finally {
-      methods.reset();
-      setSelected(null);
-      onClose();
-    }
-  };
 
   const tableData =
     schedules ||
@@ -144,7 +154,7 @@ export default function UserModal(props: Props) {
           <Button
             colorScheme={selected ? "yellow" : "twitter"}
             mr={3}
-            onClick={handleSubmit(submit)}
+            onClick={handleSubmit(onSubmit)}
             label={selected ? "Edit" : "Add"}
           />
         }
