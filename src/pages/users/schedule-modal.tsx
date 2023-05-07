@@ -1,19 +1,19 @@
-import { useEffect, useState, useCallback } from "react";
+import { useCallback } from "react";
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 import { FormControl, Modal, Button } from "@/components";
 import { useUser } from "@/hooks";
 import { api_url } from "@/data";
+import { get } from "@/lib";
 
 type Props = UseDisclosureProps;
 
 export default function ScheduleModal(props: Props) {
   const { isOpen = false, onClose = () => {} } = props;
   const { user } = useUser();
-  const [codes, setCodes] = useState<any>([]);
 
   const methods = useForm({
     defaultValues: {
@@ -58,33 +58,18 @@ export default function ScheduleModal(props: Props) {
     [mutation, onClose, methods]
   );
 
-  useEffect(() => {
-    const getCodes = async () => {
-      try {
-        const response = await fetch(`${api_url}/api/Subject`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const responseData = await response.json();
-
-        setCodes(
-          responseData.map((d: any) => {
-            return { value: d.subjectId, label: d.subjectName };
-          })
-        );
-      } catch (error) {
-        toast.error("There was an error fetching subject codes.");
-      }
-    };
-
-    getCodes();
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, []);
+  const {
+    data: codes = [],
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["subjects"],
+    queryFn: async () =>
+      await get({
+        url: `/api/Subject`,
+        key: "subjects",
+      }),
+  });
 
   return (
     <Modal
@@ -104,7 +89,7 @@ export default function ScheduleModal(props: Props) {
         />
       }
     >
-      {codes && (
+      {!isFetching && !isLoading && (
         <Grid templateColumns="repeat(2, 1fr)" gap={4}>
           <FormProvider {...methods}>
             <GridItem colSpan={1}>

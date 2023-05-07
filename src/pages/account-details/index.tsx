@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import {
   VStack,
   Box,
@@ -7,6 +7,7 @@ import {
   Flex,
   useDisclosure,
 } from "@chakra-ui/react";
+import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import { useForm, FormProvider } from "react-hook-form";
@@ -31,24 +32,36 @@ export default function AccountDetails() {
   const { handleSubmit } = methods;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const submit = async (data: any) => {
-    try {
-      const response = await fetch(`${api_url}/api/User/${user.Username}`, {
-        method: "PUT",
-        body: JSON.stringify({ ...data }),
-        headers: {
-          "Content-Type": "application/json",
+  const submitUser = async (data: any) => {
+    const res = await fetch(`${api_url}/api/User/${user.Username}`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await res.json();
+  };
+
+  const mutation = useMutation(submitUser);
+
+  const onSubmit = useCallback(
+    (data: any) => {
+      mutation.mutate(data, {
+        onSuccess: () => {
+          toast.success("Account details saved successfully!");
+        },
+        onError: () => {
+          toast.error("There was an error updating account details.");
+        },
+        onSettled: () => {
+          setIsEditing(false);
         },
       });
-      const responseData = await response.json();
-
-      toast.success("Account details saved successfully!");
-    } catch (error) {
-      toast.error("There was an error updating account details.");
-    } finally {
-      setIsEditing(false);
-    }
-  };
+    },
+    [mutation, setIsEditing]
+  );
 
   return (
     <Layout>
@@ -78,7 +91,7 @@ export default function AccountDetails() {
           w="100%"
         >
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(submit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Grid templateColumns="repeat(12, 1fr)" gap={4}>
                 <GridItem colSpan={6}>
                   <FormControl
@@ -170,10 +183,16 @@ export default function AccountDetails() {
                 mt={5}
                 hidden={!isEditing}
               >
-                <Button type="submit" label="Save" colorScheme="twitter" />
+                <Button
+                  type="submit"
+                  label="Save"
+                  colorScheme="twitter"
+                  isLoading={mutation.isLoading}
+                />
                 <Button
                   label="Cancel"
                   colorScheme="gray"
+                  isLoading={mutation.isLoading}
                   onClick={() => setIsEditing(false)}
                 />
               </Flex>
