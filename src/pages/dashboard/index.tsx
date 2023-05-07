@@ -59,9 +59,7 @@ const labels = [
   "December",
 ];
 
-export default function Dashboard(props: any) {
-  const { user } = props;
-
+export default function Dashboard() {
   const {
     data: attendance = [],
     isFetching,
@@ -92,7 +90,7 @@ export default function Dashboard(props: any) {
   };
 
   return (
-    <Layout user={user}>
+    <Layout>
       <VStack w="100%">
         {isFetching || (isLoading && <Spinner />)}
         {!isFetching && !isLoading && <Spinner /> && (
@@ -119,9 +117,9 @@ export default function Dashboard(props: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated, user }: any) => {
+  return checkAuth(context, ({ isAuthenticated }: any) => {
     return {
-      props: { isAuthenticated, user },
+      props: { isAuthenticated },
     };
   });
 }

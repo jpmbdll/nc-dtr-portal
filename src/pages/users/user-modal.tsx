@@ -25,11 +25,10 @@ import ScheduleModal from "./schedule-modal";
 
 type Props = {
   list: any;
-  user: any;
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
-  const { isOpen = false, onClose = () => {}, list, user } = props;
+  const { isOpen = false, onClose = () => {}, list } = props;
   const { selected, setSelected } = useSelectedUser();
   const [page, setPage] = useState(0);
   const methods = useForm({
@@ -129,7 +128,6 @@ export default function UserModal(props: Props) {
         <ScheduleModal
           isOpen={isAddScheduleOpen}
           onClose={onAddScheduleClose}
-          user={user}
         />
       )}
 

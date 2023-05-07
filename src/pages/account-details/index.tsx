@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   VStack,
   Box,
@@ -7,9 +7,11 @@ import {
   Flex,
   useDisclosure,
 } from "@chakra-ui/react";
+import { toast } from "react-toastify";
+
 import { useForm, FormProvider } from "react-hook-form";
 import { Layout, FormControl, Button, Card } from "@/components";
-import ChangePasswordModal from "./change-password-modal";
+import { useUser } from "@/hooks";
 import { checkAuth } from "@/lib";
 import {
   JobtitleOptions,
@@ -17,10 +19,11 @@ import {
   DepartmentOptions,
   api_url,
 } from "@/data";
-import { toast } from "react-toastify";
 
-export default function AccountDetails(props: any) {
-  const { user } = props;
+import ChangePasswordModal from "./change-password-modal";
+
+export default function AccountDetails() {
+  const { user } = useUser();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const methods = useForm({
     defaultValues: user,
@@ -48,8 +51,8 @@ export default function AccountDetails(props: any) {
   };
 
   return (
-    <Layout user={user}>
-      <ChangePasswordModal isOpen={isOpen} onClose={onClose} user={user} />
+    <Layout>
+      <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
       <VStack w="100%">
         <Card
           title={"Account Details"}
@@ -72,7 +75,7 @@ export default function AccountDetails(props: any) {
               />
             </Box>
           }
-          w={"100%"}
+          w="100%"
         >
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(submit)}>
@@ -183,9 +186,9 @@ export default function AccountDetails(props: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated, user }: any) => {
+  return checkAuth(context, ({ isAuthenticated }: any) => {
     return {
-      props: { isAuthenticated, user },
+      props: { isAuthenticated },
     };
   });
 }

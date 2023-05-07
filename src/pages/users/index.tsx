@@ -15,14 +15,14 @@ import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
+import { useSelectedUser, useUser } from "@/hooks";
 import { checkAuth, get } from "@/lib";
 import { api_url } from "@/data";
-import { useSelectedUser } from "@/hooks";
 
 import UserModal from "./user-modal";
 
-export default function Users(props: any) {
-  const { user } = props;
+export default function Users() {
+  const { user } = useUser();
 
   const [page, setPage] = useState(0);
 
@@ -142,7 +142,7 @@ export default function Users(props: any) {
   ];
 
   return (
-    <Layout user={user}>
+    <Layout>
       <>
         <Dialog
           isOpen={isConfirmDeleteOpen}
@@ -179,7 +179,6 @@ export default function Users(props: any) {
             isOpen={isOpenAddUser}
             onClose={onCloseAddUser}
             list={users}
-            user={user}
           />
         )}
         <VStack w="100%">
@@ -224,9 +223,9 @@ export default function Users(props: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated, user }: any) => {
+  return checkAuth(context, ({ isAuthenticated }: any) => {
     return {
-      props: { isAuthenticated, user },
+      props: { isAuthenticated },
     };
   });
 }

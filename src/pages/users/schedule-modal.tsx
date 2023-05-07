@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import { useForm, FormProvider } from "react-hook-form";
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
-import { FormControl, Modal, Button } from "@/components";
+import { useForm, FormProvider } from "react-hook-form";
 import { toast } from "react-toastify";
+
+import { FormControl, Modal, Button } from "@/components";
+import { useUser } from "@/hooks";
 import { api_url } from "@/data";
 
-type Props = { user: any } & UseDisclosureProps;
+type Props = UseDisclosureProps;
 
 export default function ScheduleModal(props: Props) {
-  const { isOpen = false, onClose = () => {}, user } = props;
+  const { isOpen = false, onClose = () => {} } = props;
+  const { user } = useUser();
   const [codes, setCodes] = useState<any>([]);
 
   const methods = useForm({

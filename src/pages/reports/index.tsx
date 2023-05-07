@@ -8,8 +8,7 @@ import { useQuery } from "react-query";
 import { Layout, Table, Button, FormControl } from "@/components";
 import { checkAuth, get } from "@/lib";
 
-export default function Reports(props: any) {
-  const { user } = props;
+export default function Reports() {
   const [page, setPage] = useState(0);
 
   const methods = useForm({
@@ -187,7 +186,7 @@ export default function Reports(props: any) {
   const printRef: any = useRef();
 
   return (
-    <Layout user={user}>
+    <Layout>
       <VStack w="100%">
         <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
           <FormProvider {...methods}>
@@ -230,9 +229,9 @@ export default function Reports(props: any) {
 }
 
 export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated, user }: any) => {
+  return checkAuth(context, ({ isAuthenticated }: any) => {
     return {
-      props: { isAuthenticated, user },
+      props: { isAuthenticated },
     };
   });
 }

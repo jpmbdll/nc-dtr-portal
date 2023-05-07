@@ -1,12 +1,15 @@
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
-import { FormControl, Modal, Button } from "@/components";
 import { toast } from "react-toastify";
+
+import { FormControl, Modal, Button } from "@/components";
+import { useUser } from "@/hooks";
 import { api_url } from "@/data";
-type Props = { user: any } & UseDisclosureProps;
+
+type Props = UseDisclosureProps;
 
 export default function ChangePasswordModal(props: Props) {
-  const { user } = props;
+  const { user } = useUser();
   const { isOpen = false, onClose = () => {} } = props;
   const methods = useForm({
     defaultValues: {

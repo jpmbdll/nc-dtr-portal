@@ -1,10 +1,3 @@
-import Image from "next/image";
-import Link from "next/link";
-import { toast } from "react-toastify";
-import { useRouter } from "next/router";
-import { useForm, FormProvider } from "react-hook-form";
-import cookies from "next-cookies";
-
 import {
   Card,
   CardHeader,
@@ -14,12 +7,21 @@ import {
   VStack,
   Center,
 } from "@chakra-ui/react";
+import { useForm, FormProvider } from "react-hook-form";
+import { useRouter } from "next/router";
+import { toast } from "react-toastify";
+import cookies from "next-cookies";
+import Image from "next/image";
+import Link from "next/link";
+
 import { FormControl, Button } from "@/components";
+import { useUser } from "@/hooks";
 import { api_url } from "@/data";
 
 export default function Login() {
   const methods = useForm();
   const router = useRouter();
+  const { setUser } = useUser();
   const { handleSubmit } = methods;
 
   const submit = async (data: any) => {
@@ -37,6 +39,7 @@ export default function Login() {
         document.cookie = "isAuthenticated=true; path=/";
         document.cookie = `authToken=${responseData?.authToken}; path=/`;
         document.cookie = `user=${JSON.stringify(responseData?.user)}; path=/`;
+        setUser(JSON.stringify(responseData?.user));
         router.replace("/home");
       } else {
         toast.error(responseData?.message || "Invalid username and password.");
