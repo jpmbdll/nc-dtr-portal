@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   Card,
   CardHeader,
@@ -8,6 +9,7 @@ import {
   Center,
 } from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useMutation } from "react-query";
 import { useRouter } from "next/router";
 import { toast } from "react-toastify";
 import cookies from "next-cookies";
@@ -24,32 +26,35 @@ export default function Login() {
   const { setUser } = useUser();
   const { handleSubmit } = methods;
 
-  const submit = async (data: any) => {
-    try {
-      const response = await fetch(`${api_url}/api/auth`, {
-        method: "POST",
-        body: JSON.stringify({ ...data }),
-        headers: {
-          "Content-Type": "application/json",
+  const login = async (data: any) => {
+    const res = await fetch(`${api_url}/api/auth`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+
+    return await res.json();
+  };
+
+  const mutation = useMutation(login);
+
+  const onSubmit = useCallback(
+    (data: any) => {
+      mutation.mutate(data, {
+        onSuccess: (data) => {
+          document.cookie = "isAuthenticated=true; path=/";
+          document.cookie = `authToken=${data?.authToken}; path=/`;
+          document.cookie = `user=${JSON.stringify(data?.user)}; path=/`;
+          setUser(JSON.stringify(data?.user));
+          router.replace("/home");
+        },
+        onError: () => {
+          toast.error(data?.message || "Invalid username and password.");
         },
       });
-      const responseData = await response.json();
-
-      if (responseData?.user && responseData?.authToken) {
-        document.cookie = "isAuthenticated=true; path=/";
-        document.cookie = `authToken=${responseData?.authToken}; path=/`;
-        document.cookie = `user=${JSON.stringify(responseData?.user)}; path=/`;
-        setUser(JSON.stringify(responseData?.user));
-        router.replace("/home");
-      } else {
-        toast.error(responseData?.message || "Invalid username and password.");
-      }
-    } catch (error) {
-      toast.error(
-        "There is an issue processing your request. Please contact your administrator."
-      );
-    }
-  };
+    },
+    [mutation, router, setUser]
+  );
 
   return (
     <VStack
@@ -72,7 +77,7 @@ export default function Login() {
           </CardHeader>
           <CardBody px={8} pt={4} pb={8}>
             <FormProvider {...methods}>
-              <form onSubmit={handleSubmit(submit)}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <FormControl
                   type="text"
                   label="Username"
