@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,12 +12,11 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
-import { Layout, Card } from "@/components";
+import { useQuery } from "react-query";
 import { Bar } from "react-chartjs-2";
 import { VStack, Grid, GridItem } from "@chakra-ui/react";
-import { checkAuth } from "@/lib";
-import { api_url } from "@/data";
-import { toast } from "react-toastify";
+import { Layout, Card, Spinner } from "@/components";
+import { checkAuth, get } from "@/lib";
 
 ChartJS.register(
   LineElement,
@@ -63,31 +62,18 @@ const labels = [
 export default function Dashboard(props: any) {
   const { user } = props;
 
-  const [attendance, setAttendance] = useState<any>([]);
-
-  useEffect(() => {
-    const getAttendance = async () => {
-      try {
-        const response = await fetch(`${api_url}/api/Attendance`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const responseData = await response.json();
-
-        setAttendance(responseData);
-      } catch (error) {
-        toast.error("There was an error fetching attendance.");
-      }
-    };
-
-    getAttendance();
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, []);
+  const {
+    data: attendance = [],
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["attendance"],
+    queryFn: async () =>
+      await get({
+        url: `/api/Attendance`,
+        key: "attendance",
+      }),
+  });
 
   const data = {
     labels,
@@ -108,22 +94,25 @@ export default function Dashboard(props: any) {
   return (
     <Layout user={user}>
       <VStack w="100%">
-        <Grid
-          templateRows="repeat(2, 1fr)"
-          templateColumns="repeat(2, 1fr)"
-          gap={4}
-          w="100%"
-          maxH="calc(100vh - 100px)"
-          overflowY="auto"
-        >
-          {attendance && (
-            <GridItem colSpan={1} rowSpan={1}>
-              <Card title="Attendance Graph" w="100%">
-                <Bar options={barOptions} data={data} />
-              </Card>
-            </GridItem>
-          )}
-        </Grid>
+        {isFetching || (isLoading && <Spinner />)}
+        {!isFetching && !isLoading && <Spinner /> && (
+          <Grid
+            templateRows="repeat(2, 1fr)"
+            templateColumns="repeat(2, 1fr)"
+            gap={4}
+            w="100%"
+            maxH="calc(100vh - 100px)"
+            overflowY="auto"
+          >
+            {attendance && (
+              <GridItem colSpan={1} rowSpan={1}>
+                <Card title="Attendance Graph" w="100%">
+                  <Bar options={barOptions} data={data} />
+                </Card>
+              </GridItem>
+            )}
+          </Grid>
+        )}
       </VStack>
     </Layout>
   );
