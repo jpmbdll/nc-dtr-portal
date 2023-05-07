@@ -66,10 +66,15 @@ export default function Login() {
       }}
     >
       <VStack>
-        <Center mb={5} mt="20%">
+        <Center mb={5} mt="10%">
           <Image src="/logo.png" alt="logo" width={150} height={150} />
         </Center>
-        <Card variant="elevated" size="lg" w="30rem">
+        <Center mb={5}>
+          <Heading color="blue.500" mb={5}>
+            Norzagaray College Face Recognition DTR
+          </Heading>
+        </Center>
+        <Card variant="elevated" size="lg" w="40rem">
           <CardHeader px={8} pt={8} pb={0}>
             <Center>
               <Heading size="lg">Login</Heading>
