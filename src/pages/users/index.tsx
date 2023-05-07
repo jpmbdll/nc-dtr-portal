@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
 import { checkAuth, get } from "@/lib";
 import { api_url } from "@/data";
+import { useSelectedUser } from "@/hooks";
 
 import UserModal from "./user-modal";
 
@@ -25,7 +26,7 @@ export default function Users(props: any) {
 
   const [page, setPage] = useState(0);
 
-  const [selected, setSelected] = useState<any>(null);
+  const { selected, setSelected } = useSelectedUser();
 
   const {
     data: users = [],
@@ -177,8 +178,6 @@ export default function Users(props: any) {
           <UserModal
             isOpen={isOpenAddUser}
             onClose={onCloseAddUser}
-            selected={selected}
-            setSelected={setSelected}
             list={users}
             user={user}
           />

@@ -18,26 +18,19 @@ import {
   DepartmentOptions,
   api_url,
 } from "@/data";
-
-import ScheduleModal from "./schedule-modal";
+import { useSelectedUser } from "@/hooks";
 import { get } from "@/lib";
 
+import ScheduleModal from "./schedule-modal";
+
 type Props = {
-  selected: any;
-  setSelected: any;
   list: any;
   user: any;
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
-  const {
-    isOpen = false,
-    onClose = () => {},
-    selected,
-    setSelected,
-    list,
-    user,
-  } = props;
+  const { isOpen = false, onClose = () => {}, list, user } = props;
+  const { selected, setSelected } = useSelectedUser();
   const [page, setPage] = useState(0);
   const methods = useForm({
     defaultValues: selected ? selected : {},
