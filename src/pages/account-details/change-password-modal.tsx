@@ -1,5 +1,7 @@
+import { useCallback } from "react";
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import { FormControl, Modal, Button } from "@/components";
@@ -20,28 +22,39 @@ export default function ChangePasswordModal(props: Props) {
   });
   const { handleSubmit } = methods;
 
-  const submit = async (data: any) => {
-    try {
-      const response = await fetch(
-        `${api_url}/api/ChangePassword/${user.Username}`,
-        {
-          method: "POST",
-          body: JSON.stringify({ ...data }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const responseData = await response.json();
+  const submitChangePassword = async (data: any) => {
+    const url = `${api_url}/api/ChangePassword/${user.Username}`;
+    const res = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-      toast.success("Successfully changed  password!");
-    } catch (error) {
-      toast.error("There was an error changing password.");
-    } finally {
-      methods.reset();
-      onClose();
-    }
+    return await res.json();
   };
+
+  const mutation = useMutation(submitChangePassword);
+
+  const onSubmit = useCallback(
+    (data: any) => {
+      mutation.mutate(data, {
+        onSuccess: () => {
+          toast.success("Successfully changed password!");
+        },
+        onError: () => {
+          toast.error("There was an error changing password.");
+        },
+        onSettled: () => {
+          methods.reset();
+          onClose();
+        },
+      });
+    },
+    [mutation, onClose, methods]
+  );
+
   return (
     <Modal
       isOpen={isOpen}
@@ -55,7 +68,7 @@ export default function ChangePasswordModal(props: Props) {
         <Button
           mr={3}
           colorScheme="twitter"
-          onClick={handleSubmit(submit)}
+          onClick={handleSubmit(onSubmit)}
           label="Change Password"
         />
       }
