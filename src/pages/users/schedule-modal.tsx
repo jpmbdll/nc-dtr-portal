@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { UseDisclosureProps, Grid, GridItem } from "@chakra-ui/react";
 import { useForm, FormProvider } from "react-hook-form";
+import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import { FormControl, Modal, Button } from "@/components";
@@ -24,25 +25,38 @@ export default function ScheduleModal(props: Props) {
   });
   const { handleSubmit } = methods;
 
-  const submit = async (data: any) => {
-    try {
-      const response = await fetch(`${api_url}/api/Schedule/${user.userName}`, {
-        method: "PUT",
-        body: JSON.stringify(data),
-        headers: {
-          "Content-Type": "application/json",
+  const submitSchedule = async (data: any) => {
+    const url = `${api_url}/api/Schedule/${user.userName}`;
+    const res = await fetch(url, {
+      method: "PUT",
+      body: JSON.stringify(data),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await res.json();
+  };
+
+  const mutation = useMutation(submitSchedule);
+
+  const onSubmit = useCallback(
+    (data: any) => {
+      mutation.mutate(data, {
+        onSuccess: () => {
+          toast.success("Schedule has been added successfully!");
+        },
+        onError: () => {
+          toast.error("There was an error adding this schedule.");
+        },
+        onSettled: () => {
+          methods.reset();
+          onClose();
         },
       });
-      const responseData = await response.json();
-
-      toast.success("Schedule has been added successfully!");
-    } catch (error) {
-      toast.error("There was an error adding this schedule.");
-    } finally {
-      methods.reset();
-      onClose();
-    }
-  };
+    },
+    [mutation, onClose, methods]
+  );
 
   useEffect(() => {
     const getCodes = async () => {
@@ -85,7 +99,7 @@ export default function ScheduleModal(props: Props) {
         <Button
           colorScheme="twitter"
           mr={3}
-          onClick={handleSubmit(submit)}
+          onClick={handleSubmit(onSubmit)}
           label="Add Schedule"
         />
       }
