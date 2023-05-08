@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -12,11 +12,13 @@ import {
   PointElement,
   LineElement,
 } from "chart.js";
+import { VStack, Grid, GridItem } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { Bar } from "react-chartjs-2";
-import { VStack, Grid, GridItem } from "@chakra-ui/react";
-import { Layout, Card, Spinner } from "@/components";
-import { checkAuth, get } from "@/lib";
+import { BsFillBuildingFill, BsFillPeopleFill } from "react-icons/bs";
+
+import { Layout, Card, Spinner, Metrics } from "@/components";
+import { get, checkAuth } from "@/lib";
 
 ChartJS.register(
   LineElement,
@@ -90,28 +92,37 @@ export default function Dashboard() {
   };
 
   return (
-    <Layout>
-      <VStack w="100%">
-        {isFetching || (isLoading && <Spinner />)}
-        {!isFetching && !isLoading && <Spinner /> && (
-          <Grid
-            templateRows="repeat(2, 1fr)"
-            templateColumns="repeat(2, 1fr)"
-            gap={4}
-            w="100%"
-            maxH="calc(100vh - 100px)"
-            overflowY="auto"
-          >
-            {attendance && (
-              <GridItem colSpan={1} rowSpan={1}>
-                <Card title="Attendance Graph" w="100%">
-                  <Bar options={barOptions} data={data} />
-                </Card>
-              </GridItem>
-            )}
+    <Layout title="Dashboards">
+      {isFetching || (isLoading && <Spinner />)}
+      {!isFetching && !isLoading && (
+        <VStack spacing={4}>
+          <Grid templateColumns="repeat(3, 1fr)" w="100%" gap={4}>
+            <GridItem colSpan={1}>
+              <Metrics
+                heading="Total Departments"
+                count={20}
+                color="green.400"
+                icon={
+                  <BsFillBuildingFill width="100%" color="white" size={56} />
+                }
+              />
+            </GridItem>
+            <GridItem colSpan={1}>
+              <Metrics
+                heading="Total Employees"
+                count={80}
+                color="blue.400"
+                icon={<BsFillPeopleFill width="100%" color="white" size={56} />}
+              />
+            </GridItem>
           </Grid>
-        )}
-      </VStack>
+          <VStack w="100%">
+            <Card title="Attendance Graph" w="100%">
+              <Bar options={barOptions} data={data} height="100px !important" />
+            </Card>
+          </VStack>
+        </VStack>
+      )}
     </Layout>
   );
 }
