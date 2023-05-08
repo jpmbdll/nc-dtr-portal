@@ -61,8 +61,10 @@ export default function Login() {
       sx={{
         w: "100vw",
         h: "100vh",
-        bgColor: "#52ACFF",
-        bgImage: "linear-gradient(315deg, #52ACFF 25%, #FFE32C 100%)",
+        bgImage: "/bg.png",
+        bgRepeat: "no-repeat",
+        bgAttachment: "con",
+        bgSize: "cover",
       }}
     >
       <VStack>
@@ -70,9 +72,7 @@ export default function Login() {
           <Image src="/logo.png" alt="logo" width={150} height={150} />
         </Center>
         <Center mb={5}>
-          <Heading color="blue.500" mb={5}>
-            Norzagaray College Face Recognition DTR
-          </Heading>
+          <Heading mb={5}>Norzagaray College Face Recognition DTR</Heading>
         </Center>
         <Card variant="elevated" size="lg" w="40rem">
           <CardHeader px={8} pt={8} pb={0}>
