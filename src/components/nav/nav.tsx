@@ -23,7 +23,7 @@ export function Nav() {
       }}
     >
       <Flex>
-        <Image src="/logo.png" alt="logo" width={50} height={50} />
+        <Image src="/nclogo.png" alt="logo" width={50} height={50} />
         <Heading
           pl={5}
           size="md"

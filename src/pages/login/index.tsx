@@ -69,7 +69,7 @@ export default function Login() {
     >
       <VStack>
         <Center mb={5} mt="10%">
-          <Image src="/logo.png" alt="logo" width={150} height={150} />
+          <Image src="/nclogo.png" alt="logo" width={150} height={150} />
         </Center>
         <Center mb={5}>
           <Heading mb={5}>Norzagaray College Face Recognition DTR</Heading>

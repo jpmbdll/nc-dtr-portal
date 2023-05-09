@@ -37,7 +37,7 @@ export default function Home() {
 
         <GridItem rowSpan={1} colSpan={1}>
           <Center>
-            <Image src="/logo.png" alt="logo" width={150} height={150} />
+            <Image src="/nclogo.png" alt="logo" width={150} height={150} />
           </Center>
         </GridItem>
 

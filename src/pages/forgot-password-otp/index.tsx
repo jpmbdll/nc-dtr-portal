@@ -55,7 +55,7 @@ export default function OTP() {
     >
       <VStack>
         <Center mb={5} mt="20%">
-          <Image src="/logo.png" alt="logo" width={150} height={150} />
+          <Image src="/nclogo.png" alt="logo" width={150} height={150} />
         </Center>
         <Card variant="elevated" size="lg" w="30rem">
           <CardHeader px={8} pt={8} pb={0}>
