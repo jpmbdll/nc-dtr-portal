@@ -150,6 +150,7 @@ export default function UserModal(props: Props) {
         }}
         title="Add User"
         size="6xl"
+        scrollable
         actions={
           <Button
             colorScheme={selected ? "yellow" : "twitter"}

@@ -15,6 +15,7 @@ import {
 type Props = {
   title: string;
   actions?: ReactNode;
+  scrollable?: boolean;
 } & UseDisclosureProps &
   ModalProps;
 export function Modal(props: Props) {
@@ -23,6 +24,7 @@ export function Modal(props: Props) {
     isOpen = false,
     onClose = () => {},
     actions = null,
+    scrollable = false,
     children,
     ...rest
   } = props;
@@ -34,7 +36,15 @@ export function Modal(props: Props) {
         <ModalHeader>{title}</ModalHeader>
         <Divider />
         <ModalCloseButton />
-        <ModalBody px={10} maxH="calc(100vh - 300px)" overflowY="auto">
+        <ModalBody
+          px={10}
+          sx={{
+            ...(scrollable && {
+              maxH: "calc(100vh - 300px)",
+              overflowY: "auto",
+            }),
+          }}
+        >
           {children}
         </ModalBody>
         <ModalFooter>{actions}</ModalFooter>
