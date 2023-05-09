@@ -222,10 +222,10 @@ export default function Users() {
   );
 }
 
-export async function getServerSideProps(context: any) {
-  return checkAuth(context, ({ isAuthenticated }: any) => {
-    return {
-      props: { isAuthenticated },
-    };
-  });
-}
+// export async function getServerSideProps(context: any) {
+//   return checkAuth(context, ({ isAuthenticated }: any) => {
+//     return {
+//       props: { isAuthenticated },
+//     };
+//   });
+// }
