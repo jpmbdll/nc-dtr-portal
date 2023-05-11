@@ -36,7 +36,7 @@ export default function Users() {
     queryKey: ["users"],
     queryFn: async () =>
       await get({
-        url: `/api/user`,
+        url: `api/user`,
         key: "users",
       }),
   });
@@ -59,17 +59,15 @@ export default function Users() {
     onClose: onConfirmDeleteClose,
   } = useDisclosure();
 
-  const tableData =
-    users ||
-    [].map((user: any) => ({
-      userNo: user.userNo,
-      role: user.role,
-      name: user.name,
-      email: user.email,
-      contact: user.contact,
-      regDate: user.regDate,
-      status: user.status,
-    }));
+  const tableData = users?.map((user: any) => ({
+    userNo: user.userNo,
+    role: user.role,
+    name: `${user.fName} ${user.lName}`,
+    email: user.email,
+    contact: user.contact,
+    hiredDate: user.hiredDate,
+    status: user.status,
+  }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
@@ -83,10 +81,7 @@ export default function Users() {
       header: "Role",
     }),
     columnHelper.accessor("name", {
-      cell: (info) => {
-        const { fName, lName } = info.row.original;
-        return `${fName} ${lName}`;
-      },
+      cell: (info) => info.getValue(),
       header: "Name",
     }),
     columnHelper.accessor("email", {
@@ -108,9 +103,9 @@ export default function Users() {
       },
       header: "Status",
     }),
-    columnHelper.accessor("createdAt", {
+    columnHelper.accessor("hiredDate", {
       cell: (info) => info.getValue(),
-      header: "Reg. Date",
+      header: "Hired Date",
     }),
     columnHelper.accessor("action", {
       cell: (info) => (
@@ -222,10 +217,10 @@ export default function Users() {
   );
 }
 
-// export async function getServerSideProps(context: any) {
-//   return checkAuth(context, ({ isAuthenticated }: any) => {
-//     return {
-//       props: { isAuthenticated },
-//     };
-//   });
-// }
+export async function getServerSideProps(context: any) {
+  return checkAuth(context, ({ isAuthenticated }: any) => {
+    return {
+      props: { isAuthenticated },
+    };
+  });
+}

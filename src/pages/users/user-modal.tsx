@@ -86,7 +86,7 @@ export default function UserModal(props: Props) {
     queryKey: ["schedules"],
     queryFn: async () =>
       await get({
-        url: `/api/Schedules/${selected.userName}`,
+        url: `api/Schedules/${selected.userName}`,
         key: "schedules",
       }),
     enabled: Boolean(selected),

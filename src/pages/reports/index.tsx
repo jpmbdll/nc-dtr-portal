@@ -1,8 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { VStack, Box, Flex, Card } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
-import ReactToPrint from "react-to-print";
 import { useQuery } from "react-query";
 
 import { Layout, Table, Button, FormControl } from "@/components";
@@ -27,7 +26,7 @@ export default function Reports() {
     queryKey: ["attendance"],
     queryFn: async () =>
       await get({
-        url: `/api/Attendance`,
+        url: `api/Attendance`,
         key: "attendance",
       }),
   });
@@ -36,20 +35,18 @@ export default function Reports() {
     //Perform search
   };
 
-  const tableData =
-    attendance ||
-    [].map((report: any) => ({
-      id: report.id,
-      date: report.date,
-      name: report.name,
-      amArrival: report.clockIn,
-      amDeparture: report.clockOut,
-      pmArrival: report.clockIn,
-      pmDeparture: report.pmDeparture,
-      hours: report.totalHours === null ? 0 : report.totalHours,
-      minutes: report.minutes,
-      total: report.total,
-    }));
+  const tableData = attendance?.map((report: any) => ({
+    id: report.attendanceId,
+    date: report.date,
+    name: `${report.firstName} ${report.lastName}`,
+    amArrival: report.timeIn,
+    amDeparture: report.timeOut,
+    pmArrival: report.timeIn,
+    pmDeparture: report.timeOut,
+    hours: report.totalHours === null ? 0 : report.totalHours,
+    minutes: null,
+    total: null,
+  }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
@@ -63,10 +60,12 @@ export default function Reports() {
       header: "Date",
     }),
     columnHelper.accessor("name", {
-      cell: (info) => info.getValue(),
+      cell: (info) => {
+        return info.getValue();
+      },
       header: "Name",
     }),
-    columnHelper.accessor("clockIn", {
+    columnHelper.accessor("amArrival", {
       cell: (info) => {
         const clockIn = info.getValue();
         if (!clockIn) {
@@ -86,7 +85,7 @@ export default function Reports() {
       },
       header: "Arrival (AM)",
     }),
-    columnHelper.accessor("clockOut", {
+    columnHelper.accessor("amDeparture", {
       cell: (info) => {
         const clockIn = info.getValue();
         if (!clockIn) {
@@ -106,7 +105,7 @@ export default function Reports() {
       },
       header: "Departure (AM)",
     }),
-    columnHelper.accessor("clockIn", {
+    columnHelper.accessor("pmArrival", {
       cell: (info) => {
         const clockIn = info.getValue();
         if (!clockIn) {
@@ -126,7 +125,7 @@ export default function Reports() {
       },
       header: "Arrival (PM)",
     }),
-    columnHelper.accessor("clockOut", {
+    columnHelper.accessor("pmDeparture", {
       cell: (info) => {
         const clockOut = info.getValue();
         if (!clockOut) {
@@ -146,15 +145,8 @@ export default function Reports() {
       },
       header: "Departure (PM)",
     }),
-    columnHelper.accessor("totalHours", {
-      cell: (info) => {
-        const totalHours = info.getValue();
-        if (!totalHours) {
-          return 0;
-        }
-        const hours = totalHours.slice(0, 2).replace(/^0+/, "") || "0";
-        return `${hours}`;
-      },
+    columnHelper.accessor("hours", {
+      cell: (info) => info.getValue(),
       header: "Hours",
     }),
 
@@ -169,7 +161,7 @@ export default function Reports() {
       },
       header: "Minutes",
     }),
-    columnHelper.accessor("totalHours", {
+    columnHelper.accessor("total", {
       cell: (info) => {
         const totalHours = info.getValue();
         if (!totalHours) {
@@ -214,11 +206,16 @@ export default function Reports() {
           isLoading={isFetching || isLoading}
           actions={
             <Box>
-              <ReactToPrint
-                trigger={() => (
-                  <Button label="Print" colorScheme="twitter" size="sm" />
-                )}
-                content={() => printRef.current}
+              <Button
+                label="Print"
+                colorScheme="twitter"
+                size="sm"
+                onClick={async () => {
+                  await get({
+                    url: `Attendance/exportAttendance`,
+                    key: "attendance",
+                  });
+                }}
               />
             </Box>
           }

@@ -70,7 +70,7 @@ export default function Dashboard() {
     queryKey: ["attendance"],
     queryFn: async () =>
       await get({
-        url: `/api/Attendance`,
+        url: `api/Attendance`,
         key: "attendance",
       }),
   });

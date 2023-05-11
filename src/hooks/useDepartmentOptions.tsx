@@ -10,7 +10,7 @@ export function useDepartmentOptions() {
     queryKey: ["department-options"],
     queryFn: async () =>
       await get({
-        url: `/api/user`,
+        url: `api/user`,
         key: "users",
       }),
   });

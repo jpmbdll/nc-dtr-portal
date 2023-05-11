@@ -66,7 +66,7 @@ export default function ScheduleModal(props: Props) {
     queryKey: ["subjects"],
     queryFn: async () =>
       await get({
-        url: `/api/Subject`,
+        url: `api/Subject`,
         key: "subjects",
       }),
   });

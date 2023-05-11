@@ -10,7 +10,7 @@ export function useJobTitleOptions() {
     queryKey: ["jobTitle-options"],
     queryFn: async () =>
       await get({
-        url: `/api/user`,
+        url: `api/user`,
         key: "users",
       }),
   });

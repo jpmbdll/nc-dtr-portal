@@ -10,7 +10,7 @@ export function useUserStatusOptions() {
     queryKey: ["user-status-options"],
     queryFn: async () =>
       await get({
-        url: `/api/user`,
+        url: `api/user`,
         key: "users",
       }),
   });
