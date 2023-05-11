@@ -17,13 +17,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { FormControl, Button } from "@/components";
-import { useUser } from "@/hooks";
+import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 
 export default function Login() {
   const methods = useForm();
   const router = useRouter();
-  const { setUser } = useUser();
+  const { saveUser } = useUserInfo();
   const { handleSubmit } = methods;
 
   const login = async (data: any) => {
@@ -45,7 +45,7 @@ export default function Login() {
           document.cookie = "isAuthenticated=true; path=/";
           document.cookie = `authToken=${data?.authToken}; path=/`;
           document.cookie = `user=${JSON.stringify(data?.user)}; path=/`;
-          setUser(JSON.stringify(data?.user));
+          saveUser(data?.user);
           router.replace("/home");
         },
         onError: () => {
@@ -53,7 +53,7 @@ export default function Login() {
         },
       });
     },
-    [mutation, router, setUser]
+    [mutation, router, saveUser]
   );
 
   return (

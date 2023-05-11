@@ -1,4 +1,4 @@
-export * from "./useUser";
+export * from "./useUserInfo";
 export * from "./useSelectedUser";
 export * from "./useDepartmentOptions";
 export * from "./useUserStatusOptions";

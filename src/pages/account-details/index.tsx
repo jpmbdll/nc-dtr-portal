@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 
 import { useForm, FormProvider } from "react-hook-form";
 import { Layout, FormControl, Button, Card } from "@/components";
-import { useUser } from "@/hooks";
+import { useUserInfo } from "@/hooks";
 import { checkAuth } from "@/lib";
 import {
   JobtitleOptions,
@@ -24,16 +24,16 @@ import {
 import ChangePasswordModal from "./change-password-modal";
 
 export default function AccountDetails() {
-  const { user } = useUser();
+  const { userInfo } = useUserInfo();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const methods = useForm({
-    defaultValues: user,
+    defaultValues: userInfo,
   });
   const { handleSubmit } = methods;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const submitUser = async (data: any) => {
-    const res = await fetch(`${api_url}/api/User/${user.Username}`, {
+    const res = await fetch(`${api_url}/api/User/${userInfo.Username}`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {

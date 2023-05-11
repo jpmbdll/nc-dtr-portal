@@ -15,14 +15,14 @@ import { useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
-import { useSelectedUser, useUser } from "@/hooks";
+import { useSelectedUser, useUserInfo } from "@/hooks";
 import { checkAuth, get } from "@/lib";
 import { api_url } from "@/data";
 
 import UserModal from "./user-modal";
 
 export default function Users() {
-  const { user } = useUser();
+  const { userInfo } = useUserInfo();
 
   const [page, setPage] = useState(0);
 
@@ -156,7 +156,7 @@ export default function Users() {
           onSaveCb={async () => {
             try {
               const response = await fetch(
-                `${api_url}/api/DeleteUser/${user.userName}`,
+                `${api_url}/api/DeleteUser/${userInfo.userName}`,
                 {
                   method: "POST",
                   headers: {

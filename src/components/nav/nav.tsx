@@ -1,10 +1,10 @@
 import Image from "next/image";
 import { Flex, Heading } from "@chakra-ui/react";
 import { Avatar } from "@/components";
-import { useUser } from "@/hooks";
+import { useUserInfo } from "@/hooks";
 
 export function Nav() {
-  const { user } = useUser();
+  const { userInfo } = useUserInfo();
 
   return (
     <Flex
@@ -38,8 +38,8 @@ export function Nav() {
         </Heading>
       </Flex>
       <Avatar
-        name={`${user?.fName} ${user?.lName}`}
-        accessType={user?.JobTitle || "admin"}
+        name={`${userInfo?.fName} ${userInfo?.lName}`}
+        accessType={userInfo?.role || "undefined role"}
       />
     </Flex>
   );

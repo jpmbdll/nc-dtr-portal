@@ -5,7 +5,7 @@ import { useMutation, useQuery } from "react-query";
 import { toast } from "react-toastify";
 
 import { FormControl, Modal, Button } from "@/components";
-import { useUser } from "@/hooks";
+import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 import { get } from "@/lib";
 
@@ -13,7 +13,7 @@ type Props = UseDisclosureProps;
 
 export default function ScheduleModal(props: Props) {
   const { isOpen = false, onClose = () => {} } = props;
-  const { user } = useUser();
+  const { userInfo } = useUserInfo();
 
   const methods = useForm({
     defaultValues: {
@@ -26,7 +26,7 @@ export default function ScheduleModal(props: Props) {
   const { handleSubmit } = methods;
 
   const submitSchedule = async (data: any) => {
-    const url = `${api_url}/api/Schedule/${user.userName}`;
+    const url = `${api_url}/api/Schedule/${userInfo.userName}`;
     const res = await fetch(url, {
       method: "PUT",
       body: JSON.stringify(data),

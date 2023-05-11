@@ -13,8 +13,9 @@ import {
   MenuDivider,
 } from "@chakra-ui/react";
 import { BsFillCaretDownFill, BsPersonFill } from "react-icons/bs";
-import { BiLogOut } from "react-icons/bi";
 import { AiOutlineUser } from "react-icons/ai";
+import { BiLogOut } from "react-icons/bi";
+import { useUserInfo } from "@/hooks";
 
 type Props = {
   name: string;
@@ -24,12 +25,14 @@ type Props = {
 export function Avatar(props: Props) {
   const { name, accessType } = props;
   const router = useRouter();
+  const { destroyUser } = useUserInfo();
   const handleLogout = () => {
     document.cookie =
       "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie =
       "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    destroyUser();
     router.replace("/login");
   };
   return (

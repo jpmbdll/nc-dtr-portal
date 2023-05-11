@@ -5,13 +5,13 @@ import { useMutation } from "react-query";
 import { toast } from "react-toastify";
 
 import { FormControl, Modal, Button } from "@/components";
-import { useUser } from "@/hooks";
+import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 
 type Props = UseDisclosureProps;
 
 export default function ChangePasswordModal(props: Props) {
-  const { user } = useUser();
+  const { userInfo } = useUserInfo();
   const { isOpen = false, onClose = () => {} } = props;
   const methods = useForm({
     defaultValues: {
@@ -23,7 +23,7 @@ export default function ChangePasswordModal(props: Props) {
   const { handleSubmit } = methods;
 
   const submitChangePassword = async (data: any) => {
-    const url = `${api_url}/api/ChangePassword/${user.Username}`;
+    const url = `${api_url}/api/ChangePassword/${userInfo.Username}`;
     const res = await fetch(url, {
       method: "PUT",
       body: JSON.stringify(data),
