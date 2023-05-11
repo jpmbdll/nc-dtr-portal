@@ -26,7 +26,7 @@ export default function Users() {
 
   const [page, setPage] = useState(0);
 
-  const { selected, setSelected } = useSelectedUser();
+  const [selected, setSelected] = useState<any>(null);
 
   const {
     data: users = [],
@@ -173,6 +173,8 @@ export default function Users() {
           <UserModal
             isOpen={isOpenAddUser}
             onClose={onCloseAddUser}
+            selected={selected}
+            setSelected={setSelected}
             list={users}
           />
         )}

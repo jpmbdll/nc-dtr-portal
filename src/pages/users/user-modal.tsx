@@ -14,26 +14,34 @@ import {
 
 import { FormControl, Modal, Button, Table } from "@/components";
 import {
-  JobtitleOptions,
+  EmploymentTypeOptions,
   StatusOptions,
   DepartmentOptions,
   api_url,
 } from "@/data";
-import { useSelectedUser } from "@/hooks";
 import { get } from "@/lib";
 
 import ScheduleModal from "./schedule-modal";
 
 type Props = {
   list: any;
+  selected: any;
+  setSelected: any;
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
-  const { isOpen = false, onClose = () => {}, list } = props;
-  const { selected, setSelected } = useSelectedUser();
+  const {
+    isOpen = false,
+    onClose = () => {},
+    list,
+    selected,
+    setSelected,
+  } = props;
   const [page, setPage] = useState(0);
   const methods = useForm({
-    defaultValues: selected ? selected : {},
+    defaultValues: selected
+      ? selected
+      : { employmentCode: null, status: null, department: null },
   });
   const { handleSubmit } = methods;
   const {
@@ -175,9 +183,9 @@ export default function UserModal(props: Props) {
               <GridItem colSpan={6}>
                 <FormControl
                   type="select"
-                  name="jobTitle"
-                  label="Job Title"
-                  options={JobtitleOptions}
+                  name="employmentCode"
+                  label="Employment Type"
+                  options={EmploymentTypeOptions}
                 />
               </GridItem>
               <GridItem colSpan={4}>
@@ -196,7 +204,11 @@ export default function UserModal(props: Props) {
                 <FormControl type="text" name="email" label="Email" />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="password" name="password" label="Password" />
+                <FormControl
+                  type="datepicker"
+                  name="hiredDate"
+                  label="Hired Date"
+                />
               </GridItem>
               <GridItem colSpan={6}>
                 <FormControl
@@ -209,7 +221,7 @@ export default function UserModal(props: Props) {
               <GridItem colSpan={6}>
                 <FormControl
                   type="select"
-                  name="department"
+                  name="departmentName"
                   label="Department"
                   options={DepartmentOptions}
                 />

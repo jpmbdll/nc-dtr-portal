@@ -102,6 +102,7 @@ export default function Login() {
                 <Button
                   type="submit"
                   label="Login"
+                  isLoading={mutation.isLoading}
                   colorScheme="twitter"
                   w="100%"
                   my={5}

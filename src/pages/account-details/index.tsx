@@ -15,7 +15,7 @@ import { Layout, FormControl, Button, Card } from "@/components";
 import { useUserInfo } from "@/hooks";
 import { checkAuth } from "@/lib";
 import {
-  JobtitleOptions,
+  EmploymentTypeOptions,
   StatusOptions,
   DepartmentOptions,
   api_url,
@@ -103,10 +103,10 @@ export default function AccountDetails() {
                 </GridItem>
                 <GridItem colSpan={6}>
                   <FormControl
-                    label="Job Title"
+                    label="Employment Type"
                     type="select"
-                    name="JobTitle"
-                    options={JobtitleOptions}
+                    name="employmentCode"
+                    options={EmploymentTypeOptions}
                     isReadOnly={true}
                   />
                 </GridItem>

@@ -4,5 +4,5 @@ export * from "./reports";
 export * from "./userSchedule";
 export * from "./department";
 export * from "./status";
-export * from "./jobTitle";
+export * from "./employmentType";
 export * from "./api";
