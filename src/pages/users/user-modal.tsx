@@ -3,7 +3,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
 import { BsFillTrash3Fill } from "react-icons/bs";
 import { useMutation } from "react-query";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import {
   UseDisclosureProps,
@@ -33,6 +33,7 @@ type Props = {
 } & UseDisclosureProps;
 
 export default function UserModal(props: Props) {
+  const queryClient = useQueryClient();
   const {
     isOpen = false,
     onClose = () => {},
@@ -43,7 +44,10 @@ export default function UserModal(props: Props) {
   const [page, setPage] = useState(0);
   const methods = useForm({
     defaultValues: selected
-      ? selected
+      ? {
+          ...selected,
+          hiredDate: selected.hiredDate ? new Date(selected.hiredDate) : "",
+        }
       : {
           employmentCode: null,
           status: null,
@@ -66,7 +70,7 @@ export default function UserModal(props: Props) {
       },
     });
 
-    return await res.json();
+    return res;
   };
 
   const mutation = useMutation(submitUser);
@@ -76,6 +80,7 @@ export default function UserModal(props: Props) {
       mutation.mutate(data, {
         onSuccess: () => {
           toast.success("User has been added/updated successfully!");
+          queryClient.invalidateQueries("users");
         },
         onError: () => {
           toast.error("There was an error adding/updating this user.");
@@ -87,7 +92,7 @@ export default function UserModal(props: Props) {
         },
       });
     },
-    [mutation, setSelected, onClose, methods]
+    [mutation, setSelected, onClose, methods, queryClient]
   );
 
   const {
@@ -161,6 +166,8 @@ export default function UserModal(props: Props) {
     }
   };
 
+  const isDisabled = Boolean(selected);
+
   return (
     <Fragment>
       {isAddScheduleOpen && (
@@ -199,7 +206,8 @@ export default function UserModal(props: Props) {
                   type="text"
                   name="userNo"
                   label="ID No."
-                  validator={validateIdNo}
+                  validator={selected ? () => {} : validateIdNo}
+                  isDisabled={isDisabled}
                   isRequired
                 />
               </GridItem>
@@ -208,6 +216,7 @@ export default function UserModal(props: Props) {
                   type="text"
                   name="username"
                   label="Username"
+                  isDisabled={isDisabled}
                   isRequired
                 />
               </GridItem>
@@ -265,7 +274,6 @@ export default function UserModal(props: Props) {
                   type="datepicker"
                   name="hiredDate"
                   label="Hired Date"
-                  isRequired
                 />
               </GridItem>
               <GridItem colSpan={6}>

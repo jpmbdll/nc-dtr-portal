@@ -1,5 +1,5 @@
 import { ReactNode, forwardRef } from "react";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import { Table as ChakraTable } from "react-chakra-pagination";
 import { Card, Spinner } from "@/components";
 
@@ -26,7 +26,6 @@ export const Table = forwardRef((props: Props, ref: any) => {
     setPage,
     itemsPerPage = 8,
     isLoading = true,
-    ...rest
   } = props;
 
   return (
@@ -59,7 +58,6 @@ export const Table = forwardRef((props: Props, ref: any) => {
           onPageChange={(page) => setPage(page)}
           columns={columns}
           data={data}
-          {...rest}
         />
       )}
     </Card>

@@ -48,6 +48,7 @@ export default function Users() {
           ...(methods.watch("search") && { name: methods.watch("search") }),
         },
       }),
+    refetchOnWindowFocus: false,
   });
 
   const {
