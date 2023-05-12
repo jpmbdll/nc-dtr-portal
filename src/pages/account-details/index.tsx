@@ -24,7 +24,7 @@ import {
 import ChangePasswordModal from "./change-password-modal";
 
 export default function AccountDetails() {
-  const { userInfo } = useUserInfo();
+  const { userInfo, saveUser } = useUserInfo();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const methods = useForm({
     defaultValues: userInfo,
@@ -33,15 +33,22 @@ export default function AccountDetails() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const submitUser = async (data: any) => {
-    const res = await fetch(`${api_url}/api/User`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const res = await fetch(`${api_url}/api/User`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    return await res.json();
+      if (!res.ok) {
+        throw new Error();
+      }
+      return res;
+    } catch (error) {
+      throw new Error();
+    }
   };
 
   const mutation = useMutation(submitUser);
@@ -51,21 +58,25 @@ export default function AccountDetails() {
       mutation.mutate(data, {
         onSuccess: () => {
           toast.success("Account details saved successfully!");
+          saveUser(data);
+          window.location.reload();
         },
         onError: () => {
           toast.error("There was an error updating account details.");
         },
+
         onSettled: () => {
           setIsEditing(false);
         },
       });
     },
-    [mutation, setIsEditing]
+    [mutation, setIsEditing, saveUser]
   );
 
   useEffect(() => {
     if (userInfo) {
       methods.setValue("userNo", userInfo.userNo);
+      methods.setValue("employmentCode", userInfo.employmentCode);
       methods.setValue("status", userInfo.status);
       methods.setValue("username", userInfo.username);
       methods.setValue("lName", userInfo.lName);
@@ -75,6 +86,10 @@ export default function AccountDetails() {
       methods.setValue("departmentName", userInfo.departmentName);
       methods.setValue("contact", userInfo.contact);
       methods.setValue("address", userInfo.address);
+      methods.setValue(
+        "hiredDate",
+        userInfo.hiredDate ? new Date(userInfo.hiredDate) : ""
+      );
     }
   }, [userInfo, methods]);
 
@@ -161,7 +176,7 @@ export default function AccountDetails() {
                     isRequired
                   />
                 </GridItem>
-                <GridItem colSpan={6}>
+                <GridItem colSpan={4}>
                   <FormControl
                     label="Contact"
                     type="text"
@@ -170,11 +185,20 @@ export default function AccountDetails() {
                     isRequired
                   />
                 </GridItem>
-                <GridItem colSpan={6}>
+                <GridItem colSpan={4}>
                   <FormControl
                     label="Email"
                     type="text"
                     name="email"
+                    isReadOnly={!isEditing}
+                    isRequired
+                  />
+                </GridItem>
+                <GridItem colSpan={4}>
+                  <FormControl
+                    label="Hired Date"
+                    type="datepicker"
+                    name="hiredDate"
                     isReadOnly={!isEditing}
                     isRequired
                   />

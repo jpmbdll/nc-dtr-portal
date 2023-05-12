@@ -52,9 +52,14 @@ export function FormControl(props: Props) {
 
   // eslint-disable-next-line react/display-name
   const CustomInput = forwardRef(
-    ({ value, onClick, onChange, isTimepicker }: any, ref: any) => (
+    ({ value, onClick, onChange, isTimepicker, isDisabled }: any, ref: any) => (
       <InputGroup onClick={onClick}>
-        <Input value={value} onChange={onChange} ref={ref} />
+        <Input
+          value={value}
+          onChange={onChange}
+          ref={ref}
+          isDisabled={isDisabled}
+        />
         <InputRightElement width="3rem">
           <Box onClick={handleClick}>
             {isTimepicker ? (
@@ -103,7 +108,13 @@ export function FormControl(props: Props) {
               timeIntervals={10}
               timeCaption=""
               dateFormat={isTimepicker ? "h:mm aa" : "MM/dd/yyyy"}
-              customInput={<CustomInput isTimepicker={isTimepicker} />}
+              customInput={
+                <CustomInput
+                  isTimepicker={isTimepicker}
+                  isDisabled={isReadOnly}
+                />
+              }
+              disabled={isReadOnly}
             />
           )}
         />
