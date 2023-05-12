@@ -62,15 +62,22 @@ export default function UserModal(props: Props) {
   } = useDisclosure();
 
   const submitUser = async (data: any) => {
-    const res = await fetch(`${api_url}/api/User/`, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const res = await fetch(`${api_url}/api/Users/`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    return res;
+      if (!res.ok) {
+        throw new Error();
+      }
+      return res;
+    } catch (error) {
+      throw new Error();
+    }
   };
 
   const mutation = useMutation(submitUser);
@@ -166,6 +173,12 @@ export default function UserModal(props: Props) {
     }
   };
 
+  const validateUsername = (value: any) => {
+    if (list.find((l: any) => l.username === value)) {
+      return "Username is already existing.";
+    }
+  };
+
   const isDisabled = Boolean(selected);
 
   return (
@@ -216,6 +229,7 @@ export default function UserModal(props: Props) {
                   type="text"
                   name="username"
                   label="Username"
+                  validator={selected ? () => {} : validateUsername}
                   isDisabled={isDisabled}
                   isRequired
                 />
