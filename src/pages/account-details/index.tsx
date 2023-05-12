@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   VStack,
   Box,
@@ -29,11 +29,11 @@ export default function AccountDetails() {
   const methods = useForm({
     defaultValues: userInfo,
   });
-  const { handleSubmit } = methods;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const submitUser = async (data: any) => {
-    const res = await fetch(`${api_url}/api/User/${userInfo.Username}`, {
+    const res = await fetch(`${api_url}/api/User`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
@@ -63,6 +63,21 @@ export default function AccountDetails() {
     [mutation, setIsEditing]
   );
 
+  useEffect(() => {
+    if (userInfo) {
+      methods.setValue("userNo", userInfo.userNo);
+      methods.setValue("status", userInfo.status);
+      methods.setValue("username", userInfo.username);
+      methods.setValue("lName", userInfo.lName);
+      methods.setValue("mName", userInfo.mName);
+      methods.setValue("fName", userInfo.fName);
+      methods.setValue("email", userInfo.email);
+      methods.setValue("departmentName", userInfo.departmentName);
+      methods.setValue("contact", userInfo.contact);
+      methods.setValue("address", userInfo.address);
+    }
+  }, [userInfo, methods]);
+
   return (
     <Layout>
       <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
@@ -91,13 +106,13 @@ export default function AccountDetails() {
           w="100%"
         >
           <FormProvider {...methods}>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={methods.handleSubmit(onSubmit)}>
               <Grid templateColumns="repeat(12, 1fr)" gap={4}>
                 <GridItem colSpan={4}>
                   <FormControl
                     label="ID No."
                     type="text"
-                    name="UserNo"
+                    name="userNo"
                     isReadOnly={true}
                   />
                 </GridItem>
@@ -107,6 +122,7 @@ export default function AccountDetails() {
                     name="username"
                     label="Username"
                     isRequired
+                    isReadOnly={true}
                   />
                 </GridItem>
                 <GridItem colSpan={4}>
@@ -122,7 +138,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="First Name"
                     type="text"
-                    name="Fname"
+                    name="fName"
                     isReadOnly={!isEditing}
                     isRequired
                   />
@@ -131,7 +147,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Middle Name"
                     type="text"
-                    name="Mname"
+                    name="mName"
                     isReadOnly={!isEditing}
                     isRequired
                   />
@@ -140,7 +156,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Last Name"
                     type="text"
-                    name="Lname"
+                    name="lName"
                     isReadOnly={!isEditing}
                     isRequired
                   />
@@ -149,7 +165,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Contact"
                     type="text"
-                    name="Contact"
+                    name="contact"
                     isReadOnly={!isEditing}
                     isRequired
                   />
@@ -167,7 +183,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Status"
                     type="select"
-                    name="Status"
+                    name="status"
                     options={StatusOptions}
                     isReadOnly={!isEditing}
                     isRequired
@@ -177,7 +193,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Department"
                     type="select"
-                    name="Department"
+                    name="departmentName"
                     options={DepartmentOptions}
                     isReadOnly={!isEditing}
                     isRequired
@@ -187,7 +203,7 @@ export default function AccountDetails() {
                   <FormControl
                     label="Address"
                     type="text"
-                    name="Address"
+                    name="address"
                     isReadOnly={!isEditing}
                     isRequired
                   />

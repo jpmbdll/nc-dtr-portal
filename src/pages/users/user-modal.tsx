@@ -58,10 +58,7 @@ export default function UserModal(props: Props) {
   } = useDisclosure();
 
   const submitUser = async (data: any) => {
-    const url = selected
-      ? `${api_url}/api/User/${selected?.userName}`
-      : `${api_url}/api/User/`;
-    const res = await fetch(url, {
+    const res = await fetch(`${api_url}/api/User/`, {
       method: "PUT",
       body: JSON.stringify(data),
       headers: {
