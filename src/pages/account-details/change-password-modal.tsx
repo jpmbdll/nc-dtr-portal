@@ -23,7 +23,7 @@ export default function ChangePasswordModal(props: Props) {
   const { handleSubmit } = methods;
 
   const submitChangePassword = async (data: any) => {
-    const url = `${api_url}/api/ChangePassword/${userInfo.Username}`;
+    const url = `${api_url}/api/ChangePassword/${userInfo.username}`;
     const res = await fetch(url, {
       method: "PUT",
       body: JSON.stringify(data),

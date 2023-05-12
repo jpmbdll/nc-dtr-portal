@@ -74,7 +74,7 @@ export function FormControl(props: Props) {
         <Select
           placeholder=""
           {...register(name, {
-            required: isRequired,
+            required: isRequired ? `${label} is required.` : false,
           })}
           disabled={isReadOnly}
         >
@@ -91,6 +91,7 @@ export function FormControl(props: Props) {
         <Controller
           control={control}
           name={name}
+          rules={{ required: isRequired ? `${label} is required.` : false }}
           render={({ field }) => (
             <DatePicker
               placeholderText="Select date"
@@ -114,7 +115,7 @@ export function FormControl(props: Props) {
           <Input
             type={show ? "text" : "password"}
             {...register(name, {
-              required: isRequired,
+              required: isRequired ? `${label} is required.` : false,
             })}
             disabled={isReadOnly}
           />
