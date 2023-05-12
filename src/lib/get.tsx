@@ -33,7 +33,7 @@ function convertObjectToAPIParams(obj: any) {
 export async function get({ url, key, params }: Props) {
   let urlPath = `${api_url}${url}`;
 
-  if (Object.keys(params).length > 0) {
+  if (params && Object.keys(params).length > 0) {
     const paramString = convertObjectToAPIParams(params);
     urlPath = `${api_url}${url}?${paramString}`;
   }

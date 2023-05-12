@@ -38,13 +38,13 @@ export default function Reports() {
         url: `api/Attendance`,
         key: "attendance",
         params: {
-          name: methods.watch("name"),
-          fromDate: methods.watch("fromDate")
-            ? format(new Date(methods.watch("fromDate")), "yyyy-MM-dd")
-            : "",
-          toDate: methods.watch("toDate")
-            ? format(new Date(methods.watch("toDate")), "yyyy-MM-dd")
-            : "",
+          ...(methods.watch("name") && { name: methods.watch("name") }),
+          ...(methods.watch("fromDate") && {
+            fromDate: format(new Date(methods.watch("fromDate")), "yyyy-MM-dd"),
+          }),
+          ...(methods.watch("toDate") && {
+            toDate: format(new Date(methods.watch("toDate")), "yyyy-MM-dd"),
+          }),
         },
       }),
   });
