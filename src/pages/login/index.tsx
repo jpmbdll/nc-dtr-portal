@@ -44,7 +44,6 @@ export default function Login() {
         onSuccess: (data) => {
           document.cookie = "isAuthenticated=true; path=/";
           document.cookie = `authToken=${data?.authToken}; path=/`;
-          document.cookie = `user=${JSON.stringify(data?.user)}; path=/`;
           saveUser(data?.user);
           router.replace("/home");
         },

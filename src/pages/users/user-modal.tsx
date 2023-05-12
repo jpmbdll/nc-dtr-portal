@@ -41,7 +41,7 @@ export default function UserModal(props: Props) {
   const methods = useForm({
     defaultValues: selected
       ? selected
-      : { employmentCode: null, status: null, department: null },
+      : { employmentCode: null, status: null, departmentName: null },
   });
   const { handleSubmit } = methods;
   const {
@@ -134,7 +134,7 @@ export default function UserModal(props: Props) {
     if (!/^\d{4}-[A-Z]{2}-\d{4}$/.test(value)) {
       return "ID No. has invalid format.";
     } else {
-      if (list.find((l: any) => l.no === value)) {
+      if (list.find((l: any) => l.userNo === value)) {
         return "ID No. is already existing.";
       }
     }
@@ -274,23 +274,25 @@ export default function UserModal(props: Props) {
             </FormProvider>
           </Grid>
 
-          <Table
-            title="Schedule"
-            data={tableData}
-            list={schedules}
-            page={page}
-            columns={columns}
-            isLoading={isFetching || isLoading}
-            actions={
-              <Button
-                label="Add Schedule"
-                colorScheme="green"
-                size="sm"
-                onClick={onAddScheduleOpen}
-              />
-            }
-            setPage={setPage}
-          />
+          {selected && (
+            <Table
+              title="Schedule"
+              data={tableData}
+              list={schedules}
+              page={page}
+              columns={columns}
+              isLoading={isFetching || isLoading}
+              actions={
+                <Button
+                  label="Add Schedule"
+                  colorScheme="green"
+                  size="sm"
+                  onClick={onAddScheduleOpen}
+                />
+              }
+              setPage={setPage}
+            />
+          )}
         </VStack>
       </Modal>
     </Fragment>
