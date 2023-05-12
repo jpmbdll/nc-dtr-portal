@@ -85,6 +85,7 @@ export default function ScheduleModal(props: Props) {
           mr={3}
           onClick={handleSubmit(onSubmit)}
           label="Add Schedule"
+          isLoading={mutation.isLoading}
         />
       }
     >
@@ -99,7 +100,11 @@ export default function ScheduleModal(props: Props) {
                 type="select"
                 name="subjectCode"
                 label="Subject Code"
-                options={codes}
+                options={codes.map((c: any) => ({
+                  value: c.subjectCode,
+                  label: c.description,
+                }))}
+                isDisabled={isFetching || isLoading}
               />
             </GridItem>
             <GridItem colSpan={1}>

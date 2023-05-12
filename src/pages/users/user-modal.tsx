@@ -1,6 +1,7 @@
 import { Fragment, useState, useCallback } from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
+import { BsFillTrash3Fill } from "react-icons/bs";
 import { useMutation } from "react-query";
 import { useQuery } from "react-query";
 import { toast } from "react-toastify";
@@ -10,6 +11,8 @@ import {
   GridItem,
   VStack,
   useDisclosure,
+  Flex,
+  Button as ChakraButton,
 } from "@chakra-ui/react";
 
 import { FormControl, Modal, Button, Table } from "@/components";
@@ -41,7 +44,11 @@ export default function UserModal(props: Props) {
   const methods = useForm({
     defaultValues: selected
       ? selected
-      : { employmentCode: null, status: null, departmentName: null },
+      : {
+          employmentCode: null,
+          status: null,
+          departmentName: null,
+        },
   });
   const { handleSubmit } = methods;
   const {
@@ -105,12 +112,13 @@ export default function UserModal(props: Props) {
     subjectCode: sched.subjectCode,
     startTime: sched.startTime,
     endTime: sched.endTime,
+    action: sched,
   }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
   const columns = [
-    columnHelper.accessor("workDay", {
+    columnHelper.accessor("day", {
       cell: (info) => info.getValue(),
       header: "Day",
     }),
@@ -125,6 +133,24 @@ export default function UserModal(props: Props) {
     columnHelper.accessor("endTime", {
       cell: (info) => info.getValue(),
       header: "End Time",
+    }),
+    columnHelper.accessor("action", {
+      cell: (info) => {
+        return (
+          <Flex>
+            <ChakraButton
+              colorScheme="red"
+              size="sm"
+              onClick={() => {
+                console.log("will delete", info.getValue());
+              }}
+            >
+              <BsFillTrash3Fill />
+            </ChakraButton>
+          </Flex>
+        );
+      },
+      header: "",
     }),
   ];
 
@@ -164,6 +190,7 @@ export default function UserModal(props: Props) {
             mr={3}
             onClick={handleSubmit(onSubmit)}
             label={selected ? "Edit" : "Add"}
+            isLoading={mutation.isLoading}
           />
         }
       >
