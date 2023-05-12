@@ -28,23 +28,26 @@ export default function Users() {
 
   const [selected, setSelected] = useState<any>(null);
 
+  const methods = useForm({
+    defaultValues: {
+      search: "",
+    },
+  });
+
   const {
     data: users = [],
     isFetching,
     isLoading,
   } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["users", methods.watch("search")],
     queryFn: async () =>
       await get({
         url: `api/user`,
         key: "users",
+        params: {
+          name: methods.watch("search"),
+        },
       }),
-  });
-
-  const methods = useForm({
-    defaultValues: {
-      search: "",
-    },
   });
 
   const {
@@ -67,6 +70,7 @@ export default function Users() {
     contact: user.contact,
     hiredDate: user.hiredDate,
     status: user.status,
+    action: user,
   }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
@@ -108,30 +112,32 @@ export default function Users() {
       header: "Hired Date",
     }),
     columnHelper.accessor("action", {
-      cell: (info) => (
-        <Flex justifyContent="space-between">
-          <ChakraButton
-            colorScheme="yellow"
-            size="sm"
-            onClick={() => {
-              setSelected(info.row.original);
-              onOpenAddUser();
-            }}
-          >
-            <BsPencilFill />
-          </ChakraButton>
-          <ChakraButton
-            colorScheme="red"
-            size="sm"
-            onClick={() => {
-              setSelected(info.row.original);
-              onConfirmDeleteOpen();
-            }}
-          >
-            <BsFillTrash3Fill />
-          </ChakraButton>
-        </Flex>
-      ),
+      cell: (info) => {
+        return (
+          <Flex justifyContent="space-between">
+            <ChakraButton
+              colorScheme="yellow"
+              size="sm"
+              onClick={() => {
+                setSelected(info.getValue());
+                onOpenAddUser();
+              }}
+            >
+              <BsPencilFill />
+            </ChakraButton>
+            <ChakraButton
+              colorScheme="red"
+              size="sm"
+              onClick={() => {
+                setSelected(info.getValue());
+                onConfirmDeleteOpen();
+              }}
+            >
+              <BsFillTrash3Fill />
+            </ChakraButton>
+          </Flex>
+        );
+      },
       header: "",
     }),
   ];
@@ -182,16 +188,6 @@ export default function Users() {
           <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
             <FormProvider {...methods}>
               <FormControl label="" type="text" name="search" />
-
-              <Flex flexDirection="column-reverse" pb={2}>
-                <Button
-                  label="Search"
-                  colorScheme="green"
-                  onClick={methods.handleSubmit((data: any) => {
-                    //filter here
-                  })}
-                />
-              </Flex>
             </FormProvider>
           </Card>
           <Table

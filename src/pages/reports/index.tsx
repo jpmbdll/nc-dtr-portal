@@ -1,8 +1,9 @@
 import { useState, useRef } from "react";
-import { VStack, Box, Flex, Card } from "@chakra-ui/react";
+import { VStack, Box, Card, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
 import { useQuery } from "react-query";
+import { format } from "date-fns";
 import { CSVLink } from "react-csv";
 
 import { Layout, Table, Button, FormControl } from "@/components";
@@ -14,8 +15,8 @@ export default function Reports() {
   const methods = useForm({
     defaultValues: {
       name: "",
-      from: "",
-      to: "",
+      fromDate: "",
+      toDate: "",
     },
   });
 
@@ -24,17 +25,29 @@ export default function Reports() {
     isFetching,
     isLoading,
   } = useQuery({
-    queryKey: ["attendance"],
+    queryKey: [
+      "attendance",
+      {
+        name: methods.watch("name"),
+        fromDate: methods.watch("fromDate"),
+        toDate: methods.watch("toDate"),
+      },
+    ],
     queryFn: async () =>
       await get({
         url: `api/Attendance`,
         key: "attendance",
+        params: {
+          name: methods.watch("name"),
+          fromDate: methods.watch("fromDate")
+            ? format(new Date(methods.watch("fromDate")), "yyyy-MM-dd")
+            : "",
+          toDate: methods.watch("toDate")
+            ? format(new Date(methods.watch("toDate")), "yyyy-MM-dd")
+            : "",
+        },
       }),
   });
-
-  const submit = async (data: any) => {
-    //Perform search
-  };
 
   const ifAmArrival = (value: any) => {
     const clockIn = value;
@@ -203,13 +216,15 @@ export default function Reports() {
         <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
           <FormProvider {...methods}>
             <FormControl label="Name" type="text" name="name" />
-            <FormControl label="From" type="datepicker" name="from" />
-            <FormControl label="To" type="datepicker" name="to" />
+            <FormControl label="From" type="datepicker" name="fromDate" />
+            <FormControl label="To" type="datepicker" name="toDate" />
             <Flex flexDirection="column-reverse" pb={2}>
               <Button
-                label="Search"
-                colorScheme="green"
-                onClick={methods.handleSubmit(submit)}
+                label="Clear filters"
+                colorScheme="red"
+                onClick={() => {
+                  methods.reset();
+                }}
               />
             </Flex>
           </FormProvider>
