@@ -93,7 +93,7 @@ export default function AccountDetails() {
           <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
               <Grid templateColumns="repeat(12, 1fr)" gap={4}>
-                <GridItem colSpan={6}>
+                <GridItem colSpan={4}>
                   <FormControl
                     label="ID No."
                     type="text"
@@ -101,7 +101,15 @@ export default function AccountDetails() {
                     isReadOnly={true}
                   />
                 </GridItem>
-                <GridItem colSpan={6}>
+                <GridItem colSpan={4}>
+                  <FormControl
+                    type="text"
+                    name="username"
+                    label="Username"
+                    isRequired
+                  />
+                </GridItem>
+                <GridItem colSpan={4}>
                   <FormControl
                     label="Employment Type"
                     type="select"
@@ -116,6 +124,7 @@ export default function AccountDetails() {
                     type="text"
                     name="Fname"
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={4}>
@@ -124,6 +133,7 @@ export default function AccountDetails() {
                     type="text"
                     name="Mname"
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={4}>
@@ -132,6 +142,7 @@ export default function AccountDetails() {
                     type="text"
                     name="Lname"
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={6}>
@@ -140,6 +151,7 @@ export default function AccountDetails() {
                     type="text"
                     name="Contact"
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={6}>
@@ -148,6 +160,7 @@ export default function AccountDetails() {
                     type="text"
                     name="email"
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={6}>
@@ -157,6 +170,7 @@ export default function AccountDetails() {
                     name="Status"
                     options={StatusOptions}
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={6}>
@@ -166,6 +180,7 @@ export default function AccountDetails() {
                     name="Department"
                     options={DepartmentOptions}
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
                 <GridItem colSpan={12}>
@@ -174,6 +189,7 @@ export default function AccountDetails() {
                     type="text"
                     name="Address"
                     isReadOnly={!isEditing}
+                    isRequired
                   />
                 </GridItem>
               </Grid>

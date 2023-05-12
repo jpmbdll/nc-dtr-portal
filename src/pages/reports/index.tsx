@@ -39,11 +39,14 @@ export default function Reports() {
     id: report.attendanceId,
     date: report.date,
     name: `${report.firstName} ${report.lastName}`,
+    employeeType: report.employeeType,
     amArrival: report.timeIn,
     amDeparture: report.timeOut,
     pmArrival: report.timeIn,
     pmDeparture: report.timeOut,
     hours: report.totalHours === null ? 0 : report.totalHours,
+    late: report.late,
+    undertime: report.undertime,
     minutes: null,
     total: null,
   }));
@@ -64,6 +67,12 @@ export default function Reports() {
         return info.getValue();
       },
       header: "Name",
+    }),
+    columnHelper.accessor("employeeType", {
+      cell: (info) => {
+        return info.getValue();
+      },
+      header: "Emp. Type",
     }),
     columnHelper.accessor("amArrival", {
       cell: (info) => {
@@ -161,6 +170,18 @@ export default function Reports() {
       },
       header: "Minutes",
     }),
+    columnHelper.accessor("late", {
+      cell: (info) => {
+        return info.getValue();
+      },
+      header: "Late",
+    }),
+    columnHelper.accessor("undertime", {
+      cell: (info) => {
+        return info.getValue();
+      },
+      header: "Undertime",
+    }),
     columnHelper.accessor("total", {
       cell: (info) => {
         const totalHours = info.getValue();
@@ -171,7 +192,7 @@ export default function Reports() {
         const minutes = totalHours.slice(3, 5);
         return `${hours}:${minutes}`;
       },
-      header: "Total",
+      header: "Total Hours",
     }),
   ];
 

@@ -171,43 +171,78 @@ export default function UserModal(props: Props) {
         <VStack spacing={10}>
           <Grid templateColumns="repeat(12, 1fr)" gap={4} w="100%">
             <FormProvider {...methods}>
-              <GridItem colSpan={6}>
+              <GridItem colSpan={4}>
                 <FormControl
                   type="text"
                   name="userNo"
                   label="ID No."
                   validator={validateIdNo}
-                  isRequired={true}
+                  isRequired
                 />
               </GridItem>
-              <GridItem colSpan={6}>
+              <GridItem colSpan={4}>
+                <FormControl
+                  type="text"
+                  name="username"
+                  label="Username"
+                  isRequired
+                />
+              </GridItem>
+              <GridItem colSpan={4}>
                 <FormControl
                   type="select"
                   name="employmentCode"
                   label="Employment Type"
                   options={EmploymentTypeOptions}
+                  isRequired
                 />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="fName" label="First Name" />
+                <FormControl
+                  type="text"
+                  name="fName"
+                  label="First Name"
+                  isRequired
+                />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="mName" label="Middle Name" />
+                <FormControl
+                  type="text"
+                  name="mName"
+                  label="Middle Name"
+                  isRequired
+                />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="lName" label="Last Name" />
+                <FormControl
+                  type="text"
+                  name="lName"
+                  label="Last Name"
+                  isRequired
+                />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="contact" label="Contact" />
+                <FormControl
+                  type="text"
+                  name="contact"
+                  label="Contact"
+                  isRequired
+                />
               </GridItem>
               <GridItem colSpan={4}>
-                <FormControl type="text" name="email" label="Email" />
+                <FormControl
+                  type="text"
+                  name="email"
+                  label="Email"
+                  isRequired
+                />
               </GridItem>
               <GridItem colSpan={4}>
                 <FormControl
                   type="datepicker"
                   name="hiredDate"
                   label="Hired Date"
+                  isRequired
                 />
               </GridItem>
               <GridItem colSpan={6}>
@@ -216,6 +251,7 @@ export default function UserModal(props: Props) {
                   name="status"
                   label="Status"
                   options={StatusOptions}
+                  isRequired
                 />
               </GridItem>
               <GridItem colSpan={6}>
@@ -224,10 +260,16 @@ export default function UserModal(props: Props) {
                   name="departmentName"
                   label="Department"
                   options={DepartmentOptions}
+                  isRequired
                 />
               </GridItem>
               <GridItem colSpan={12}>
-                <FormControl type="text" name="address" label="Address" />
+                <FormControl
+                  type="text"
+                  name="address"
+                  label="Address"
+                  isRequired
+                />
               </GridItem>
             </FormProvider>
           </Grid>
