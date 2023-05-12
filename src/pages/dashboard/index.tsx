@@ -75,6 +75,15 @@ export default function Dashboard() {
       }),
   });
 
+  const { data: dashboards = [] } = useQuery({
+    queryKey: ["dashboards"],
+    queryFn: async () =>
+      await get({
+        url: `api/Dashboard`,
+        key: "dashboards",
+      }),
+  });
+
   const data = {
     labels,
     datasets: [
@@ -100,7 +109,7 @@ export default function Dashboard() {
             <GridItem colSpan={1}>
               <Metrics
                 heading="Total Departments"
-                count={20}
+                count={dashboards?.employeeCount}
                 color="green.400"
                 icon={
                   <BsFillBuildingFill width="100%" color="white" size={56} />
@@ -110,7 +119,7 @@ export default function Dashboard() {
             <GridItem colSpan={1}>
               <Metrics
                 heading="Total Employees"
-                count={80}
+                count={dashboards.departmentCount}
                 color="blue.400"
                 icon={<BsFillPeopleFill width="100%" color="white" size={56} />}
               />
