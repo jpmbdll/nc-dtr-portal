@@ -94,20 +94,18 @@ export default function UserModal(props: Props) {
     queryKey: ["schedules"],
     queryFn: async () =>
       await get({
-        url: `api/Schedules/${selected.userName}`,
+        url: `api/Schedule/${selected.username}`,
         key: "schedules",
       }),
     enabled: Boolean(selected),
   });
 
-  const tableData =
-    schedules ||
-    [].map((sched: any) => ({
-      day: sched.day,
-      subjectCode: sched.subjectCode,
-      startTime: sched.startTime,
-      endTime: sched.endTime,
-    }));
+  const tableData = schedules?.map((sched: any) => ({
+    day: sched.workDay,
+    subjectCode: sched.subjectCode,
+    startTime: sched.startTime,
+    endTime: sched.endTime,
+  }));
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
@@ -146,6 +144,7 @@ export default function UserModal(props: Props) {
         <ScheduleModal
           isOpen={isAddScheduleOpen}
           onClose={onAddScheduleClose}
+          selected={selected}
         />
       )}
 

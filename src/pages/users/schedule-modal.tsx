@@ -9,11 +9,10 @@ import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 import { get } from "@/lib";
 
-type Props = UseDisclosureProps;
+type Props = { selected: any } & UseDisclosureProps;
 
 export default function ScheduleModal(props: Props) {
-  const { isOpen = false, onClose = () => {} } = props;
-  const { userInfo } = useUserInfo();
+  const { isOpen = false, onClose = () => {}, selected } = props;
 
   const methods = useForm({
     defaultValues: {
@@ -26,7 +25,7 @@ export default function ScheduleModal(props: Props) {
   const { handleSubmit } = methods;
 
   const submitSchedule = async (data: any) => {
-    const url = `${api_url}/api/Schedule/${userInfo.userName}`;
+    const url = `${api_url}/api/Schedule/${selected.username}`;
     const res = await fetch(url, {
       method: "PUT",
       body: JSON.stringify(data),

@@ -45,7 +45,7 @@ export default function Users() {
         url: `api/user`,
         key: "users",
         params: {
-          name: methods.watch("search"),
+          ...(methods.watch("search") && { name: methods.watch("search") }),
         },
       }),
   });
