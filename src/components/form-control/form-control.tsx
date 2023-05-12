@@ -116,6 +116,7 @@ export function FormControl(props: Props) {
             type={show ? "text" : "password"}
             {...register(name, {
               required: isRequired ? `${label} is required.` : false,
+              validate: validator,
             })}
             disabled={isReadOnly}
           />

@@ -23,16 +23,17 @@ export default function ChangePasswordModal(props: Props) {
   const { handleSubmit } = methods;
 
   const submitChangePassword = async (data: any) => {
-    const url = `${api_url}/api/ChangePassword/${userInfo.username}`;
-    const res = await fetch(url, {
-      method: "PUT",
-      body: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json",
-      },
+    const res = await fetch(`${api_url}/api/User/ChangePassword`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        userName: userInfo.username,
+        oldPassword: data.oldPassword,
+        newPassword: data.confirmPassword,
+      }),
     });
 
-    return await res.json();
+    return await res;
   };
 
   const mutation = useMutation(submitChangePassword);
@@ -69,6 +70,7 @@ export default function ChangePasswordModal(props: Props) {
           mr={3}
           colorScheme="twitter"
           onClick={handleSubmit(onSubmit)}
+          isLoading={mutation.isLoading}
           label="Change Password"
         />
       }
@@ -96,6 +98,10 @@ export default function ChangePasswordModal(props: Props) {
               label="Confirm Password"
               type="password"
               name="confirmPassword"
+              validator={(value: any) =>
+                methods.watch("newPassword") === value ||
+                "Passwords do not match"
+              }
               isRequired
             />
           </GridItem>
