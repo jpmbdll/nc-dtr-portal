@@ -28,7 +28,7 @@ export function SideNav() {
       label: "Dashboards",
       icon: <BsFillFileBarGraphFill fontSize={25} />,
       link: "/dashboard",
-      enabled: true,
+      enabled: isAdmin(),
     },
     {
       label: "Users",

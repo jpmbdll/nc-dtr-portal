@@ -1,5 +1,7 @@
 import cookies from "next-cookies";
 
+const adminAccess = ["/users", "/dashboard"];
+
 export const checkAuth = async (context: any, cb: any) => {
   const { isAuthenticated, authToken, accessType } = cookies(context);
   const { req } = context;
@@ -14,7 +16,7 @@ export const checkAuth = async (context: any, cb: any) => {
     };
   }
 
-  if (currentPath === "/users" && accessType !== "admin") {
+  if (adminAccess.includes(currentPath) && accessType !== "admin") {
     return {
       redirect: {
         destination: "/404",
