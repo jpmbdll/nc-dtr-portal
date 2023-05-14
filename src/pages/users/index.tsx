@@ -11,17 +11,19 @@ import {
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import { FormProvider, useForm } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
-import { useUserInfo } from "@/hooks";
 import { checkAuth, get } from "@/lib";
+import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 
 import UserModal from "./user-modal";
 
 export default function Users() {
+  const queryClient = useQueryClient();
+
   const { userInfo } = useUserInfo();
 
   const [page, setPage] = useState(0);
@@ -114,6 +116,9 @@ export default function Users() {
     }),
     columnHelper.accessor("action", {
       cell: (info) => {
+        if (info.getValue().username === userInfo.username) {
+          return null;
+        }
         return (
           <Flex justifyContent="space-between">
             <ChakraButton
@@ -151,26 +156,27 @@ export default function Users() {
           onClose={onConfirmDeleteClose}
           title="Delete User"
           color="red"
-          message={`Are you sure you want to delete this user (${selected?.fname} ${selected?.lname})?`} //Add user name
+          message={`Are you sure you want to delete this user (${selected?.fName} ${selected?.lName})?`} //Add user name
           onCloseCb={() => {
             setSelected(null);
           }}
           onSaveCb={async () => {
+            //TODO::convert to mutate
             try {
               const response = await fetch(
-                `${api_url}/api/DeleteUser/${userInfo.userName}`,
+                `${api_url}/api/User/${selected.username}`,
                 {
-                  method: "POST",
+                  method: "DELETE",
                   headers: {
                     "Content-Type": "application/json",
                   },
                 }
               );
-              const responseData = await response.json();
               toast.success("User has been deleted successfully!");
             } catch (error) {
               toast.error("There was an error deleting this user.");
             } finally {
+              queryClient.invalidateQueries("users");
               onConfirmDeleteClose();
               setSelected(null);
             }

@@ -63,7 +63,7 @@ export default function UserModal(props: Props) {
 
   const submitUser = async (data: any) => {
     try {
-      const res = await fetch(`${api_url}/api/Users/`, {
+      const res = await fetch(`${api_url}/api/User/`, {
         method: "PUT",
         body: JSON.stringify(data),
         headers: {
@@ -220,7 +220,7 @@ export default function UserModal(props: Props) {
                   name="userNo"
                   label="ID No."
                   validator={selected ? () => {} : validateIdNo}
-                  isDisabled={isDisabled}
+                  isReadOnly={isDisabled}
                   isRequired
                 />
               </GridItem>
@@ -230,7 +230,7 @@ export default function UserModal(props: Props) {
                   name="username"
                   label="Username"
                   validator={selected ? () => {} : validateUsername}
-                  isDisabled={isDisabled}
+                  isReadOnly={isDisabled}
                   isRequired
                 />
               </GridItem>
