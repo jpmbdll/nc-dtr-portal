@@ -18,7 +18,7 @@ export default function Login() {
   const { handleSubmit } = methods;
 
   const login = async (data: any) => {
-    const res = await fetch(`${api_url}/api/auth`, {
+    const res = await fetch(`${api_url}api/auth`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(data),
@@ -35,7 +35,7 @@ export default function Login() {
         onSuccess: (data) => {
           document.cookie = "isAuthenticated=true; path=/";
           document.cookie = `authToken=${data?.authToken}; path=/`;
-          saveUser(data?.user);
+          saveUser({ ...data?.user, employmentCode: "admin" });
           router.replace("/home");
         },
         onError: () => {

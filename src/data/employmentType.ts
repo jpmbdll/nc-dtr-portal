@@ -6,4 +6,5 @@ export const EmploymentTypeOptions = [
   { value: "utilityWorker", label: "Utility Worker" },
   { value: "securityGuard", label: "Security Guard" },
   { value: "librarian", label: "Librarian" },
+  { value: "admin", label: "Admin" },
 ];

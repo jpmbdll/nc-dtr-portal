@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
 import {
   Flex,
   Button as ChakraButton,
@@ -23,6 +24,8 @@ import UserModal from "./user-modal";
 
 export default function Users() {
   const queryClient = useQueryClient();
+
+  const router = useRouter();
 
   const { userInfo, isAdmin } = useUserInfo();
 

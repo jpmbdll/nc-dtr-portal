@@ -1,6 +1,6 @@
-import Link from "next/link";
-import { useRouter } from "next/router";
 import { Box, Flex, Text, Divider, Heading } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import {
   BsFillHouseFill,
   BsFillFileBarGraphFill,
@@ -10,19 +10,39 @@ import {
 import { BsFacebook, BsTelephoneFill } from "react-icons/bs";
 import { GoGlobe } from "react-icons/go";
 
-const nav = [
-  { label: "Home", icon: <BsFillHouseFill fontSize={25} />, link: "/home" },
-  {
-    label: "Dashboards",
-    icon: <BsFillFileBarGraphFill fontSize={25} />,
-    link: "/dashboard",
-  },
-  { label: "Users", icon: <BsFillPeopleFill fontSize={25} />, link: "/users" },
-  { label: "DTR Report", icon: <BsTable fontSize={25} />, link: "/reports" },
-];
+import { useUserInfo } from "@/hooks";
 
 export function SideNav() {
   const { route } = useRouter();
+
+  const { isAdmin } = useUserInfo();
+
+  const nav = [
+    {
+      label: "Home",
+      icon: <BsFillHouseFill fontSize={25} />,
+      link: "/home",
+      enabled: true,
+    },
+    {
+      label: "Dashboards",
+      icon: <BsFillFileBarGraphFill fontSize={25} />,
+      link: "/dashboard",
+      enabled: true,
+    },
+    {
+      label: "Users",
+      icon: <BsFillPeopleFill fontSize={25} />,
+      link: "/users",
+      enabled: isAdmin(),
+    },
+    {
+      label: "DTR Report",
+      icon: <BsTable fontSize={25} />,
+      link: "/reports",
+      enabled: true,
+    },
+  ];
 
   return (
     <Flex
@@ -39,29 +59,31 @@ export function SideNav() {
       <Box>
         {nav.map((n, i) => {
           const isActivated = n.link === route;
-          return (
-            <Link href={n.link} key={i}>
-              <Flex
-                justifyContent="center"
-                flexDirection="column"
-                h={14}
-                px={6}
-                w="100%"
-                borderRadius={12}
-                cursor="pointer"
-                fontSize="md"
-                fontWeight="bold"
-                my={3}
-                color={isActivated ? "white" : "gray.700"}
-                bg={isActivated ? "#1DA1F2" : "white"}
-                sx={{ _hover: { bg: "#1DA1F2", color: "white" } }}
-              >
-                <Text display="flex" gap={4}>
-                  {n.icon} {n.label}
-                </Text>
-              </Flex>
-            </Link>
-          );
+          if (n.enabled) {
+            return (
+              <Link href={n.link} key={i}>
+                <Flex
+                  justifyContent="center"
+                  flexDirection="column"
+                  h={14}
+                  px={6}
+                  w="100%"
+                  borderRadius={12}
+                  cursor="pointer"
+                  fontSize="md"
+                  fontWeight="bold"
+                  my={3}
+                  color={isActivated ? "white" : "gray.700"}
+                  bg={isActivated ? "#1DA1F2" : "white"}
+                  sx={{ _hover: { bg: "#1DA1F2", color: "white" } }}
+                >
+                  <Text display="flex" gap={4}>
+                    {n.icon} {n.label}
+                  </Text>
+                </Flex>
+              </Link>
+            );
+          }
         })}
       </Box>
       <Box color="gray.600">

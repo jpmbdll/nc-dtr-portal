@@ -1,7 +1,8 @@
 import cookies from "next-cookies";
 
 export const checkAuth = async (context: any, cb: any) => {
-  const { isAuthenticated, authToken, user } = cookies(context);
+  const { isAuthenticated, authToken } = cookies(context);
+
   if (!Boolean(isAuthenticated) && !authToken) {
     return {
       redirect: {
@@ -11,5 +12,5 @@ export const checkAuth = async (context: any, cb: any) => {
     };
   }
 
-  return cb({ isAuthenticated, user });
+  return cb({ isAuthenticated });
 };
