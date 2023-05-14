@@ -39,7 +39,7 @@ export function Nav() {
       </Flex>
       <Avatar
         name={`${userInfo?.fName} ${userInfo?.lName}`}
-        accessType={userInfo?.employmentCode || "undefined role"}
+        accessType={userInfo?.empDescription || "undefined role"}
       />
     </Flex>
   );

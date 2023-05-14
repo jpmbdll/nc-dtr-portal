@@ -17,7 +17,7 @@ export default function ScheduleModal(props: Props) {
 
   const methods = useForm({
     defaultValues: {
-      day: "",
+      workDay: "",
       subjectCode: "",
       startTime: "",
       endTime: "",
@@ -26,21 +26,28 @@ export default function ScheduleModal(props: Props) {
   const { handleSubmit } = methods;
 
   const submitSchedule = async (data: any) => {
-    const url = `${api_url}/api/Schedule/`;
-    const res = await fetch(url, {
-      method: "PUT",
-      body: JSON.stringify({
-        ...data,
-        username: selected.username,
-        startTime: format(new Date(data.startTime), "HH:mm"),
-        endTime: format(new Date(data.startTime), "HH:mm"),
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    try {
+      const url = `${api_url}/api/Schedule/`;
+      const res = await fetch(url, {
+        method: "PUT",
+        body: JSON.stringify({
+          ...data,
+          username: selected.username,
+          startTime: format(new Date(data.startTime), "HH:mm"),
+          endTime: format(new Date(data.endTime), "HH:mm"),
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    return await res.json();
+      if (!res.ok) {
+        throw new Error();
+      }
+      return res;
+    } catch (error) {
+      throw new Error();
+    }
   };
 
   const mutation = useMutation(submitSchedule);
@@ -102,7 +109,7 @@ export default function ScheduleModal(props: Props) {
             <GridItem colSpan={1}>
               <FormControl
                 type="select"
-                name="day"
+                name="workDay"
                 label="Work Day"
                 options={[
                   { value: "Monday", label: "Monday" },

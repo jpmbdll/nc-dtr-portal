@@ -15,7 +15,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 
 import { Layout, Table, Button, Dialog, FormControl } from "@/components";
-import { checkAuth, get } from "@/lib";
+import { get, checkAuth } from "@/lib";
 import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 
@@ -68,6 +68,7 @@ export default function Users() {
   const tableData = users?.map((user: any) => ({
     userNo: user.userNo,
     employmentCode: user.employmentCode,
+    empDescription: user.empDescription,
     name: `${user.fName} ${user.lName}`,
     email: user.email,
     contact: user.contact,
@@ -83,7 +84,7 @@ export default function Users() {
       cell: (info) => info.getValue(),
       header: "No",
     }),
-    columnHelper.accessor("employmentCode", {
+    columnHelper.accessor("empDescription", {
       cell: (info) => info.getValue(),
       header: "Employment Type",
     }),

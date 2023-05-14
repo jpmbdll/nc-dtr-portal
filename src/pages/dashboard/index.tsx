@@ -109,7 +109,7 @@ export default function Dashboard() {
             <GridItem colSpan={1}>
               <Metrics
                 heading="Total Departments"
-                count={dashboards?.employeeCount}
+                count={dashboards?.departmentCount}
                 color="green.400"
                 icon={
                   <BsFillBuildingFill width="100%" color="white" size={56} />
@@ -119,7 +119,7 @@ export default function Dashboard() {
             <GridItem colSpan={1}>
               <Metrics
                 heading="Total Employees"
-                count={dashboards.departmentCount}
+                count={dashboards.employeeCount}
                 color="blue.400"
                 icon={<BsFillPeopleFill width="100%" color="white" size={56} />}
               />
