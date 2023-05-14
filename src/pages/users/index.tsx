@@ -24,7 +24,7 @@ import UserModal from "./user-modal";
 export default function Users() {
   const queryClient = useQueryClient();
 
-  const { userInfo } = useUserInfo();
+  const { userInfo, isAdmin } = useUserInfo();
 
   const [page, setPage] = useState(0);
 
@@ -116,7 +116,7 @@ export default function Users() {
     }),
     columnHelper.accessor("action", {
       cell: (info) => {
-        if (info.getValue().username === userInfo.username) {
+        if (info.getValue().username === userInfo.username || !isAdmin()) {
           return null;
         }
         return (
@@ -205,14 +205,16 @@ export default function Users() {
             columns={columns}
             isLoading={isFetching || isLoading}
             actions={
-              <Box>
-                <Button
-                  label="Add User"
-                  colorScheme="twitter"
-                  size="sm"
-                  onClick={onOpenAddUser}
-                />
-              </Box>
+              isAdmin() ? (
+                <Box>
+                  <Button
+                    label="Add User"
+                    colorScheme="twitter"
+                    size="sm"
+                    onClick={onOpenAddUser}
+                  />
+                </Box>
+              ) : null
             }
             setPage={setPage}
           />

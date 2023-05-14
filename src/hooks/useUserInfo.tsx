@@ -20,5 +20,9 @@ export const useUserInfo = () => {
     setUserInfo(null);
   };
 
-  return { userInfo, saveUser, destroyUser };
+  const isAdmin = () => {
+    return userInfo?.employmentCode === "admin";
+  };
+
+  return { userInfo, saveUser, destroyUser, isAdmin };
 };

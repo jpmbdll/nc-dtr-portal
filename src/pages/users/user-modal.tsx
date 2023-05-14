@@ -1,9 +1,8 @@
 import { Fragment, useState, useCallback } from "react";
+import { useQuery, useQueryClient, useMutation } from "react-query";
 import { useForm, FormProvider } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
 import { BsFillTrash3Fill } from "react-icons/bs";
-import { useMutation } from "react-query";
-import { useQuery, useQueryClient } from "react-query";
 import { toast } from "react-toastify";
 import {
   UseDisclosureProps,
@@ -23,6 +22,7 @@ import {
   api_url,
 } from "@/data";
 import { get } from "@/lib";
+import { useUserInfo } from "@/hooks";
 
 import ScheduleModal from "./schedule-modal";
 
@@ -34,6 +34,7 @@ type Props = {
 
 export default function UserModal(props: Props) {
   const queryClient = useQueryClient();
+  const { isAdmin } = useUserInfo();
   const {
     isOpen = false,
     onClose = () => {},
@@ -145,6 +146,9 @@ export default function UserModal(props: Props) {
     }),
     columnHelper.accessor("action", {
       cell: (info) => {
+        if (!isAdmin()) {
+          return null;
+        }
         return (
           <Flex>
             <ChakraButton
@@ -328,12 +332,14 @@ export default function UserModal(props: Props) {
               columns={columns}
               isLoading={isFetching || isLoading}
               actions={
-                <Button
-                  label="Add Schedule"
-                  colorScheme="green"
-                  size="sm"
-                  onClick={onAddScheduleOpen}
-                />
+                isAdmin() ? (
+                  <Button
+                    label="Add Schedule"
+                    colorScheme="green"
+                    size="sm"
+                    onClick={onAddScheduleOpen}
+                  />
+                ) : null
               }
               setPage={setPage}
             />
