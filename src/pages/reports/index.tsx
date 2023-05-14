@@ -14,7 +14,6 @@ export default function Reports() {
 
   const methods = useForm({
     defaultValues: {
-      name: "",
       fromDate: "",
       toDate: "",
     },
@@ -28,7 +27,6 @@ export default function Reports() {
     queryKey: [
       "attendance",
       {
-        name: methods.watch("name"),
         fromDate: methods.watch("fromDate"),
         toDate: methods.watch("toDate"),
       },
@@ -38,7 +36,6 @@ export default function Reports() {
         url: `api/Attendance`,
         key: "attendance",
         params: {
-          ...(methods.watch("name") && { name: methods.watch("name") }),
           ...(methods.watch("fromDate") && {
             fromDate: format(new Date(methods.watch("fromDate")), "yyyy-MM-dd"),
           }),
@@ -215,7 +212,6 @@ export default function Reports() {
       <VStack w="100%">
         <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
           <FormProvider {...methods}>
-            <FormControl label="Name" type="text" name="name" />
             <FormControl label="From" type="datepicker" name="fromDate" />
             <FormControl label="To" type="datepicker" name="toDate" />
             <Flex flexDirection="column-reverse" pb={2}>
