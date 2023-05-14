@@ -31,6 +31,8 @@ export function Avatar(props: Props) {
       "isAuthenticated=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     document.cookie =
       "authToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie =
+      "accessType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     destroyUser();
     router.replace("/login");
   };

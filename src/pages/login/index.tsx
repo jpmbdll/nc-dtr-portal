@@ -35,7 +35,8 @@ export default function Login() {
         onSuccess: (data) => {
           document.cookie = "isAuthenticated=true; path=/";
           document.cookie = `authToken=${data?.authToken}; path=/`;
-          saveUser({ ...data?.user, employmentCode: "admin" });
+          document.cookie = `accessType=${data?.user.employmentCode}; path=/`;
+          saveUser(data?.user);
           router.replace("/home");
         },
         onError: () => {
