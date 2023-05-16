@@ -146,6 +146,7 @@ export default function UserModal(props: Props) {
     }),
     columnHelper.accessor("action", {
       cell: (info) => {
+        return null;
         if (!isAdmin()) {
           return null;
         }

@@ -22,6 +22,7 @@ import {
 } from "@/data";
 
 import ChangePasswordModal from "./change-password-modal";
+import ScheduleModal from "./schedule-modal";
 
 export default function AccountDetails() {
   const { userInfo, saveUser } = useUserInfo();
@@ -31,6 +32,12 @@ export default function AccountDetails() {
   });
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const {
+    isOpen: iSOpenScheduleModal,
+    onOpen: onOpenScheduleModal,
+    onClose: onCloseScheduleModal,
+  } = useDisclosure();
 
   const submitUser = async (data: any) => {
     try {
@@ -95,7 +102,13 @@ export default function AccountDetails() {
 
   return (
     <Layout>
-      <ChangePasswordModal isOpen={isOpen} onClose={onClose} />
+      {isOpen && <ChangePasswordModal isOpen={isOpen} onClose={onClose} />}
+      {iSOpenScheduleModal && (
+        <ScheduleModal
+          isOpen={iSOpenScheduleModal}
+          onClose={onCloseScheduleModal}
+        />
+      )}
       <VStack w="100%">
         <Card
           title={"Account Details"}
@@ -110,6 +123,18 @@ export default function AccountDetails() {
                   onClick={() => setIsEditing((state) => !state)}
                 />
               )}
+              {userInfo &&
+                userInfo.employmentCode !== "partTime" &&
+                userInfo.employmentCode !== "utilityWorker" &&
+                userInfo.employmentCode !== "jobOrder" && (
+                  <Button
+                    label="Schedules"
+                    colorScheme="green"
+                    size="sm"
+                    mr={3}
+                    onClick={onOpenScheduleModal}
+                  />
+                )}
               <Button
                 label="Change Password"
                 colorScheme="twitter"

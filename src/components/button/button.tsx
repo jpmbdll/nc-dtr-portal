@@ -9,7 +9,6 @@ export function Button(props: Props) {
     label,
     colorScheme = "messenger",
     variant = "solid",
-    isDisabled = false,
     ...rest
   } = props;
   return (
