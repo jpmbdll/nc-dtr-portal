@@ -332,7 +332,11 @@ export default function UserModal(props: Props) {
               columns={columns}
               isLoading={isFetching || isLoading}
               actions={
-                isAdmin() ? (
+                isAdmin() &&
+                selected &&
+                selected.employmentCode !== "partTime" &&
+                selected.employmentCode !== "utilityWorker" &&
+                selected.employmentCode !== "jobOrder" ? (
                   <Button
                     label="Add Schedule"
                     colorScheme="green"
