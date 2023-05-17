@@ -76,6 +76,8 @@ export default function Reports() {
 
   const ifAmDeparture = (value: any) => {
     const clockIn = value;
+    if (!clockIn || clockIn == "N/A") {
+      return "";
     if (!clockIn) {
       return "No Out";
     }
@@ -108,6 +110,8 @@ export default function Reports() {
 
   const ifPmDeparture = (value: any) => {
     const clockOut = value;
+    if (!clockOut || clockOut == "N/A") {
+      return "";
     if (!clockOut) {
       return "No Out";
     }
@@ -127,12 +131,18 @@ export default function Reports() {
       id: report.userNumber,
       date: report.date,
       name: `${report.firstName} ${report.lastName}`,
+      employeeType: report.employmentType,
       lastName: report.lastName ? report.lastName : "",
       employeeType: report.empDescription,
       amArrival: ifAmArrival(report.timeIn),
       amDeparture: ifAmDeparture(report.timeOut),
       pmArrival: ifPmArrival(report.timeIn),
       pmDeparture: ifPmDeparture(report.timeOut),
+      hours: report.totalHours === null ? 0 : report.totalHours,
+      late: report.late < 0 ? 0 : report.late,
+      undertime: report.underTime < 0 ? 0 : report.underTime,
+      minutes: null,
+      total: report.totalHoursTimeFormat,
       hours: !report.totalHours
         ? "00:00"
         : format(new Date().setHours(report.totalHours, 0), "HH:mm"),
@@ -201,7 +211,7 @@ export default function Reports() {
       cell: (info) => {
         return info.getValue();
       },
-      header: "Late",
+      header: "Late(minutes)",
     }),
     columnHelper.accessor("undertime", {
       cell: (info) => {
@@ -210,6 +220,15 @@ export default function Reports() {
       header: "Undertime",
     }),
     columnHelper.accessor("total", {
+      cell: (info) => {
+        const totalHoursTimeFormat = info.getValue();
+        if (!totalHoursTimeFormat) {
+          return "";
+        }
+        const hours = totalHoursTimeFormat.slice(0, 2).replace(/^0+/, "") || "0";
+         const minutes = totalHoursTimeFormat.slice(3, 5);
+        return `${hours} hours ${minutes} minutes`;
+      },
       cell: (info) => info.getValue(),
       header: "Total Hours",
     }),
