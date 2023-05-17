@@ -8,8 +8,10 @@ import { CSVLink } from "react-csv";
 
 import { Layout, Table, Button, FormControl } from "@/components";
 import { checkAuth, get } from "@/lib";
+import { useUserInfo } from "@/hooks";
 
 export default function Reports() {
+  const { userInfo, isAdmin } = useUserInfo();
   const [page, setPage] = useState(0);
 
   const methods = useForm({
@@ -33,7 +35,9 @@ export default function Reports() {
     ],
     queryFn: async () =>
       await get({
-        url: `api/Attendance`,
+        url: isAdmin()
+          ? "api/Attendance"
+          : `api/Attendance/${userInfo?.username}`,
         key: "attendance",
         params: {
           ...(methods.watch("fromDate") && {
@@ -44,6 +48,7 @@ export default function Reports() {
           }),
         },
       }),
+    enabled: Boolean(userInfo),
   });
 
   const ifAmArrival = (value: any) => {
