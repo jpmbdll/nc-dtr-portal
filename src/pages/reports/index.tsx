@@ -141,7 +141,7 @@ export default function Reports() {
       hours: report.totalHours === null ? 0 : report.totalHours,
       late: report.late < 0 ? 0 : report.late,
       undertime: report.underTime < 0 ? 0 : report.underTime,
-      minutes: null,
+      minutes: report.minute,
       total: report.totalHoursTimeFormat,
       hours: !report.totalHours
         ? "00:00"
@@ -225,9 +225,8 @@ export default function Reports() {
         if (!totalHoursTimeFormat) {
           return "";
         }
-        const hours = totalHoursTimeFormat.slice(0, 2).replace(/^0+/, "") || "0";
-         const minutes = totalHoursTimeFormat.slice(3, 5);
-        return `${hours} hours ${minutes} minutes`;
+        const formattedTotalHours = moment(totalHoursTimeFormat, 'HH:mm').format('hh:mm');
+        return formattedTotalHours;
       },
       cell: (info) => info.getValue(),
       header: "Total Hours",
