@@ -37,6 +37,7 @@ export const Table = forwardRef((props: Props, ref: any) => {
       sx={{
         "&  .chakra-card__body > div": {
           p: "0 !important",
+          overflowX: "auto",
         },
         "&  td": { color: "gray.700", fontSize: "sm" },
         "&  th": {
