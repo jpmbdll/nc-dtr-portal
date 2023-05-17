@@ -25,7 +25,7 @@ import ChangePasswordModal from "./change-password-modal";
 import ScheduleModal from "./schedule-modal";
 
 export default function AccountDetails() {
-  const { userInfo, saveUser } = useUserInfo();
+  const { userInfo, saveUser, isAdmin } = useUserInfo();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const methods = useForm({
     defaultValues: userInfo,
@@ -124,9 +124,7 @@ export default function AccountDetails() {
                 />
               )}
               {userInfo &&
-                userInfo.employmentCode !== "partTime" &&
-                userInfo.employmentCode !== "utilityWorker" &&
-                userInfo.employmentCode !== "jobOrder" && (
+                (userInfo?.employmentCode === "partTime" || isAdmin()) && (
                   <Button
                     label="Schedules"
                     colorScheme="green"

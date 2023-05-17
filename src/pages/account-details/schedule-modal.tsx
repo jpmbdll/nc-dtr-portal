@@ -80,9 +80,10 @@ export default function ScheduleModal(props: Props) {
     queryKey: ["schedules"],
     queryFn: async () =>
       await get({
-        url: `api/Schedule/${userInfo.username}`,
+        url: `api/Schedule/${userInfo?.username}`,
         key: "schedules",
       }),
+    enabled: Boolean(userInfo),
   });
 
   const {
