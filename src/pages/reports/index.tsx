@@ -225,7 +225,7 @@ export default function Reports() {
         if (!totalHoursTimeFormat) {
           return "";
         }
-        const formattedTotalHours = moment(totalHoursTimeFormat, 'HH:mm').format('hh:mm');
+        const formattedTotalHours = moment(totalHoursTimeFormat, 'HH:mm').format('HH:mm');
         return formattedTotalHours;
       },
       cell: (info) => info.getValue(),
