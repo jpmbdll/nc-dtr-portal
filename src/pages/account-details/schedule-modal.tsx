@@ -116,7 +116,7 @@ export default function ScheduleModal(props: Props) {
     }),
     columnHelper.accessor("subjectCode", {
       cell: (info) => info.getValue(),
-      header: "Subject Code",
+      header: "Description",
     }),
     columnHelper.accessor("startTime", {
       cell: (info) => info.getValue(),
@@ -167,7 +167,7 @@ export default function ScheduleModal(props: Props) {
             <FormControl
               type="select"
               name="subjectCode"
-              label="Subject Code"
+              label="Description"
               options={codes.map((c: any) => ({
                 value: c.subjectCode,
                 label: c.description,
