@@ -336,9 +336,9 @@ export default function UserModal(props: Props) {
               actions={
                 isAdmin() &&
                 selected &&
-                selected.employmentCode !== "partTime" &&
-                selected.employmentCode !== "utilityWorker" &&
-                selected.employmentCode !== "jobOrder" ? (
+                selected.employmentCode !== "Part Time" &&
+                selected.employmentCode !== "Utility Worker" &&
+                selected.employmentCode !== "Job Order" ? (
                   <Button
                     label="Add Schedule"
                     colorScheme="green"
