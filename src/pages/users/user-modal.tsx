@@ -134,7 +134,7 @@ export default function UserModal(props: Props) {
     }),
     columnHelper.accessor("subjectCode", {
       cell: (info) => info.getValue(),
-      header: "Subject Code",
+      header: "Description",
     }),
     columnHelper.accessor("startTime", {
       cell: (info) => info.getValue(),

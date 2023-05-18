@@ -126,7 +126,7 @@ export default function ScheduleModal(props: Props) {
               <FormControl
                 type="select"
                 name="subjectCode"
-                label="Subject Code"
+                label="Description"
                 options={codes.map((c: any) => ({
                   value: c.subjectCode,
                   label: c.description,
