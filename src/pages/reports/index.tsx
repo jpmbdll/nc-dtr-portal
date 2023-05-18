@@ -217,7 +217,7 @@ export default function Reports() {
       cell: (info) => {
         return info.getValue();
       },
-      header: "Undertime",
+      header: "Undertime(HRS)",
     }),
     columnHelper.accessor("total", {
       cell: (info) => {
@@ -349,7 +349,7 @@ export default function Reports() {
         </Card>
         <Table
           ref={printRef}
-          title="DTR Reports"
+          title="Attendance Log"
           data={tableData}
           list={attendance}
           page={page}
