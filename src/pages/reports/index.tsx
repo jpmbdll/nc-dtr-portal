@@ -223,8 +223,18 @@ export default function Reports() {
         <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
           <FormProvider {...methods}>
             {isAdmin() && <FormControl label="Name" type="text" name="name" />}
-            <FormControl label="From" type="datepicker" name="fromDate" />
-            <FormControl label="To" type="datepicker" name="toDate" />
+            <FormControl
+              label="From"
+              type="datepicker"
+              name="fromDate"
+              maxDate={new Date(methods.watch("toDate"))}
+            />
+            <FormControl
+              label="To"
+              type="datepicker"
+              name="toDate"
+              minDate={new Date(methods.watch("fromDate"))}
+            />
             <Flex flexDirection="column-reverse" pb={2}>
               <Button
                 label="Clear filters"

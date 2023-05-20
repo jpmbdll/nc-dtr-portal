@@ -24,6 +24,8 @@ type Props = {
   options?: { value: string; label: string }[];
   isTimepicker?: boolean;
   validator?: any;
+  minDate?: Date;
+  maxDate?: Date;
 } & FormControlProps;
 
 export function FormControl(props: Props) {
@@ -37,6 +39,8 @@ export function FormControl(props: Props) {
     isReadOnly = false,
     isTimepicker = false,
     validator,
+    minDate = null,
+    maxDate = null,
   } = props;
 
   const [show, setShow] = useState(false);
@@ -108,6 +112,8 @@ export function FormControl(props: Props) {
               timeIntervals={10}
               timeCaption=""
               dateFormat={isTimepicker ? "h:mm aa" : "MM/dd/yyyy"}
+              minDate={minDate ? minDate : null}
+              maxDate={maxDate ? maxDate : null}
               customInput={
                 <CustomInput
                   isTimepicker={isTimepicker}
