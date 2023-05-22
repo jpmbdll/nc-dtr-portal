@@ -28,12 +28,15 @@ import UserModal from "./user-modal";
 export default function Users() {
   const queryClient = useQueryClient();
 
-  const [selectedFile, setSelectedFile] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
-  const handleFileSelect = (event) => {
-    setSelectedFile(event.target.files[0]);
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      setSelectedFile(files[0]);
+    }
   };
-
   const uploadFile = async () => {
     if (!selectedFile) {
       toast.error("No file selected.");
@@ -252,7 +255,7 @@ export default function Users() {
                
                 <Box>
                   <br />                 
-                  <ButtonGroup spacing={4}>
+                  <ButtonGroup spacing={3}>
                    <Button
                     label="Bulk upload users"
                     colorScheme="twitter"
