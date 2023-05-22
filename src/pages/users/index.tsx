@@ -8,6 +8,8 @@ import {
   Badge,
   Box,
   Card,
+  Stack,
+  ButtonGroup
 } from "@chakra-ui/react";
 import { BsFillTrash3Fill, BsPencilFill } from "react-icons/bs";
 import { FormProvider, useForm } from "react-hook-form";
@@ -20,10 +22,44 @@ import { get, checkAuth } from "@/lib";
 import { useUserInfo } from "@/hooks";
 import { api_url } from "@/data";
 
+
 import UserModal from "./user-modal";
 
 export default function Users() {
   const queryClient = useQueryClient();
+
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileSelect = (event) => {
+    setSelectedFile(event.target.files[0]);
+  };
+
+  const uploadFile = async () => {
+    if (!selectedFile) {
+      toast.error("No file selected.");
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append("file", selectedFile);
+  
+    try {
+      const response = await fetch(`${api_url}/api/user/BulkUploadUser`, {
+        method: "POST",
+        body: formData,
+      });
+  
+      if (response.ok) {
+        toast.success("File uploaded successfully!");
+        queryClient.invalidateQueries("users");
+      } else {
+        toast.error("There was an error uploading the file.");
+      }
+    } catch (error) {
+      toast.error("There was an error uploading the file.");
+    }
+  };
+
 
   const router = useRouter();
 
@@ -79,6 +115,8 @@ export default function Users() {
     status: user.status,
     action: user,
   }));
+
+  const [filePath, setFilePath] = useState(""); // State to store the file path
 
   const columnHelper = createColumn<(typeof tableData)[0]>();
 
@@ -198,10 +236,11 @@ export default function Users() {
         <VStack w="100%">
           <Card display="flex" flexDirection="row" w="100%" p={5} gap={10}>
             <FormProvider {...methods}>
-              <FormControl label="" type="text" name="search" />
+              <FormControl label="" type="text" name="search" />             
             </FormProvider>
           </Card>
-          <Table
+          
+          <Table      
             title="User Management"
             data={tableData}
             list={users}
@@ -210,18 +249,32 @@ export default function Users() {
             isLoading={isFetching || isLoading}
             actions={
               isAdmin() ? (
+               
                 <Box>
+                  <br />                 
+                  <ButtonGroup spacing={4}>
+                   <Button
+                    label="Bulk upload users"
+                    colorScheme="twitter"
+                    size="sm"
+                    onClick={uploadFile}
+                  />
+                   <input type="file" onChange={handleFileSelect}
+                  />
                   <Button
                     label="Add User"
                     colorScheme="twitter"
                     size="sm"
                     onClick={onOpenAddUser}
                   />
+                  </ButtonGroup>
                 </Box>
-              ) : null
+         
+             ) : null
             }
             setPage={setPage}
           />
+          
         </VStack>
       </>
     </Layout>
