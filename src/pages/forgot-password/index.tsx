@@ -8,6 +8,7 @@ import cookies from "next-cookies";
 
 import { FormControl, Button, AuthLayout } from "@/components";
 import { VStack, Text, Heading } from "@chakra-ui/react";
+import {api_url} from "@/data";
 
 export default function Phone() {
   const [done, setDone] = useState<boolean>(false);
@@ -16,35 +17,41 @@ export default function Phone() {
   const { handleSubmit } = methods;
 
   const submit = async (data: any) => {
-    // const url = `${api_url}/api/sendPassword/`;
-    // const res = await fetch(url, {
-    //   method: "PUT",
-    //   body: JSON.stringify(data),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // return await res.json();
+    const url = `${api_url}/api/user/ForgotPassword/`;
+    const res = await fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data.username),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return await res.json();
   };
 
   const mutation = useMutation(submit);
 
-  const onSubmit = useCallback(
-    (data: any) => {
-      mutation.mutate(data, {
-        onSuccess: () => {
-          setDone(true);
-        },
-        onError: () => {
-          toast.error("There was an error adding this schedule.");
-        },
-        onSettled: () => {
-          methods.reset();
+  const onSubmit = useCallback(async (data: any) => {
+    try {
+      const url = `${api_url}/api/user/ForgotPassword/`;
+      const res = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data.username),
+        headers: {
+          "Content-Type": "application/json",
         },
       });
-    },
-    [mutation, methods]
-  );
+  
+      if (res.ok) {
+        setDone(true);
+      } else {
+        throw new Error("Request failed");
+      }
+    } catch (error) {
+      toast.error("An errror occured while retrieving the user credential. Check if your username is correct otherwise, contact your administrator.");
+    } finally {
+      methods.reset();
+    }
+  }, []);
 
   return (
     <AuthLayout header={done ? "" : "Forgot Password"}>
