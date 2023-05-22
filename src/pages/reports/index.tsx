@@ -200,7 +200,7 @@ export default function Reports() {
     }),
     columnHelper.accessor("hours", {
       cell: (info) => info.getValue(),
-      header: "Hours",
+      header: "Total Hours",
     }),
 
     columnHelper.accessor("minutes", {
@@ -217,7 +217,7 @@ export default function Reports() {
       cell: (info) => {
         return info.getValue();
       },
-      header: "Undertime(HRS)",
+      header: "Undertime(HH:mm)",
     }),
     columnHelper.accessor("total", {
       cell: (info) => {
