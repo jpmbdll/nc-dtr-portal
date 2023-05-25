@@ -203,7 +203,7 @@ export default function UserModal(props: Props) {
           setSelected(null);
           onClose();
         }}
-        title="Add User"
+        title={selected ? "Edit User" : "Add User"}
         size="6xl"
         scrollable
         actions={
@@ -211,7 +211,7 @@ export default function UserModal(props: Props) {
             colorScheme={selected ? "yellow" : "twitter"}
             mr={3}
             onClick={handleSubmit(onSubmit)}
-            label={selected ? "Edit" : "Add"}
+            label={selected ? "Save" : "Add"}
             isLoading={mutation.isLoading}
           />
         }
