@@ -109,7 +109,7 @@ export function FormControl(props: Props) {
               showPopperArrow={false}
               showTimeSelect={isTimepicker}
               showTimeSelectOnly={isTimepicker}
-              timeIntervals={10}
+              timeIntervals={30}
               timeCaption=""
               dateFormat={isTimepicker ? "h:mm aa" : "MM/dd/yyyy"}
               minDate={minDate ? minDate : null}
