@@ -211,7 +211,7 @@ export default function UserModal(props: Props) {
             colorScheme={selected ? "yellow" : "twitter"}
             mr={3}
             onClick={handleSubmit(onSubmit)}
-            label={selected ? "Save" : "Add"}
+            label="Save"
             isLoading={mutation.isLoading}
           />
         }
