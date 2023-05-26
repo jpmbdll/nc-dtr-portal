@@ -81,7 +81,7 @@ export default function Reports() {
     }
     const hours = parseInt(clockIn.slice(0, 2));
     if (hours >= 12) {
-      return "";
+      return "No Out";
     } else {
       const ampm = hours < 12 ? "AM" : "PM";
       const formattedHours = hours % 12 || 12;
@@ -113,7 +113,7 @@ export default function Reports() {
     }
     const hours = parseInt(clockOut.slice(0, 2));
     if (hours < 12) {
-      return "";
+      return "No Out";
     } else {
       const ampm = hours >= 12 ? "PM" : "AM";
       const formattedHours = hours % 12 || 12;
