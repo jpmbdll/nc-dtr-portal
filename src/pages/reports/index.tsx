@@ -134,8 +134,10 @@ export default function Reports() {
       pmDeparture: ifPmDeparture(report.timeOut),
       hours: !report.totalHours
         ? "00:00"
-        : format(new Date().setHours(report.totalHours, 0), "H:mm"),
-      late: format(new Date().setHours(report.late, 0), "H:mm"),
+        : format(new Date().setHours(report.totalHours, 0), "HH:mm"),
+      late: !report.late
+        ? "00:00"
+        : format(new Date().setHours(report.late, 0), "HH:mm"),
       undertime:
         !report.underTime || report.minute === "0"
           ? "00:00"
@@ -146,7 +148,7 @@ export default function Reports() {
           : `00:${report.minute}`,
       total: !report.totalHours
         ? "00:00"
-        : format(new Date().setHours(report.totalHours, 0), "H:mm"),
+        : format(new Date().setHours(report.totalHours, 0), "HH:mm"),
     };
   });
 
