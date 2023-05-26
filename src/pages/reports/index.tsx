@@ -132,17 +132,21 @@ export default function Reports() {
       amDeparture: ifAmDeparture(report.timeOut),
       pmArrival: ifPmArrival(report.timeIn),
       pmDeparture: ifPmDeparture(report.timeOut),
-      hours:
-        report.totalHours === null
-          ? 0
-          : format(new Date().setHours(report.totalHours, 0), "H:mm"),
+      hours: !report.totalHours
+        ? "00:00"
+        : format(new Date().setHours(report.totalHours, 0), "H:mm"),
       late: format(new Date().setHours(report.late, 0), "H:mm"),
-      undertime: report.underTime.replace(/\*/g, "0"),
-      minutes: format(new Date().setHours(report.minute, 0), "H:mm"),
-      total:
-        report.totalHours === null
-          ? 0
-          : format(new Date().setHours(report.totalHours, 0), "H:mm"),
+      undertime:
+        !report.underTime || report.minute === "0"
+          ? "00:00"
+          : report.underTime.replace(/\*/g, "0"),
+      minutes:
+        !report.minute || report.minute === "0"
+          ? "00:00"
+          : `00:${report.minute}`,
+      total: !report.totalHours
+        ? "00:00"
+        : format(new Date().setHours(report.totalHours, 0), "H:mm"),
     };
   });
 
@@ -187,14 +191,7 @@ export default function Reports() {
     }),
 
     columnHelper.accessor("minutes", {
-      cell: (info) => {
-        const totalHours = info.getValue();
-        if (!totalHours) {
-          return 0;
-        }
-        const minutes = totalHours.slice(3, 5);
-        return minutes;
-      },
+      cell: (info) => info.getValue(),
       header: "Minutes",
     }),
     columnHelper.accessor("late", {
@@ -210,15 +207,7 @@ export default function Reports() {
       header: "Undertime",
     }),
     columnHelper.accessor("total", {
-      cell: (info) => {
-        const totalHours = info.getValue();
-        if (!totalHours) {
-          return "";
-        }
-        const hours = totalHours.slice(0, 2).replace(/^0+/, "") || "0";
-        const minutes = totalHours.slice(3, 5);
-        return `${hours}:${minutes}`;
-      },
+      cell: (info) => info.getValue(),
       header: "Total Hours",
     }),
   ];
@@ -287,7 +276,7 @@ export default function Reports() {
 
     doc.save(`DTR Report_${new Date()}.pdf`);
   };
-
+  console.log(attendance);
   return (
     <Layout>
       <VStack w="100%">
