@@ -1,10 +1,12 @@
 import { useState, useRef } from "react";
-import { VStack, Box, Card, Flex } from "@chakra-ui/react";
+import { VStack, Card, Flex, HStack } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 import { createColumn } from "react-chakra-pagination";
 import { useQuery } from "react-query";
 import { format } from "date-fns";
 import { CSVLink } from "react-csv";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 import { Layout, Table, Button, FormControl } from "@/components";
 import { checkAuth, get } from "@/lib";
@@ -130,11 +132,17 @@ export default function Reports() {
       amDeparture: ifAmDeparture(report.timeOut),
       pmArrival: ifPmArrival(report.timeIn),
       pmDeparture: ifPmDeparture(report.timeOut),
-      hours: report.totalHours === null ? 0 : report.totalHours,
-      late: report.late,
+      hours:
+        report.totalHours === null
+          ? 0
+          : format(new Date().setHours(report.totalHours, 0), "H:mm"),
+      late: format(new Date().setHours(report.late, 0), "H:mm"),
       undertime: report.underTime,
-      minutes: null,
-      total: null,
+      minutes: format(new Date().setHours(report.minute, 0), "H:mm"),
+      total:
+        report.totalHours === null
+          ? 0
+          : format(new Date().setHours(report.totalHours, 0), "H:mm"),
     };
   });
 
@@ -174,7 +182,7 @@ export default function Reports() {
       header: "Departure (PM)",
     }),
     columnHelper.accessor("hours", {
-      cell: (info) => format(new Date().setHours(info.getValue(), 0), "H:mm"),
+      cell: (info) => info.getValue(),
       header: "Hours",
     }),
 
@@ -185,13 +193,13 @@ export default function Reports() {
           return 0;
         }
         const minutes = totalHours.slice(3, 5);
-        return format(new Date().setHours(minutes, 0), "H:mm");
+        return minutes;
       },
       header: "Minutes",
     }),
     columnHelper.accessor("late", {
       cell: (info) => {
-        return format(new Date().setHours(info.getValue(), 0), "H:mm");
+        return info.getValue();
       },
       header: "Late",
     }),
@@ -216,6 +224,68 @@ export default function Reports() {
   ];
 
   const printRef: any = useRef();
+
+  const generatePDF = () => {
+    const doc = new jsPDF({ orientation: "landscape" });
+
+    const table = tableData.map((item: any, index: number) => [
+      item.id,
+      item.date,
+      item.name,
+      item.employeeType,
+      item.amArrival,
+      item.amDeparture,
+      item.pmArrival,
+      item.pmDeparture,
+      item.hours,
+      item.late,
+      item.undertime,
+      item.minutes,
+      item.total,
+    ]);
+
+    const headers = [
+      [
+        "ID",
+        "Date",
+        "Name",
+        "Emp. Type",
+        "Arrival (Am)",
+        "Departure (Am)",
+        "Arrival (Pm)",
+        "Departure (Pm)",
+        "Hours",
+        "Minutes",
+        "Late",
+        "Undertime",
+        "Total Hours",
+      ],
+    ];
+
+    const tableConfig = {
+      startY: methods.watch("fromDate") && methods.watch("toDate") ? 40 : 20,
+      margin: { top: 20 },
+      head: headers,
+      body: table,
+    };
+    doc.text("Norzagaray College DTR Report", 15, 10);
+    doc.setFontSize(10);
+    if (methods.watch("fromDate") && methods.watch("toDate")) {
+      doc.text(
+        `From: ${format(new Date(methods.watch("fromDate")), "MMMM dd,yyyy")}`,
+        15,
+        20
+      );
+      doc.text(
+        `To: ${format(new Date(methods.watch("toDate")), "MMMM dd, yyyy")}`,
+        15,
+        30
+      );
+    }
+    doc.autoTable(tableConfig);
+
+    doc.save(`DTR Report_${new Date()}.pdf`);
+  };
 
   return (
     <Layout>
@@ -257,11 +327,17 @@ export default function Reports() {
           setPage={setPage}
           isLoading={isFetching || isLoading}
           actions={
-            <Box>
+            <HStack gap={2}>
               <CSVLink data={tableData} filename="DTR_report">
                 <Button label="Extract" colorScheme="twitter" size="sm" />
               </CSVLink>
-            </Box>
+              <Button
+                label="Print"
+                colorScheme="green"
+                size="sm"
+                onClick={generatePDF}
+              />
+            </HStack>
           }
         />
       </VStack>

@@ -28,7 +28,7 @@ export function SideNav() {
       label: "Dashboards",
       icon: <BsFillFileBarGraphFill fontSize={25} />,
       link: "/dashboard",
-      enabled: isAdmin(),
+      enabled: false,
     },
     {
       label: "Users",
@@ -37,7 +37,7 @@ export function SideNav() {
       enabled: isAdmin(),
     },
     {
-      label: "DTR Report",
+      label: isAdmin() ? "Attendance Log" : "My Reports",
       icon: <BsTable fontSize={25} />,
       link: "/reports",
       enabled: true,
