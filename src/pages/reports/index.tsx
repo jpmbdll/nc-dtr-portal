@@ -282,6 +282,7 @@ export default function Reports() {
         30
       );
     }
+    // @ts-ignore
     doc.autoTable(tableConfig);
 
     doc.save(`DTR Report_${new Date()}.pdf`);
