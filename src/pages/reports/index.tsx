@@ -174,7 +174,7 @@ export default function Reports() {
       header: "Departure (PM)",
     }),
     columnHelper.accessor("hours", {
-      cell: (info) => info.getValue(),
+      cell: (info) => format(new Date().setHours(info.getValue(), 0), "H:mm"),
       header: "Hours",
     }),
 
@@ -185,13 +185,13 @@ export default function Reports() {
           return 0;
         }
         const minutes = totalHours.slice(3, 5);
-        return `${minutes}`;
+        return format(new Date().setHours(minutes, 0), "H:mm");
       },
       header: "Minutes",
     }),
     columnHelper.accessor("late", {
       cell: (info) => {
-        return info.getValue();
+        return format(new Date().setHours(info.getValue(), 0), "H:mm");
       },
       header: "Late",
     }),
