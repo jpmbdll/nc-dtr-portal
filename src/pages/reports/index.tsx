@@ -137,7 +137,7 @@ export default function Reports() {
           ? 0
           : format(new Date().setHours(report.totalHours, 0), "H:mm"),
       late: format(new Date().setHours(report.late, 0), "H:mm"),
-      undertime: report.underTime,
+      undertime: report.underTime.replace(/\*/g, "0"),
       minutes: format(new Date().setHours(report.minute, 0), "H:mm"),
       total:
         report.totalHours === null
