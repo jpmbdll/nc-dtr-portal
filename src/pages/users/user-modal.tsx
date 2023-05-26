@@ -169,7 +169,8 @@ export default function UserModal(props: Props) {
   ];
 
   const validateIdNo = (value: any) => {
-    if (!/^\d{4}-[A-Z]{2}-\d{4}$/.test(value)) {
+    // if (!/^\d{4}-[A-Z]{2}-\d{4}$/.test(value)) {
+    if (value.length !== 13) {
       return "ID No. has invalid format.";
     } else {
       if (list.find((l: any) => l.userNo === value)) {
