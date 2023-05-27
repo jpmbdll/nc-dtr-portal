@@ -220,27 +220,10 @@ export default function Reports() {
   const generatePDF = () => {
     const doc = new jsPDF({ orientation: "landscape" });
 
-    const table = tableData.map((item: any, index: number) => [
-      item.id,
-      item.date,
-      item.name,
-      item.employeeType,
-      item.lastName,
-      item.amArrival,
-      item.amDeparture,
-      item.pmArrival,
-      item.pmDeparture,
-      item.hours,
-      item.late,
-      item.undertime,
-      item.minutes,
-      item.total,
-    ]);
-
-    table.sort((a: any, b: any) => {
+    tableData.sort((a: any, b: any) => {
       console.log(a, b);
-      const nameA = a[4].toUpperCase();
-      const nameB = b[4].toUpperCase();
+      const nameA = a.lastName.toUpperCase();
+      const nameB = b.lastName.toUpperCase();
 
       if (nameA < nameB) {
         return -1;
@@ -256,6 +239,23 @@ export default function Reports() {
       }
       return 0;
     });
+
+    const table = tableData.map((item: any, index: number) => [
+      item.id,
+      format(new Date(item.date), "MM-dd-yyyy"),
+      item.name,
+      item.employeeType,
+      item.amArrival,
+      item.amDeparture,
+      item.pmArrival,
+      item.pmDeparture,
+      item.hours,
+      item.late,
+      item.undertime,
+      item.minutes,
+      item.total,
+    ]);
+
     console.log(table);
     const headers = [
       [
