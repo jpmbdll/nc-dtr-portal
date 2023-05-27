@@ -127,7 +127,8 @@ export default function Reports() {
       id: report.userNumber,
       date: report.date,
       name: `${report.firstName} ${report.lastName}`,
-      employeeType: report.employeeType,
+      lastName: report.lastName ? report.lastName : "",
+      employeeType: report.empDescription,
       amArrival: ifAmArrival(report.timeIn),
       amDeparture: ifAmDeparture(report.timeOut),
       pmArrival: ifPmArrival(report.timeIn),
@@ -223,7 +224,8 @@ export default function Reports() {
       item.id,
       item.date,
       item.name,
-      item.employeeType,
+      item.empDescription,
+      item.lastName,
       item.amArrival,
       item.amDeparture,
       item.pmArrival,
@@ -234,6 +236,26 @@ export default function Reports() {
       item.minutes,
       item.total,
     ]);
+
+    table.sort((a: any, b: any) => {
+      console.log(a, b);
+      const nameA = a[4].toUpperCase();
+      const nameB = b[4].toUpperCase();
+
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+      if (a.id < b.id) {
+        return -1;
+      }
+      if (a.id > b.id) {
+        return 1;
+      }
+      return 0;
+    });
 
     const headers = [
       [
@@ -263,12 +285,12 @@ export default function Reports() {
     doc.setFontSize(10);
     if (methods.watch("fromDate") && methods.watch("toDate")) {
       doc.text(
-        `From: ${format(new Date(methods.watch("fromDate")), "MMMM dd,yyyy")}`,
+        `From: ${format(new Date(methods.watch("fromDate")), "mm-dd-yyyy")}`,
         15,
         20
       );
       doc.text(
-        `To: ${format(new Date(methods.watch("toDate")), "MMMM dd, yyyy")}`,
+        `To: ${format(new Date(methods.watch("toDate")), "mm-dd-yyyy")}`,
         15,
         30
       );
@@ -278,7 +300,6 @@ export default function Reports() {
 
     doc.save(`DTR Report_${new Date()}.pdf`);
   };
-  console.log(attendance);
   return (
     <Layout>
       <VStack w="100%">
