@@ -31,13 +31,13 @@ export function SideNav() {
       enabled: false,
     },
     {
-      label: "Users",
+      label: "Employees",
       icon: <BsFillPeopleFill fontSize={25} />,
       link: "/users",
       enabled: isAdmin(),
     },
     {
-      label: isAdmin() ? "Attendance Log" : "My Reports",
+      label: isAdmin() ? "Daily Time Report" : "My Reports",
       icon: <BsTable fontSize={25} />,
       link: "/reports",
       enabled: true,

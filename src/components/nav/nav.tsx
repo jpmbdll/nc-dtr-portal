@@ -34,7 +34,7 @@ export function Nav() {
             justifyContent: "center",
           }}
         >
-          Norzagaray College Face Recognition DTR
+          Norzagaray College Daily Time Portal
         </Heading>
       </Flex>
       <Avatar

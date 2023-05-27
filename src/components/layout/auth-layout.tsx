@@ -29,7 +29,7 @@ export function AuthLayout(props: Props) {
           <Image src="/nclogo.png" alt="logo" width={150} height={150} />
         </Center>
         <Center mb={5}>
-          <Heading mb={5}>Norzagaray College Face Recognition DTR</Heading>
+          <Heading mb={5}>Norzagaray College Daily Time Portal</Heading>
         </Center>
         <Card variant="elevated" size="lg" w="40rem">
           {header && (
