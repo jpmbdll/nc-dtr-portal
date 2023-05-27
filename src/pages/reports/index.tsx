@@ -224,7 +224,7 @@ export default function Reports() {
       item.id,
       item.date,
       item.name,
-      item.empDescription,
+      item.employeeType,
       item.lastName,
       item.amArrival,
       item.amDeparture,
@@ -256,7 +256,7 @@ export default function Reports() {
       }
       return 0;
     });
-
+    console.log(table);
     const headers = [
       [
         "ID",
