@@ -145,7 +145,7 @@ export default function AccountDetails() {
         >
           <FormProvider {...methods}>
             <form onSubmit={methods.handleSubmit(onSubmit)}>
-              <Grid templateColumns="repeat(12, 1fr)" gap={4}>
+              <Grid templateColumns="repeat(10, 1fr)" gap={4}>
                 <GridItem colSpan={4}>
                   <FormControl
                     label="ID No."
