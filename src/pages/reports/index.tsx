@@ -77,11 +77,11 @@ export default function Reports() {
   const ifAmDeparture = (value: any) => {
     const clockIn = value;
     if (!clockIn) {
-      return "";
+      return "No Out";
     }
     const hours = parseInt(clockIn.slice(0, 2));
     if (hours >= 12) {
-      return "No Out";
+      return "";
     } else {
       const ampm = hours < 12 ? "AM" : "PM";
       const formattedHours = hours % 12 || 12;
@@ -109,11 +109,11 @@ export default function Reports() {
   const ifPmDeparture = (value: any) => {
     const clockOut = value;
     if (!clockOut) {
-      return "";
+      return "No Out";
     }
     const hours = parseInt(clockOut.slice(0, 2));
     if (hours < 12) {
-      return "No Out";
+      return "";
     } else {
       const ampm = hours >= 12 ? "PM" : "AM";
       const formattedHours = hours % 12 || 12;
